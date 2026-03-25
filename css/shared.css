@@ -118,6 +118,7 @@ ul { list-style: none; }
 }
 
 .nav-logo-icon svg { width: 20px; height: 20px; }
+.nav-logo-img { height: 38px; width: auto; display: block; }
 
 .nav-logo-text { display: flex; flex-direction: column; }
 
@@ -264,6 +265,7 @@ ul { list-style: none; }
 }
 
 .footer-logo-icon svg { width: 16px; height: 16px; }
+.footer-logo-img { height: 34px; width: auto; display: block; }
 
 .footer-logo-main {
   font-size: 0.9em;
