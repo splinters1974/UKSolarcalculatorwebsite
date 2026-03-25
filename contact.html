@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — UK Solar Calculator | Kinetic Energy Consulting</title>
+  <meta name="description" content="Get in touch with Kinetic Energy Consulting for commercial solar enquiries, site surveys, and expert advice.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="css/shared.css">
+  <style>
+    /* ── CONTACT PAGE ── */
+    .contact-section {
+      padding: 80px 24px 100px;
+    }
+    .contact-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 480px;
+      gap: 64px;
+      align-items: start;
+    }
+
+    /* Left: info */
+    .contact-info h2 {
+      font-size: clamp(1.5em, 3.5vw, 2em);
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+    }
+    .contact-info p {
+      font-size: 0.93em;
+      color: var(--text-muted);
+      line-height: 1.75;
+      margin-bottom: 32px;
+    }
+
+    .contact-details { display: flex; flex-direction: column; gap: 16px; margin-bottom: 36px; }
+    .contact-detail {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .contact-detail-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      background: var(--gold-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .contact-detail-icon svg { width: 20px; height: 20px; }
+    .contact-detail-label {
+      font-size: 0.72em;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 3px;
+    }
+    .contact-detail-value {
+      font-size: 0.95em;
+      font-weight: 600;
+      color: var(--navy);
+    }
+    .contact-detail-value a {
+      color: var(--kec-blue);
+      transition: color 0.15s;
+    }
+    .contact-detail-value a:hover { color: var(--gold-dark); }
+
+    /* What to expect */
+    .what-to-expect {
+      background: var(--slate-50);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-top: 8px;
+    }
+    .what-title {
+      font-size: 0.72em;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .what-step {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+    .what-step:last-child { margin-bottom: 0; }
+    .what-step-num {
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      background: var(--gold);
+      color: var(--navy);
+      font-size: 0.72em;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .what-step-text {
+      font-size: 0.85em;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+    .what-step-text strong { color: var(--navy); }
+
+    /* Right: form */
+    .contact-form-card {
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-xl);
+      padding: 36px;
+      box-shadow: var(--shadow-md);
+    }
+    .form-title {
+      font-size: 1.1em;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+    .form-subtitle {
+      font-size: 0.82em;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+    }
+
+    .form-group { margin-bottom: 18px; }
+    .form-group label {
+      display: block;
+      font-size: 0.8em;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 6px;
+    }
+    .form-group label .req { color: var(--gold-dark); margin-left: 2px; }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--slate-200);
+      border-radius: var(--radius);
+      font-family: 'Familjen Grotesk', sans-serif;
+      font-size: 0.9em;
+      color: var(--text);
+      background: var(--white);
+      transition: border-color 0.15s, box-shadow 0.15s;
+      outline: none;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(245,158,11,0.12);
+    }
+    .form-group textarea { resize: vertical; min-height: 110px; }
+    .form-group select { appearance: none; cursor: pointer; }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-submit {
+      width: 100%;
+      margin-top: 8px;
+    }
+
+    .form-note {
+      font-size: 0.76em;
+      color: var(--text-dim);
+      text-align: center;
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+
+    /* Success state */
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 32px 0 16px;
+    }
+    .form-success-icon {
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: rgba(13,122,79,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .form-success-icon svg { width: 28px; height: 28px; }
+    .form-success h3 { font-size: 1.1em; color: var(--navy); margin-bottom: 8px; }
+    .form-success p { font-size: 0.85em; color: var(--text-muted); line-height: 1.6; }
+
+    @media (max-width: 900px) {
+      .contact-inner { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 540px) {
+      .form-row { grid-template-columns: 1fr; }
+      .contact-form-card { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="site-nav" id="siteNav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </div>
+      <div class="nav-logo-text">
+        <span class="nav-logo-main">UK Solar Calculator</span>
+        <span class="nav-logo-sub">Kinetic Energy Consulting</span>
+      </div>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About Solar</a></li>
+      <li><a href="sectors.html">Sectors</a></li>
+      <li><a href="contact.html" class="active">Contact</a></li>
+      <li><a href="calculator.html" class="nav-cta">Calculator</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-hero-kicker">Get in Touch</div>
+    <h1 class="page-hero-title">Talk to an <span>expert</span></h1>
+    <p class="page-hero-lead">Whether you've run the calculator and want to discuss the results, or you're just starting to explore solar for your site — get in touch for a no-obligation conversation.</p>
+  </div>
+</section>
+
+<!-- CONTACT SECTION -->
+<section class="contact-section">
+  <div class="contact-inner">
+
+    <!-- Left: info -->
+    <div class="contact-info">
+      <div class="section-kicker">Kinetic Energy Consulting</div>
+      <h2>Martyn Sheridan</h2>
+      <p>Martyn works with industrial and commercial businesses across the UK to assess solar opportunities, model the financial case, and manage projects from initial survey through to commissioning. Enquiries are typically responded to within one working day.</p>
+
+      <div class="contact-details">
+        <div class="contact-detail">
+          <div class="contact-detail-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div>
+            <div class="contact-detail-label">Email</div>
+            <div class="contact-detail-value"><a href="mailto:martynsheridan621@gmail.com">martynsheridan621@gmail.com</a></div>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 012 2.18 2 2 0 014 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14z"/></svg>
+          </div>
+          <div>
+            <div class="contact-detail-label">Phone</div>
+            <div class="contact-detail-value"><a href="tel:+447872015769">+44 (0) 7872 015769</a></div>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <div class="contact-detail-label">Response time</div>
+            <div class="contact-detail-value">Within 1 working day</div>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <div class="contact-detail-label">Coverage</div>
+            <div class="contact-detail-value">Nationwide across the UK</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="what-to-expect">
+        <div class="what-title">What happens next</div>
+        <div class="what-step">
+          <div class="what-step-num">1</div>
+          <div class="what-step-text"><strong>Initial call:</strong> We discuss your site, energy use, and objectives. No technical knowledge required — we'll guide you through what's needed.</div>
+        </div>
+        <div class="what-step">
+          <div class="what-step-num">2</div>
+          <div class="what-step-text"><strong>Site survey:</strong> A no-obligation visit to assess roof suitability, structural condition, shading, and grid connection options.</div>
+        </div>
+        <div class="what-step">
+          <div class="what-step-num">3</div>
+          <div class="what-step-text"><strong>Detailed proposal:</strong> A full financial model, system design, and project timeline — with no pressure to proceed.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: form -->
+    <div class="contact-form-card">
+      <div class="form-title">Send an enquiry</div>
+      <div class="form-subtitle">Fill in the form and we'll be in touch within one working day.</div>
+
+      <form id="contactForm" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First name <span class="req">*</span></label>
+            <input type="text" id="firstName" name="firstName" placeholder="Jane" required>
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last name <span class="req">*</span></label>
+            <input type="text" id="lastName" name="lastName" placeholder="Smith" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email address <span class="req">*</span></label>
+          <input type="email" id="email" name="email" placeholder="jane.smith@company.co.uk" required>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone number</label>
+          <input type="tel" id="phone" name="phone" placeholder="+44 (0) 7700 000000">
+        </div>
+
+        <div class="form-group">
+          <label for="company">Company / organisation</label>
+          <input type="text" id="company" name="company" placeholder="Acme Manufacturing Ltd">
+        </div>
+
+        <div class="form-group">
+          <label for="sector">Sector</label>
+          <select id="sector" name="sector">
+            <option value="">Select your sector…</option>
+            <option>Manufacturing</option>
+            <option>Logistics &amp; Warehousing</option>
+            <option>Retail &amp; Leisure</option>
+            <option>Agriculture &amp; Rural</option>
+            <option>Education</option>
+            <option>Healthcare</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="roofArea">Approximate roof area (m²)</label>
+          <input type="number" id="roofArea" name="roofArea" placeholder="e.g. 5000" min="0">
+        </div>
+
+        <div class="form-group">
+          <label for="message">Message <span class="req">*</span></label>
+          <textarea id="message" name="message" placeholder="Tell us about your site, energy use, or any questions you have…" required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-gold btn-lg form-submit">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Send Enquiry
+        </button>
+
+        <div class="form-note">No obligation. We will never share your details with third parties.</div>
+      </form>
+
+      <div class="form-success" id="formSuccess">
+        <div class="form-success-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--kec-green)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h3>Enquiry sent</h3>
+        <p>Thank you — Martyn will be in touch within one working day.<br>In the meantime, you can <a href="calculator.html" style="color:var(--kec-blue)">run the calculator</a> for an instant estimate.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA STRIP -->
+<section class="cta-strip">
+  <div class="cta-strip-inner">
+    <h2 class="cta-strip-title">Not ready to call yet?</h2>
+    <p class="cta-strip-lead">Run our free calculator first. It takes under three minutes and produces a detailed financial model for your site — no sign-up required.</p>
+    <div class="cta-strip-btns">
+      <a href="calculator.html" class="btn btn-gold btn-lg">Run the Calculator Free</a>
+      <a href="about.html" class="btn btn-outline-white">Learn About Solar</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          </div>
+          <div>
+            <div class="footer-logo-main">UK Solar Calculator</div>
+            <div class="footer-logo-sub">Kinetic Energy Consulting</div>
+          </div>
+        </div>
+        <p class="footer-desc">Industrial &amp; commercial solar energy solutions for UK businesses. Detailed financial modelling, project timeline planning, and expert consultation from enquiry to commissioning.</p>
+        <div class="footer-contact-item"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><a href="mailto:martynsheridan621@gmail.com">martynsheridan621@gmail.com</a></div>
+        <div class="footer-contact-item"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 012 2.18 2 2 0 014 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14z"/></svg><a href="tel:+447872015769">+44 (0) 7872 015769</a></div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Pages</div>
+        <ul><li><a href="index.html">Home</a></li><li><a href="about.html">About Solar</a></li><li><a href="sectors.html">Sectors</a></li><li><a href="calculator.html">Calculator</a></li><li><a href="contact.html">Contact</a></li></ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Solar Topics</div>
+        <ul><li><a href="about.html#how-it-works">How Solar Works</a></li><li><a href="about.html#installation-types">Installation Types</a></li><li><a href="about.html#battery-storage">Battery Storage</a></li><li><a href="about.html#funding">Funding Options</a></li></ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Sectors</div>
+        <ul><li><a href="sectors.html#manufacturing">Manufacturing</a></li><li><a href="sectors.html#logistics">Logistics</a></li><li><a href="sectors.html#retail">Retail</a></li><li><a href="sectors.html#agriculture">Agriculture</a></li><li><a href="sectors.html#education">Education</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">&copy; 2025 Kinetic Energy Consulting. All rights reserved.</div>
+      <div class="footer-disclaimer">All calculator outputs are indicative estimates. Not a formal quotation or guarantee of performance.</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('navToggle').addEventListener('click', () => {
+    document.getElementById('siteNav').classList.toggle('nav-mobile-open');
+  });
+
+  document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName  = document.getElementById('lastName').value.trim();
+    const email     = document.getElementById('email').value.trim();
+    const message   = document.getElementById('message').value.trim();
+    if (!firstName || !lastName || !email || !message) {
+      alert('Please fill in all required fields.');
+      return;
+    }
+    // Build mailto link as fallback (no backend)
+    const subject = encodeURIComponent('Solar Enquiry — ' + firstName + ' ' + lastName);
+    const sector  = document.getElementById('sector').value;
+    const company = document.getElementById('company').value.trim();
+    const phone   = document.getElementById('phone').value.trim();
+    const roofArea = document.getElementById('roofArea').value.trim();
+    const body = encodeURIComponent(
+      'Name: ' + firstName + ' ' + lastName + '\n' +
+      'Email: ' + email + '\n' +
+      (phone   ? 'Phone: ' + phone + '\n' : '') +
+      (company ? 'Company: ' + company + '\n' : '') +
+      (sector  ? 'Sector: ' + sector + '\n' : '') +
+      (roofArea ? 'Roof area: ' + roofArea + ' m²\n' : '') +
+      '\nMessage:\n' + message
+    );
+    window.location.href = 'mailto:martynsheridan621@gmail.com?subject=' + subject + '&body=' + body;
+    document.getElementById('contactForm').style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UK Solar Calculator — Industrial & Commercial Solar for UK Businesses</title>
+  <meta name="description" content="Free solar ROI calculator for UK industrial and commercial businesses. Estimate savings, payback period, and carbon reduction for your site.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="css/shared.css">
+  <style>
+    /* ── HOME PAGE STYLES ── */
+
+    /* Hero */
+    .home-hero {
+      background: linear-gradient(140deg, var(--navy) 0%, var(--navy-mid) 55%, var(--kec-blue) 100%);
+      padding: 100px 24px 120px;
+      position: relative;
+      overflow: hidden;
+    }
+    .home-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 28px 28px;
+    }
+    .home-hero::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0; right: 0;
+      height: 80px;
+      background: var(--white);
+      clip-path: ellipse(60% 100% at 50% 100%);
+    }
+    .home-hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 60px;
+      align-items: center;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72em;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      background: var(--gold-dim);
+      border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 20px;
+      padding: 5px 14px;
+      margin-bottom: 22px;
+    }
+    .hero-badge-dot {
+      width: 6px; height: 6px;
+      background: var(--gold);
+      border-radius: 50%;
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%,100% { opacity:1; transform:scale(1); }
+      50% { opacity:0.4; transform:scale(0.7); }
+    }
+    .hero-title {
+      font-size: clamp(2em, 5vw, 3.4em);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+    }
+    .hero-title span { color: var(--gold); }
+    .hero-title .teal { color: var(--kec-teal-lt); }
+    .hero-lead {
+      font-size: 1.05em;
+      color: rgba(255,255,255,0.72);
+      line-height: 1.75;
+      max-width: 520px;
+      margin-bottom: 36px;
+    }
+    .hero-btns {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .hero-card {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      backdrop-filter: blur(10px);
+    }
+    .hero-card-title {
+      font-size: 0.72em;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+    .hero-stat-list { display: flex; flex-direction: column; gap: 14px; }
+    .hero-stat-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .hero-stat-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .hero-stat-label {
+      font-size: 0.82em;
+      color: rgba(255,255,255,0.6);
+    }
+    .hero-stat-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1em;
+      font-weight: 500;
+      color: var(--white);
+    }
+    .hero-stat-val .accent { color: var(--gold); }
+
+    /* Stats band */
+    .stats-band {
+      background: var(--white);
+      border-bottom: 1px solid var(--slate-200);
+      box-shadow: var(--shadow-sm);
+    }
+    .stats-band-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    /* Features section */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+    .feature-card {
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .feature-card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+    }
+    .feature-card h3 {
+      font-size: 1.05em;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+    .feature-card p {
+      font-size: 0.88em;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* How it works */
+    .how-section { background: var(--slate-50); }
+    .steps-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+      margin-top: 52px;
+      position: relative;
+    }
+    .steps-row::before {
+      content: '';
+      position: absolute;
+      top: 32px;
+      left: calc(100% / 6);
+      right: calc(100% / 6);
+      height: 2px;
+      background: var(--slate-200);
+      z-index: 0;
+    }
+    .step-item {
+      text-align: center;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+    .step-num-circle {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 2px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2em;
+      font-weight: 500;
+      color: var(--gold);
+      box-shadow: var(--shadow-sm);
+    }
+    .step-item h3 {
+      font-size: 1em;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 10px;
+    }
+    .step-item p {
+      font-size: 0.85em;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* Sector teasers */
+    .sectors-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 48px;
+    }
+    .sector-teaser {
+      background: var(--white);
+      border: 1px solid var(--slate-200);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      transition: box-shadow 0.2s, border-color 0.2s;
+      text-decoration: none;
+      color: inherit;
+    }
+    .sector-teaser:hover {
+      box-shadow: var(--shadow-md);
+      border-color: rgba(245,158,11,0.35);
+    }
+    .sector-teaser-icon {
+      width: 44px; height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .sector-teaser-icon svg { width: 22px; height: 22px; }
+    .sector-teaser h3 {
+      font-size: 0.92em;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 5px;
+    }
+    .sector-teaser p {
+      font-size: 0.8em;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .home-hero-inner { grid-template-columns: 1fr; }
+      .hero-card { display: none; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .sectors-grid { grid-template-columns: 1fr 1fr; }
+      .stats-band-inner { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .features-grid { grid-template-columns: 1fr; }
+      .steps-row { grid-template-columns: 1fr; gap: 32px; }
+      .steps-row::before { display: none; }
+      .sectors-grid { grid-template-columns: 1fr; }
+      .stats-band-inner { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="site-nav" id="siteNav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </div>
+      <div class="nav-logo-text">
+        <span class="nav-logo-main">UK Solar Calculator</span>
+        <span class="nav-logo-sub">Kinetic Energy Consulting</span>
+      </div>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="about.html">About Solar</a></li>
+      <li><a href="sectors.html">Sectors</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="calculator.html" class="nav-cta">Calculator</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="home-hero">
+  <div class="home-hero-inner">
+    <div class="hero-content">
+      <div class="hero-badge"><span class="hero-badge-dot"></span>UK Industrial &amp; Commercial Solar</div>
+      <h1 class="hero-title">
+        Calculate Your <span>Solar ROI</span><br>
+        in Under <span class="teal">3 Minutes</span>
+      </h1>
+      <p class="hero-lead">
+        Free, detailed financial modelling for UK businesses. Enter your roof size and energy use — get payback period, annual savings, carbon reduction, and a downloadable report.
+      </p>
+      <div class="hero-btns">
+        <a href="calculator.html" class="btn btn-gold btn-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/></svg>
+          Run the Calculator
+        </a>
+        <a href="about.html" class="btn btn-outline-white btn-lg">Learn How Solar Works</a>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="hero-card-title">Example: 500 kWp Warehouse</div>
+      <div class="hero-stat-list">
+        <div class="hero-stat-row">
+          <span class="hero-stat-label">Annual generation</span>
+          <span class="hero-stat-val"><span class="accent">~440,000</span> kWh</span>
+        </div>
+        <div class="hero-stat-row">
+          <span class="hero-stat-label">Year 1 savings</span>
+          <span class="hero-stat-val"><span class="accent">~£88,000</span></span>
+        </div>
+        <div class="hero-stat-row">
+          <span class="hero-stat-label">Simple payback</span>
+          <span class="hero-stat-val"><span class="accent">6–8</span> years</span>
+        </div>
+        <div class="hero-stat-row">
+          <span class="hero-stat-label">25-year NPV</span>
+          <span class="hero-stat-val"><span class="accent">£900k+</span></span>
+        </div>
+        <div class="hero-stat-row">
+          <span class="hero-stat-label">CO₂ avoided</span>
+          <span class="hero-stat-val"><span class="accent">~200</span> t/yr</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAND -->
+<div class="stats-band">
+  <div class="stats-band-inner">
+    <div class="stat-item">
+      <div class="stat-num">£<span>0.20</span>+</div>
+      <div class="stat-label">UK grid electricity cost per kWh (2024)</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num"><span>25</span>yr</div>
+      <div class="stat-label">Typical panel performance warranty</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num"><span>6–9</span>yr</div>
+      <div class="stat-label">Typical commercial payback period</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num"><span>15+</span>%</div>
+      <div class="stat-label">Typical annual ROI on solar capital</div>
+    </div>
+  </div>
+</div>
+
+<!-- WHY SOLAR -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-kicker">Why Commercial Solar</div>
+    <h2 class="section-title">A genuine return, not just a green gesture</h2>
+    <p class="section-lead">Commercial and industrial solar in the UK now offers a compelling business case independent of subsidies. Here's why businesses are acting now.</p>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="icon-box gold" style="margin-bottom:18px">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h3>Lock in energy costs</h3>
+        <p>Grid electricity prices have risen sharply and remain volatile. On-site solar generation provides a hedge against further increases, giving finance teams greater cost certainty.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon-box teal" style="margin-bottom:18px">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--kec-teal)" stroke-width="2"><path d="M2 12a10 10 0 1 1 20 0"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83"/></svg>
+        </div>
+        <h3>Meet carbon targets</h3>
+        <p>ESOS, SECR, and supply chain pressure are driving Scope 2 emission reductions. Rooftop solar is the most direct, measurable action most businesses can take.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon-box blue" style="margin-bottom:18px">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--kec-blue)" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <h3>Mature, proven technology</h3>
+        <p>Solar panels have been commercially deployed for over two decades. Failure rates are low, warranties long, and the UK installer market is competitive and well-established.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon-box green" style="margin-bottom:18px">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--kec-green)" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <h3>Strong, predictable returns</h3>
+        <p>A well-designed commercial system delivers a genuine, measurable ROI over a predictable timeframe. Output can be modelled with confidence before a panel is installed.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon-box gold" style="margin-bottom:18px">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        </div>
+        <h3>Flexible financing options</h3>
+        <p>From capital purchase to Power Purchase Agreements (PPA), lease, or finance packages, there are structures to suit every business — including zero-capex options.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon-box navy" style="margin-bottom:18px">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <h3>Uses existing roof space</h3>
+        <p>Rooftop and canopy installations require no additional land. Industrial units, warehouses, and retail sites typically have large, south-facing roof areas ideal for solar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section how-section">
+  <div class="section-inner">
+    <div class="section-kicker">The Process</div>
+    <h2 class="section-title">From estimate to <span>energised system</span></h2>
+    <p class="section-lead">Our calculator gives you a fast, detailed first estimate. From there, we walk you through every step.</p>
+
+    <div class="steps-row">
+      <div class="step-item">
+        <div class="step-num-circle">01</div>
+        <h3>Run the Calculator</h3>
+        <p>Enter your roof area, region, and energy costs. The calculator models generation, savings, payback, and carbon impact — instantly.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num-circle">02</div>
+        <h3>Site Survey &amp; Design</h3>
+        <p>We conduct a no-obligation site assessment, confirm structural suitability, assess shading, and produce a detailed financial model for your specific site.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num-circle">03</div>
+        <h3>Installation &amp; Commissioning</h3>
+        <p>We manage the full project — design, MCS-accredited installation, DNO notification, and commissioning — so you can focus on your business.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTORS -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-kicker">Who We Work With</div>
+    <h2 class="section-title">Solar across <span>every sector</span></h2>
+    <p class="section-lead">From manufacturing to education, commercial solar makes sense wherever there's a large roof and daytime energy demand.</p>
+
+    <div class="sectors-grid">
+      <a href="sectors.html#manufacturing" class="sector-teaser">
+        <div class="sector-teaser-icon" style="background:rgba(245,158,11,0.12)">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="1"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+        </div>
+        <div>
+          <h3>Manufacturing</h3>
+          <p>High daytime loads, large flat roofs, and significant Scope 2 pressure make manufacturing sites ideal candidates.</p>
+        </div>
+      </a>
+      <a href="sectors.html#logistics" class="sector-teaser">
+        <div class="sector-teaser-icon" style="background:rgba(20,100,170,0.10)">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--kec-blue)" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        </div>
+        <div>
+          <h3>Logistics &amp; Warehousing</h3>
+          <p>Vast, south-facing warehouse roofs offer some of the UK's best solar opportunities, with minimal on-site disruption.</p>
+        </div>
+      </a>
+      <a href="sectors.html#retail" class="sector-teaser">
+        <div class="sector-teaser-icon" style="background:rgba(11,122,110,0.10)">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--kec-teal)" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        </div>
+        <div>
+          <h3>Retail &amp; Leisure</h3>
+          <p>Solar generation aligned with trading hours reduces peak grid demand and strengthens sustainability credentials.</p>
+        </div>
+      </a>
+      <a href="sectors.html#agriculture" class="sector-teaser">
+        <div class="sector-teaser-icon" style="background:rgba(13,122,79,0.10)">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--kec-green)" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <div>
+          <h3>Agriculture &amp; Rural</h3>
+          <p>Barn roofs, polytunnel carports, and ground-mounted arrays offer farmers diversified income and reduced energy costs.</p>
+        </div>
+      </a>
+      <a href="sectors.html#education" class="sector-teaser">
+        <div class="sector-teaser-icon" style="background:rgba(245,158,11,0.12)">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        </div>
+        <div>
+          <h3>Education</h3>
+          <p>Schools and universities benefit from reduced energy bills, curriculum engagement, and demonstrable sustainability leadership.</p>
+        </div>
+      </a>
+      <a href="sectors.html#healthcare" class="sector-teaser">
+        <div class="sector-teaser-icon" style="background:rgba(20,100,170,0.10)">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--kec-blue)" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <div>
+          <h3>Healthcare</h3>
+          <p>Predictable operating costs, resilience benefits, and NHS net zero targets make solar a natural fit for health facilities.</p>
+        </div>
+      </a>
+    </div>
+
+    <div style="text-align:center; margin-top:36px">
+      <a href="sectors.html" class="btn btn-outline">View All Sectors &amp; Case Data →</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA STRIP -->
+<section class="cta-strip">
+  <div class="cta-strip-inner">
+    <h2 class="cta-strip-title">Ready to see the numbers for your site?</h2>
+    <p class="cta-strip-lead">Our free calculator produces a detailed, downloadable financial model in under three minutes. No sign-up required.</p>
+    <div class="cta-strip-btns">
+      <a href="calculator.html" class="btn btn-gold btn-lg">Run the Calculator Free</a>
+      <a href="contact.html" class="btn btn-outline-white">Speak to an Expert</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          </div>
+          <div>
+            <div class="footer-logo-main">UK Solar Calculator</div>
+            <div class="footer-logo-sub">Kinetic Energy Consulting</div>
+          </div>
+        </div>
+        <p class="footer-desc">Industrial &amp; commercial solar energy solutions for UK businesses. Detailed financial modelling, project timeline planning, and expert consultation from enquiry to commissioning.</p>
+        <div class="footer-contact-item"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><a href="mailto:martynsheridan621@gmail.com">martynsheridan621@gmail.com</a></div>
+        <div class="footer-contact-item"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 012 2.18 2 2 0 014 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14z"/></svg><a href="tel:+447872015769">+44 (0) 7872 015769</a></div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Pages</div>
+        <ul><li><a href="index.html">Home</a></li><li><a href="about.html">About Solar</a></li><li><a href="sectors.html">Sectors</a></li><li><a href="calculator.html">Calculator</a></li><li><a href="contact.html">Contact</a></li></ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Solar Topics</div>
+        <ul><li><a href="about.html#how-it-works">How Solar Works</a></li><li><a href="about.html#installation-types">Installation Types</a></li><li><a href="about.html#battery-storage">Battery Storage</a></li><li><a href="about.html#funding">Funding Options</a></li></ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Sectors</div>
+        <ul><li><a href="sectors.html#manufacturing">Manufacturing</a></li><li><a href="sectors.html#logistics">Logistics</a></li><li><a href="sectors.html#retail">Retail</a></li><li><a href="sectors.html#agriculture">Agriculture</a></li><li><a href="sectors.html#education">Education</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">&copy; 2025 Kinetic Energy Consulting. All rights reserved.</div>
+      <div class="footer-disclaimer">All calculator outputs are indicative estimates. Not a formal quotation or guarantee of performance.</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('navToggle').addEventListener('click', () => {
+    document.getElementById('siteNav').classList.toggle('nav-mobile-open');
+  });
+</script>
+</body>
+</html>

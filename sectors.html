@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sectors — UK Solar Calculator | Kinetic Energy Consulting</title>
+  <meta name="description" content="Commercial and industrial solar applications across manufacturing, logistics, retail, agriculture, education, and healthcare sectors in the UK.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="css/shared.css">
+  <style>
+    /* ── SECTORS PAGE ── */
+
+    .sector-block {
+      padding: 72px 24px;
+      border-bottom: 1px solid var(--slate-100);
+    }
+    .sector-block:nth-child(even) { background: var(--slate-50); }
+    .sector-block:last-child { border-bottom: none; }
+
+    .sector-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 60px;
+      align-items: start;
+    }
+    .sector-inner.reverse { grid-template-columns: 340px 1fr; }
+    .sector-inner.reverse .sector-main { order: 2; }
+    .sector-inner.reverse .sector-aside { order: 1; }
+
+    .sector-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.7em;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .sector-kicker::before {
+      content: '';
+      display: inline-block;
+      width: 16px; height: 2px;
+      border-radius: 2px;
+      background: currentColor;
+    }
+
+    .sector-title {
+      font-size: clamp(1.5em, 3.5vw, 2em);
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .sector-body {
+      font-size: 0.93em;
+      color: var(--text-muted);
+      line-height: 1.75;
+      margin-bottom: 24px;
+    }
+    .sector-body p + p { margin-top: 12px; }
+
+    .sector-points {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .sector-point {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.88em;
+      color: var(--text);
+    }
+    .sector-point-icon {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--gold-dim);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .sector-point-icon svg { width: 11px; height: 11px; }
+
+    /* Aside stats card */
+    .sector-stats-card {
+      background: var(--navy);
+      border-radius: var(--radius-xl);
+      padding: 28px;
+      color: var(--white);
+    }
+    .sector-stats-title {
+      font-size: 0.7em;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--kec-teal-lt);
+      margin-bottom: 20px;
+    }
+    .sector-stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      gap: 12px;
+    }
+    .sector-stat-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .sector-stat-label-txt {
+      font-size: 0.8em;
+      color: rgba(255,255,255,0.55);
+    }
+    .sector-stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.92em;
+      color: var(--white);
+      font-weight: 500;
+      text-align: right;
+    }
+    .sector-stat-value .hi { color: var(--gold); }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .sector-inner,
+      .sector-inner.reverse { grid-template-columns: 1fr; }
+      .sector-inner.reverse .sector-main,
+      .sector-inner.reverse .sector-aside { order: unset; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="site-nav" id="siteNav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      </div>
+      <div class="nav-logo-text">
+        <span class="nav-logo-main">UK Solar Calculator</span>
+        <span class="nav-logo-sub">Kinetic Energy Consulting</span>
+      </div>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="about.html">About Solar</a></li>
+      <li><a href="sectors.html" class="active">Sectors</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="calculator.html" class="nav-cta">Calculator</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-hero-kicker">Industry Applications</div>
+    <h1 class="page-hero-title">Solar across <span>every sector</span></h1>
+    <p class="page-hero-lead">Wherever there is a large roof and daytime energy demand, commercial solar makes a compelling business case. Explore the opportunities and typical system data for your sector.</p>
+    <a href="calculator.html" class="btn btn-gold">Run the Calculator →</a>
+  </div>
+</section>
+
+<!-- MANUFACTURING -->
+<div class="sector-block" id="manufacturing">
+  <div class="sector-inner">
+    <div class="sector-main">
+      <div class="sector-kicker" style="color:var(--gold-dark)">Manufacturing</div>
+      <h2 class="sector-title">Industrial facilities &amp; production sites</h2>
+      <div class="sector-body">
+        <p>Manufacturing operations typically consume large amounts of electricity during daylight hours — precisely when solar panels generate most. This near-perfect alignment between generation and consumption maximises self-consumption rates and reduces reliance on grid imports.</p>
+        <p>Large, flat factory roofs and adjacent land are often underutilised. A single 10,000 m² roof can accommodate a 1–1.5 MWp system, generating sufficient electricity to offset a substantial portion of a mid-sized manufacturer's energy bill.</p>
+      </div>
+      <div class="sector-points">
+        <div class="sector-point"><div class="sector-point-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><span>Daytime production loads align closely with solar generation profiles</span></div>
+        <div class="sector-point"><div class="sector-point-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><span>Scope 2 emission reductions support ESOS and SECR compliance</span></div>
+        <div class="sector-point"><div class="sector-point-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><span>EV charging for fleet vehicles can be powered by on-site generation</span></div>
+        <div class="sector-point"><div class="sector-point-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><span>Battery storage can smooth grid import peaks and reduce demand charges</span></div>
+      </div>
+      <a href="calculator.html" class="btn btn-gold">Calculate for a Manufacturing Site</a>
+    </div>
+    <div class="sector-aside">
+      <div class="sector-stats-card">
+        <div class="sector-stats-title">Typical System Data</div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">System size range</span><span class="sector-stat-value"><span class="hi">200 kWp – 2 MWp</span></span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">Roof area required</span><span class="sector-stat-value">2,000 – 20,000 m²</span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">Self-consumption rate</span><span class="sector-stat-value"><span class="hi">65–85%</span></span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">Simple payback</span><span class="sector-stat-value">5–8 years</span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">25-yr NPV (500 kWp)</span><span class="sector-stat-value"><span class="hi">£700k – £1.2m</span></span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">Annual CO₂ saving (500 kWp)</span><span class="sector-stat-value">~190 t/yr</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LOGISTICS -->
+<div class="sector-block" id="logistics">
+  <div class="sector-inner reverse">
+    <div class="sector-main">
+      <div class="sector-kicker" style="color:var(--kec-blue)">Logistics &amp; Warehousing</div>
+      <h2 class="sector-title">Distribution centres &amp; storage facilities</h2>
+      <div class="sector-body">
+        <p>Warehouses and distribution centres represent some of the best solar opportunities in the UK. Their defining feature — vast, unobstructed, south-facing roof spans — is precisely what solar requires. A standard 20,000 m² logistics unit can accommodate a 1.5–2 MWp rooftop system.</p>
+        <p>The logistics sector faces growing pressure from major retailers and e-commerce companies to demonstrate supply chain sustainability credentials. On-site solar generation, verifiable through smart metering and REGO certificates, is a direct and credible response.</p>
+      </div>
+      <div class="sector-points">
+        <div class="sector-point"><div class="sector-point-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><span>Largest roof areas of any commercial building type</span></div>
+        <div class="sector-point"><div class="sector-point-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><span>Minimal operational disruption during installation</span></div>
+        <div class="sector-point"><div class="sector-point-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><span>EV charging canopies for HGV and van fleets increasingly viable</span></div>
+        <div class="sector-point"><div class="sector-point-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><span>Export to grid or PPA structures available where self-consumption is lower</span></div>
+      </div>
+      <a href="calculator.html" class="btn btn-navy">Calculate for a Warehouse</a>
+    </div>
+    <div class="sector-aside">
+      <div class="sector-stats-card">
+        <div class="sector-stats-title">Typical System Data</div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">System size range</span><span class="sector-stat-value"><span class="hi">500 kWp – 5 MWp</span></span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">Roof area required</span><span class="sector-stat-value">5,000 – 50,000 m²</span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">Self-consumption rate</span><span class="sector-stat-value"><span class="hi">40–70%</span></span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">Simple payback</span><span class="sector-stat-value">6–10 years</span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">25-yr NPV (1 MWp)</span><span class="sector-stat-value"><span class="hi">£1.5m – £2.5m</span></span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">Annual CO₂ saving (1 MWp)</span><span class="sector-stat-value">~380 t/yr</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RETAIL -->
+<div class="sector-block" id="retail">
+  <div class="sector-inner">
+    <div class="sector-main">
+      <div class="sector-kicker" style="color:var(--kec-teal)">Retail &amp; Leisure</div>
+      <h2 class="sector-title">Retail parks, supermarkets &amp; leisure facilities</h2>
+      <div class="sector-body">
+        <p>Retail and leisure sites benefit from a natural overlap between solar generation hours and peak trading periods. This improves self-consumption rates and reduces peak grid demand charges — both directly impacting operating cost.</p>
+        <p>Consumer-facing brands also benefit from the reputational dimension. Visible solar installations and published renewable energy statistics support ESG reporting and customer engagement, particularly relevant as the UK moves toward mandatory sustainability disclosures.</p>
+      </div>
+      <div class="sector-points">
+        <div class="sector-point"><div class="sector-point-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><span>Peak generation aligns with daytime trading and footfall</span></div>
+        <div class="sector-point"><div class="sector-point-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><span>Solar carports provide EV charging and weather protection</span></div>
+        <div class="sector-point"><div class="sector-point-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><span>Supports ESG reporting and sustainability disclosures</span></div>
+        <div class="sector-point"><div class="sector-point-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><span>Suitable for PPA structures removing capital requirement</span></div>
+      </div>
+      <a href="calculator.html" class="btn btn-teal">Calculate for a Retail Site</a>
+    </div>
+    <div class="sector-aside">
+      <div class="sector-stats-card">
+        <div class="sector-stats-title">Typical System Data</div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">System size range</span><span class="sector-stat-value"><span class="hi">100 kWp – 1 MWp</span></span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">Roof area required</span><span class="sector-stat-value">1,000 – 10,000 m²</span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">Self-consumption rate</span><span class="sector-stat-value"><span class="hi">60–80%</span></span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">Simple payback</span><span class="sector-stat-value">6–9 years</span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">25-yr NPV (250 kWp)</span><span class="sector-stat-value"><span class="hi">£350k – £600k</span></span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">Annual CO₂ saving (250 kWp)</span><span class="sector-stat-value">~95 t/yr</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AGRICULTURE -->
+<div class="sector-block" id="agriculture">
+  <div class="sector-inner reverse">
+    <div class="sector-main">
+      <div class="sector-kicker" style="color:var(--kec-green)">Agriculture &amp; Rural</div>
+      <h2 class="sector-title">Farms, rural businesses &amp; estate properties</h2>
+      <div class="sector-body">
+        <p>Agricultural businesses have embraced solar more readily than many other sectors, driven by large roof areas on barns and outbuildings, high energy costs (particularly where grid connection is limited), and an affinity with land-based energy production.</p>
+        <p>Beyond rooftop systems, agrivoltaics — dual-use land for both solar generation and farming — is an emerging area offering farmers a diversified income stream. Ground-mounted arrays on lower-grade agricultural land can generate significant electricity while maintaining grazing or other low-intensity uses.</p>
+      </div>
+      <div class="sector-points">
+        <div class="sector-point"><div class="sector-point-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><span>Large barn roofs and outbuildings ideal for rooftop solar</span></div>
+        <div class="sector-point"><div class="sector-point-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><span>Ground-mounted arrays on lower-grade agricultural land</span></div>
+        <div class="sector-point"><div class="sector-point-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><span>Diversified income through grid export (SEG tariff)</span></div>
+        <div class="sector-point"><div class="sector-point-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><span>Battery storage to power irrigation, refrigeration, and processing overnight</span></div>
+      </div>
+      <a href="calculator.html" class="btn btn-gold">Calculate for an Agricultural Site</a>
+    </div>
+    <div class="sector-aside">
+      <div class="sector-stats-card">
+        <div class="sector-stats-title">Typical System Data</div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">System size range</span><span class="sector-stat-value"><span class="hi">50 kWp – 5 MWp</span></span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">Roof area (barn rooftop)</span><span class="sector-stat-value">500 – 5,000 m²</span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">Self-consumption rate</span><span class="sector-stat-value"><span class="hi">30–65%</span></span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">Simple payback</span><span class="sector-stat-value">7–12 years</span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">25-yr NPV (100 kWp)</span><span class="sector-stat-value"><span class="hi">£80k – £180k</span></span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">Annual CO₂ saving (100 kWp)</span><span class="sector-stat-value">~38 t/yr</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EDUCATION -->
+<div class="sector-block" id="education">
+  <div class="sector-inner">
+    <div class="sector-main">
+      <div class="sector-kicker" style="color:var(--gold-dark)">Education</div>
+      <h2 class="sector-title">Schools, colleges &amp; universities</h2>
+      <div class="sector-body">
+        <p>Educational institutions face a dual imperative: reducing operating costs in an era of constrained budgets, and demonstrating genuine sustainability leadership to students, parents, and the community. Solar delivers on both fronts.</p>
+        <p>Schools benefit particularly from the alignment between solar generation and school hours, while universities with large campus footprints can deploy significant capacity. The payback on a well-designed school or college system is typically within 6–8 years, with systems operating for 25+ years.</p>
+      </div>
+      <div class="sector-points">
+        <div class="sector-point"><div class="sector-point-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><span>Generation hours align closely with school and college operating hours</span></div>
+        <div class="sector-point"><div class="sector-point-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><span>Real-time monitoring data usable as a live STEM teaching resource</span></div>
+        <div class="sector-point"><div class="sector-point-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><span>Supports DfE sustainability reporting and net zero planning</span></div>
+        <div class="sector-point"><div class="sector-point-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><span>Public sector financing options including Salix Finance available</span></div>
+      </div>
+      <a href="calculator.html" class="btn btn-navy">Calculate for an Education Site</a>
+    </div>
+    <div class="sector-aside">
+      <div class="sector-stats-card">
+        <div class="sector-stats-title">Typical System Data</div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">System size range</span><span class="sector-stat-value"><span class="hi">30 kWp – 500 kWp</span></span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">Roof area required</span><span class="sector-stat-value">300 – 5,000 m²</span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">Self-consumption rate</span><span class="sector-stat-value"><span class="hi">70–90%</span></span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">Simple payback</span><span class="sector-stat-value">6–9 years</span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">25-yr NPV (100 kWp)</span><span class="sector-stat-value"><span class="hi">£120k – £200k</span></span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">Annual CO₂ saving (100 kWp)</span><span class="sector-stat-value">~38 t/yr</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HEALTHCARE -->
+<div class="sector-block" id="healthcare">
+  <div class="sector-inner reverse">
+    <div class="sector-main">
+      <div class="sector-kicker" style="color:var(--kec-blue)">Healthcare</div>
+      <h2 class="sector-title">NHS trusts, GP surgeries &amp; private healthcare</h2>
+      <div class="sector-body">
+        <p>Healthcare facilities operate 24/7 but still consume significant energy during solar generation hours. The combination of daytime energy demand, large flat roofs on hospital buildings, and the NHS net zero target (2040 for direct emissions, 2045 for supply chain) makes solar a strategic priority for the sector.</p>
+        <p>Beyond cost reduction, solar with battery storage can provide a degree of resilience to grid outages — an increasingly valuable benefit for critical healthcare infrastructure as the grid transitions to higher proportions of intermittent renewables.</p>
+      </div>
+      <div class="sector-points">
+        <div class="sector-point"><div class="sector-point-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><span>Aligned with NHS net zero by 2040 target for direct emissions</span></div>
+        <div class="sector-point"><div class="sector-point-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><span>Battery storage provides resilience and peak demand management</span></div>
+        <div class="sector-point"><div class="sector-point-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><span>Large hospital roofs accommodate significant system sizes</span></div>
+        <div class="sector-point"><div class="sector-point-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="var(--gold-dark)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></div><span>Public sector procurement routes and PSDS funding applicable</span></div>
+      </div>
+      <a href="calculator.html" class="btn btn-gold">Calculate for a Healthcare Site</a>
+    </div>
+    <div class="sector-aside">
+      <div class="sector-stats-card">
+        <div class="sector-stats-title">Typical System Data</div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">System size range</span><span class="sector-stat-value"><span class="hi">50 kWp – 2 MWp</span></span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">Roof area required</span><span class="sector-stat-value">500 – 20,000 m²</span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">Self-consumption rate</span><span class="sector-stat-value"><span class="hi">55–80%</span></span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">Simple payback</span><span class="sector-stat-value">6–10 years</span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">25-yr NPV (300 kWp)</span><span class="sector-stat-value"><span class="hi">£380k – £650k</span></span></div>
+        <div class="sector-stat-row"><span class="sector-stat-label-txt">Annual CO₂ saving (300 kWp)</span><span class="sector-stat-value">~115 t/yr</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA STRIP -->
+<section class="cta-strip" style="margin-top:0">
+  <div class="cta-strip-inner">
+    <h2 class="cta-strip-title">Get the numbers for your site</h2>
+    <p class="cta-strip-lead">Our free calculator produces a detailed financial model in under three minutes. Enter your roof size, region, and energy costs — download a PDF report.</p>
+    <div class="cta-strip-btns">
+      <a href="calculator.html" class="btn btn-gold btn-lg">Run the Calculator Free</a>
+      <a href="contact.html" class="btn btn-outline-white">Speak to an Expert</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer" style="margin-top:0">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+          </div>
+          <div>
+            <div class="footer-logo-main">UK Solar Calculator</div>
+            <div class="footer-logo-sub">Kinetic Energy Consulting</div>
+          </div>
+        </div>
+        <p class="footer-desc">Industrial &amp; commercial solar energy solutions for UK businesses. Detailed financial modelling, project timeline planning, and expert consultation from enquiry to commissioning.</p>
+        <div class="footer-contact-item"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><a href="mailto:martynsheridan621@gmail.com">martynsheridan621@gmail.com</a></div>
+        <div class="footer-contact-item"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 012 2.18 2 2 0 014 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14z"/></svg><a href="tel:+447872015769">+44 (0) 7872 015769</a></div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Pages</div>
+        <ul><li><a href="index.html">Home</a></li><li><a href="about.html">About Solar</a></li><li><a href="sectors.html">Sectors</a></li><li><a href="calculator.html">Calculator</a></li><li><a href="contact.html">Contact</a></li></ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Solar Topics</div>
+        <ul><li><a href="about.html#how-it-works">How Solar Works</a></li><li><a href="about.html#installation-types">Installation Types</a></li><li><a href="about.html#battery-storage">Battery Storage</a></li><li><a href="about.html#funding">Funding Options</a></li></ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Sectors</div>
+        <ul><li><a href="sectors.html#manufacturing">Manufacturing</a></li><li><a href="sectors.html#logistics">Logistics</a></li><li><a href="sectors.html#retail">Retail</a></li><li><a href="sectors.html#agriculture">Agriculture</a></li><li><a href="sectors.html#education">Education</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">&copy; 2025 Kinetic Energy Consulting. All rights reserved.</div>
+      <div class="footer-disclaimer">All calculator outputs are indicative estimates. Not a formal quotation or guarantee of performance.</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('navToggle').addEventListener('click', () => {
+    document.getElementById('siteNav').classList.toggle('nav-mobile-open');
+  });
+</script>
+</body>
+</html>
