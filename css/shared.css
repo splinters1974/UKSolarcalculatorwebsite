@@ -80,6 +80,8 @@ ul { list-style: none; }
   top: 0;
   left: 0;
   right: 0;
+  height: 68px;
+  overflow: hidden;
   z-index: 1000;
   background: var(--navy);
   border-bottom: 1px solid rgba(255,255,255,0.08);
@@ -118,7 +120,7 @@ ul { list-style: none; }
 }
 
 .nav-logo-icon svg { width: 20px; height: 20px; }
-.nav-logo-img { height: 38px; width: auto; display: block; }
+.nav-logo-img { height: 32px; width: auto; display: block; }
 
 .nav-logo-text { display: flex; flex-direction: column; }
 
@@ -522,7 +524,7 @@ ul { list-style: none; }
 /* ── HERO COMMON ───────────────────────────────────────────── */
 .page-hero {
   background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 50%, var(--navy-light) 100%);
-  padding: 80px 24px 90px;
+  padding: 100px 24px 90px;
   position: relative;
   overflow: hidden;
 }
