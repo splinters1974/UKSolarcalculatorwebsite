@@ -118,7 +118,7 @@ ul { list-style: none; }
 }
 
 .nav-logo-icon svg { width: 20px; height: 20px; }
-.nav-logo-img { height: 32px; max-height: 32px; width: auto; display: block; }
+.nav-logo-img { height: 32px; width: 160px; max-width: 160px; display: block; flex-shrink: 0; }
 
 .nav-logo-text { display: flex; flex-direction: column; }
 
@@ -206,10 +206,11 @@ ul { list-style: none; }
 .nav-mobile-open .nav-links {
   display: flex;
   flex-direction: column;
-  position: absolute;
+  position: fixed;
   top: 68px;
   left: 0;
   right: 0;
+  z-index: 999;
   background: var(--navy-mid);
   padding: 16px 24px 24px;
   gap: 4px;
