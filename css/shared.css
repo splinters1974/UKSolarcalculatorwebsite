@@ -90,7 +90,7 @@ ul { list-style: none; }
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
-  height: 68px;
+  height: 88px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -118,7 +118,7 @@ ul { list-style: none; }
 }
 
 .nav-logo-icon svg { width: 20px; height: 20px; }
-.nav-logo-img { height: 32px; width: 160px; max-width: 160px; display: block; flex-shrink: 0; }
+.nav-logo-img { height: 64px; width: 320px; max-width: 320px; display: block; flex-shrink: 0; }
 
 .nav-logo-text { display: flex; flex-direction: column; }
 
@@ -207,7 +207,7 @@ ul { list-style: none; }
   display: flex;
   flex-direction: column;
   position: fixed;
-  top: 68px;
+  top: 88px;
   left: 0;
   right: 0;
   z-index: 999;
@@ -224,7 +224,7 @@ ul { list-style: none; }
 }
 
 /* Page offset for fixed nav */
-.page-body { padding-top: 68px; }
+.page-body { padding-top: 88px; }
 
 /* ── SITE FOOTER ───────────────────────────────────────────── */
 .site-footer {
@@ -266,7 +266,7 @@ ul { list-style: none; }
 }
 
 .footer-logo-icon svg { width: 16px; height: 16px; }
-.footer-logo-img { height: 34px; width: auto; display: block; }
+.footer-logo-img { height: 68px; width: auto; display: block; }
 
 .footer-logo-main {
   font-size: 0.9em;
@@ -523,7 +523,7 @@ ul { list-style: none; }
 /* ── HERO COMMON ───────────────────────────────────────────── */
 .page-hero {
   background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 50%, var(--navy-light) 100%);
-  padding: 100px 24px 90px;
+  padding: 120px 24px 90px;
   position: relative;
   overflow: hidden;
 }
