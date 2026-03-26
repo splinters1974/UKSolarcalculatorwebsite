@@ -681,7 +681,11 @@ ul { list-style: none; }
   }
   .nav-toggle {
     display: flex;
+    flex-shrink: 0;
   }
+  .nav-inner { gap: 8px; }
+  .nav-logo { flex-shrink: 1; min-width: 0; }
+  .nav-logo-img { width: auto; max-width: 55vw; height: 44px; }
   .footer-grid { grid-template-columns: 1fr; gap: 28px; }
   .footer-disclaimer { text-align: left; }
   .footer-bottom { flex-direction: column; align-items: flex-start; }
