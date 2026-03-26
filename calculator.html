@@ -2704,6 +2704,7 @@
       clearTimeout(safetyTimer);
 
       // Lead notification — fire and forget, never blocks UI
+      try {
       const r = calculationData.results;
       const inp = calculationData.inputs;
       const fundingLabel = currentMode === 'ppa' ? 'PPA (Power Purchase Agreement)' : 'Self-Funded';
@@ -2750,6 +2751,7 @@
         region:      region,
         message:     leadMsg,
       }).catch(e => console.warn('Lead notification non-critical error:', e));
+      } catch(leadErr) { console.warn('Lead data error (non-critical):', leadErr); }
 
       // Download PDF
       downloadPDF();
@@ -2757,8 +2759,14 @@
       // Update UI
       txt.textContent = 'Sent!';
       showModalMsg('Done! PDF downloading now. Martyn will be in touch shortly.', 'success');
-      // Auto-close after 1.5s — closeEmailModal() with no args always closes
-      setTimeout(() => closeEmailModal(), 1500);
+      // Auto-close after 2s — direct DOM manipulation to avoid any event-guard issues
+      setTimeout(() => {
+        const m = document.getElementById('emailModal');
+        if (m) m.style.display = 'none';
+        document.getElementById('modalMsg').style.display = 'none';
+        document.getElementById('sendBtnText').textContent = 'Send Report';
+        btn.disabled = false;
+      }, 2000);
 
     } catch (err) {
       clearTimeout(safetyTimer);
