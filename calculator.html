@@ -2704,13 +2704,51 @@
       clearTimeout(safetyTimer);
 
       // Lead notification — fire and forget, never blocks UI
+      const r = calculationData.results;
+      const inp = calculationData.inputs;
+      const fundingLabel = currentMode === 'ppa' ? 'PPA (Power Purchase Agreement)' : 'Self-Funded';
+      const batteryLabel = inp.batteryOn
+        ? 'Yes — ' + r.batteryKwh.toFixed(0) + ' kWh (cost: £' + r.batteryCost.toLocaleString('en-GB') + ', 10yr saving: £' + r.batteryTotalSaving.toLocaleString('en-GB') + ')'
+        : 'No';
+      const roofLabel = {
+        pitched: 'Pitched Roof', flat: 'Flat Roof',
+        ground: 'Ground-Mounted', carport: 'Solar Carport'
+      }[inp.roofType] || inp.roofType;
+      const leadMsg = [
+        '🔔 NEW LEAD — I&C Solar Calculator',
+        '',
+        '📧 Contact email: ' + email,
+        '📅 Date: ' + reportDate,
+        '',
+        '━━ SYSTEM DETAILS ━━',
+        '🏗  Installation type: ' + roofLabel,
+        '📐 Roof area: ' + r.roofArea.toLocaleString('en-GB') + ' m²',
+        '🔢 Number of panels: ' + r.maxPanels.toLocaleString('en-GB'),
+        '⚡ System size: ' + parseFloat(systemSize).toFixed(2) + ' kWp',
+        '📍 Region: ' + region,
+        '',
+        '━━ FINANCIAL ━━',
+        '💰 Funding model: ' + fundingLabel,
+        '💷 Estimated install cost: £' + r.totalCost.toLocaleString('en-GB'),
+        '📈 Year 1 savings: £' + r.yearlySavings[0].toLocaleString('en-GB'),
+        '💵 30-yr total savings: £' + r.totalSavings.toLocaleString('en-GB'),
+        '🔄 Payback period: ' + r.paybackYear.toFixed(1) + ' years',
+        '📊 30-yr ROI: ' + r.roi.toFixed(1) + '%',
+        '',
+        '━━ BATTERY ━━',
+        '🔋 Battery storage: ' + batteryLabel,
+        '',
+        '━━ CARBON ━━',
+        '🌱 Annual CO₂ saving: ' + r.carbonOffset.toFixed(1) + ' tonnes/yr',
+      ].join('\n');
+
       emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
         to_email:    'martynsheridan621@gmail.com',
         to_name:     'Martyn',
         report_date: reportDate,
         system_size: systemSize,
         region:      region,
-        message:     'New lead!\n\nEmail: ' + email + '\nSystem: ' + systemSize + ' kWp\nRegion: ' + region + '\nDate: ' + reportDate,
+        message:     leadMsg,
       }).catch(e => console.warn('Lead notification non-critical error:', e));
 
       // Download PDF
