@@ -2704,44 +2704,35 @@
       clearTimeout(safetyTimer);
 
       // Lead notification — fire and forget, never blocks UI
-      try {
-      const r = calculationData.results;
-      const inp = calculationData.inputs;
-      const fundingLabel = currentMode === 'ppa' ? 'PPA (Power Purchase Agreement)' : 'Self-Funded';
-      const batteryLabel = inp.batteryOn
-        ? 'Yes — ' + r.batteryKwh.toFixed(0) + ' kWh (cost: £' + r.batteryCost.toLocaleString('en-GB') + ', 10yr saving: £' + r.batteryTotalSaving.toLocaleString('en-GB') + ')'
+      const _r   = calculationData ? calculationData.results : {};
+      const _inp = calculationData ? calculationData.inputs  : {};
+      const _funding = (typeof currentMode !== 'undefined' && currentMode === 'ppa') ? 'PPA (Power Purchase Agreement)' : 'Self-Funded';
+      const _battery = _inp.batteryOn
+        ? 'Yes — ' + (+(_r.batteryKwh||0)).toFixed(0) + ' kWh | Cost: £' + Math.round(_r.batteryCost||0).toLocaleString('en-GB') + ' | 10yr saving: £' + Math.round(_r.batteryTotalSaving||0).toLocaleString('en-GB')
         : 'No';
-      const roofLabel = {
-        pitched: 'Pitched Roof', flat: 'Flat Roof',
-        ground: 'Ground-Mounted', carport: 'Solar Carport'
-      }[inp.roofType] || inp.roofType;
-      const leadMsg = [
-        '🔔 NEW LEAD — I&C Solar Calculator',
-        '',
-        '📧 Contact email: ' + email,
-        '📅 Date: ' + reportDate,
-        '',
-        '━━ SYSTEM DETAILS ━━',
-        '🏗  Installation type: ' + roofLabel,
-        '📐 Roof area: ' + r.roofArea.toLocaleString('en-GB') + ' m²',
-        '🔢 Number of panels: ' + r.maxPanels.toLocaleString('en-GB'),
-        '⚡ System size: ' + parseFloat(systemSize).toFixed(2) + ' kWp',
-        '📍 Region: ' + region,
-        '',
-        '━━ FINANCIAL ━━',
-        '💰 Funding model: ' + fundingLabel,
-        '💷 Estimated install cost: £' + r.totalCost.toLocaleString('en-GB'),
-        '📈 Year 1 savings: £' + r.yearlySavings[0].toLocaleString('en-GB'),
-        '💵 30-yr total savings: £' + r.totalSavings.toLocaleString('en-GB'),
-        '🔄 Payback period: ' + r.paybackYear.toFixed(1) + ' years',
-        '📊 30-yr ROI: ' + r.roi.toFixed(1) + '%',
-        '',
-        '━━ BATTERY ━━',
-        '🔋 Battery storage: ' + batteryLabel,
-        '',
-        '━━ CARBON ━━',
-        '🌱 Annual CO₂ saving: ' + r.carbonOffset.toFixed(1) + ' tonnes/yr',
-      ].join('\n');
+      const _roofMap = { pitched:'Pitched Roof', flat:'Flat Roof', ground:'Ground-Mounted', carport:'Solar Carport' };
+      const _roofLabel = _roofMap[_inp.roofType] || (_inp.roofType || 'Unknown');
+      const _yr1sav = Array.isArray(_r.yearlySavings) && _r.yearlySavings.length > 0 ? Math.round(_r.yearlySavings[0]) : 0;
+      const leadMsg = 'NEW LEAD\n\n'
+        + 'Email: ' + email + '\n'
+        + 'Date: ' + reportDate + '\n\n'
+        + 'SYSTEM\n'
+        + 'Type: ' + _roofLabel + '\n'
+        + 'Roof area: ' + Math.round(_r.roofArea||0) + ' m2\n'
+        + 'Panels: ' + Math.round(_r.maxPanels||0) + '\n'
+        + 'System size: ' + parseFloat(systemSize).toFixed(2) + ' kWp\n'
+        + 'Region: ' + region + '\n\n'
+        + 'FINANCIAL\n'
+        + 'Funding: ' + _funding + '\n'
+        + 'Install cost: GBP ' + Math.round(_r.totalCost||0).toLocaleString('en-GB') + '\n'
+        + 'Year 1 savings: GBP ' + _yr1sav.toLocaleString('en-GB') + '\n'
+        + '30yr savings: GBP ' + Math.round(_r.totalSavings||0).toLocaleString('en-GB') + '\n'
+        + 'Payback: ' + (+(_r.paybackYear||0)).toFixed(1) + ' years\n'
+        + 'ROI: ' + (+(_r.roi||0)).toFixed(1) + '%\n\n'
+        + 'BATTERY\n'
+        + _battery + '\n\n'
+        + 'CARBON\n'
+        + 'Annual CO2 saving: ' + (+(_r.carbonOffset||0)).toFixed(1) + ' t/yr';
 
       emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
         to_email:    'martynsheridan621@gmail.com',
@@ -2751,7 +2742,6 @@
         region:      region,
         message:     leadMsg,
       }).catch(e => console.warn('Lead notification non-critical error:', e));
-      } catch(leadErr) { console.warn('Lead data error (non-critical):', leadErr); }
 
       // Download PDF
       downloadPDF();
