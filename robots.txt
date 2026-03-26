@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.uksolarcalculator.co.uk/sitemap.xml
