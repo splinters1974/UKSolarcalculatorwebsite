@@ -3433,6 +3433,7 @@
       }
     };
 
+    return new Promise(resolve => {
     currentChart = new Chart(canvasCtx, {
       type: 'line',
       plugins: [annotationPlugin],
@@ -3440,7 +3441,7 @@
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        animation: { duration: 0 },
+        animation: { duration: 0, onComplete: resolve },
         interaction: { intersect: false, mode: 'index' },
         plugins: {
           legend: { display: false },
@@ -3475,6 +3476,7 @@
         }
       }
     });
+    }); // end new Promise
   }
 
   // ── PROJECT TIMELINE ────────────────────────────────────────────────────────
@@ -3636,8 +3638,8 @@
       livePpaData = computePPA(_baseRate + _bSurch, contractYears);
     }
 
-    // Page 1: Self-Funded
-    const doc = await buildSelfFundedPDFDoc();
+    // Page 1: Self-Funded (pass livePpaData so page 1 can show the comparison chart)
+    const doc = await buildSelfFundedPDFDoc(livePpaData);
 
     // Page 2: PPA — add a new page and draw PPA content directly into the same doc
     doc.addPage();
@@ -3953,7 +3955,7 @@
     doc.setLineWidth(0.2);
   }
 
-  async function buildSelfFundedPDFDoc() {
+  async function buildSelfFundedPDFDoc(ppa) {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ unit: 'mm', format: 'a4' });
     const r   = calculationData.results;
@@ -4089,12 +4091,16 @@
     chartY += 5;
 
     T('bold', 9, BLUE);
-    doc.text('Break-Even Analysis: Cumulative Savings vs Initial Investment', PW / 2, chartY, { align: 'center' });
+    doc.text('30-Year Cumulative Savings: Self-Funded vs PPA', PW / 2, chartY, { align: 'center' });
     chartY += 4;
 
-    // Ensure SF chart is shown before capture — wait for Chart.js to finish rendering
-    buildChart('selffunded', r.totalCost, r.yearlySavings, r.paybackYear || 30, null, null);
-    await new Promise(resolve => setTimeout(resolve, 250));
+    // Build comparison chart — await onComplete so canvas is fully painted before capture
+    const _ppa = ppa || ppaData;
+    if (_ppa) {
+      await buildChart('ppa', r.totalCost, r.yearlySavings, r.paybackYear || 30, _ppa.yearlySavings, _ppa.contractYears);
+    } else {
+      await buildChart('selffunded', r.totalCost, r.yearlySavings, r.paybackYear || 30, null, null);
+    }
     const chartImg = document.getElementById('savingsChart').toDataURL('image/png');
     const chartH   = 58;
     doc.addImage(chartImg, 'PNG', ML, chartY, CW, chartH);
@@ -4268,15 +4274,12 @@
     doc.setDrawColor(...LGREY); doc.setLineWidth(0.4); doc.line(ML, chartY, PW - MR, chartY);
     chartY += 5;
     T('bold', 9, BLUE);
-    doc.text('30-Year Cumulative Savings: Self-Funded vs PPA', PW / 2, chartY, { align: 'center' });
+    doc.text('Break-Even Analysis: Cumulative Savings vs Initial Investment', PW / 2, chartY, { align: 'center' });
     chartY += 4;
-    // Build PPA-mode chart and capture it — wait for Chart.js to finish rendering
+    // Build SF break-even chart and capture — await onComplete so canvas is fully painted
     const r2 = calculationData.results;
-    buildChart('ppa', r2.totalCost, r2.yearlySavings, r2.paybackYear || 30, ppa.yearlySavings, ppa.contractYears);
-    await new Promise(resolve => setTimeout(resolve, 250));
+    await buildChart('selffunded', r2.totalCost, r2.yearlySavings, r2.paybackYear || 30, null, null);
     const chartImg = document.getElementById('savingsChart').toDataURL('image/png');
-    // Restore SF chart for on-screen display
-    buildChart('selffunded', r2.totalCost, r2.yearlySavings, r2.paybackYear || 30, null, null);
     doc.addImage(chartImg, 'PNG', ML, chartY, CW, 58);
     chartY += 63;
 
