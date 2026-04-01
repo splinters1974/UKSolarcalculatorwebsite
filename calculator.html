@@ -3692,25 +3692,13 @@
     doc.setFillColor(245, 247, 250);
     doc.rect(0, 2.5, PW, 26, 'F');
 
-    // Header text
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(13);
-    doc.setTextColor(20, 20, 20);
-    doc.text('PROJECT TIMELINE', ML, 14);
+    // Header — nav logo + subtitle
+    drawLogoInPDF(doc, ML, 4, 65);
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(7.5);
     doc.setTextColor(...MGREY);
-    doc.text('Kinetic Energy Consulting  —  Self-Funded & PPA Comparison', ML, 20);
-    doc.text('Generated: ' + calculationData.date, ML, 25.5);
-
-    // Logo — sits within the header band (below stripe), right-aligned, does NOT overlap stripe
-    try {
-      const logoImg = document.querySelector('.logo-area img');
-      if (logoImg && logoImg.src) {
-        // y=3 places top of logo just below the 2.5mm stripe, well clear of border
-        doc.addImage(logoImg.src, 'PNG', PW - MR - 22, 3, 19, 19);
-      }
-    } catch(e) {}
+    doc.text('Project Timeline  —  Self-Funded & PPA Comparison', ML, 21);
+    doc.text('Generated: ' + calculationData.date, PW - MR, 21, { align: 'right' });
 
     // Header separator
     doc.setDrawColor(...LGREY);
@@ -3915,13 +3903,54 @@
     );
   }
 
-  // Cache the nav logo as a PNG data URL for use in PDF headers
-  // Get logo PNG directly from the already-loaded DOM element — no canvas, no taint risk
-  function getLogoForPDF() {
-    try {
-      const el = document.querySelector('.logo-area img');
-      return (el && el.src) ? el.src : null;
-    } catch(e) { return null; }
+  // Draw the nav logo as jsPDF vector commands — no canvas, no taint issues
+  // ox,oy = top-left in mm; logoW = width in mm (SVG viewBox is 540x108)
+  function drawLogoInPDF(doc, ox, oy, logoW) {
+    const s = logoW / 540;
+    const GOLD  = [201, 162,  39];
+    const NAVY  = [ 30,  58, 110];
+    const GLDLT = [218, 193, 110]; // gold at ~0.75 opacity on white
+
+    // Navy solar panel triangle (behind bolt)
+    doc.setFillColor(...NAVY);
+    doc.triangle(ox+8*s, oy+98*s, ox+52*s, oy+46*s, ox+96*s, oy+98*s, 'F');
+
+    // Gold lightning bolt polygon: 58,4 → 80,48 → 60,48 → 37,98 → 16,52 → 37,52
+    const boltPts = [[58,4],[80,48],[60,48],[37,98],[16,52],[37,52]];
+    const boltRel = [];
+    for (let i = 1; i < boltPts.length; i++) {
+      boltRel.push([boltPts[i][0]-boltPts[i-1][0], boltPts[i][1]-boltPts[i-1][1]]);
+    }
+    doc.setFillColor(...GOLD);
+    doc.lines(boltRel, ox+58*s, oy+4*s, [s, s], 'F', true);
+
+    // Gold grid lines (opacity 0.75 → lightened shade)
+    doc.setDrawColor(...GLDLT);
+    doc.setLineWidth(1.5*s);
+    doc.line(ox+32*s, oy+70*s, ox+72*s, oy+70*s);
+    doc.line(ox+20*s, oy+84*s, ox+84*s, oy+84*s);
+    doc.line(ox+35*s, oy+66*s, ox+35*s, oy+98*s);
+    doc.line(ox+52*s, oy+46*s, ox+52*s, oy+98*s);
+    doc.line(ox+69*s, oy+66*s, ox+69*s, oy+98*s);
+
+    // Gold base line (stroke-width 2.5)
+    doc.setDrawColor(...GOLD);
+    doc.setLineWidth(2.5*s);
+    doc.line(ox+8*s, oy+104*s, ox+96*s, oy+104*s);
+
+    // "INDUSTRIAL & COMMERCIAL" — navy (SVG white won't show on white PDF)
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(19 * s * (72/25.4));
+    doc.setTextColor(...NAVY);
+    doc.text('INDUSTRIAL & COMMERCIAL', ox+118*s, oy+42*s);
+
+    // "SOLAR CALCULATOR" — gold
+    doc.setFontSize(33 * s * (72/25.4));
+    doc.setTextColor(...GOLD);
+    doc.text('SOLAR CALCULATOR', ox+118*s, oy+83*s);
+
+    // Restore defaults
+    doc.setLineWidth(0.2);
   }
 
   async function buildSelfFundedPDFDoc() {
@@ -3985,19 +4014,10 @@
       return y + ROW_H;
     }
 
-    // ── HEADER (white bg, black text, amber top stripe) ──────────────
-    const logoSrc = getLogoForPDF();
-
+    // ── HEADER (white bg, amber top stripe, vector logo) ─────────────
     doc.setFillColor(...AMBER);
     doc.rect(0, 0, PW, 2.5, 'F');
-
-    // Logo on left replacing title text
-    if (logoSrc) {
-      doc.addImage(logoSrc, 'PNG', ML, 4, 18, 18);
-    } else {
-      T('bold', 17, BLACK);
-      doc.text('Solar Calculator', ML, 13);
-    }
+    drawLogoInPDF(doc, ML, 4, 65);
 
     T('normal', 9, SLATE);
     doc.text('Self-Funded Analysis  —  Indicative Proposal', ML, 21);
@@ -4203,14 +4223,9 @@
       return y + ROW_H;
     }
 
-    // PAGE HEADER — sky blue stripe + logo
-    const logoSrc2 = getLogoForPDF();
+    // PAGE HEADER — sky blue stripe + vector logo
     doc.setFillColor(...SKY); doc.rect(0, 0, PW, 2.5, 'F');
-    if (logoSrc2) {
-      doc.addImage(logoSrc2, 'PNG', ML, 4, 18, 18);
-    } else {
-      T('bold', 17, BLACK); doc.text('Solar Calculator — PPA Analysis', ML, 13);
-    }
+    drawLogoInPDF(doc, ML, 4, 65);
     T('normal', 9, SLATE); doc.text('Power Purchase Agreement  —  Indicative Proposal', ML, 21);
     T('normal', 8, MGREY); doc.text('Generated: ' + calculationData.date, PW - MR, 21, { align: 'right' });
     doc.setDrawColor(...LGREY); doc.setLineWidth(0.4); doc.line(ML, 24, PW - MR, 24);
@@ -4401,16 +4416,10 @@
       // Light header band
       doc.setFillColor(245, 247, 250);
       doc.rect(0, 2.5, PW, 25, 'F');
-      // Title
-      T('bold', 14, BLACK);
-      doc.text('Solar Energy — Supporting Notes & User Guide', ML, 14);
+      // Nav logo (vector)
+      drawLogoInPDF(doc, ML, 4, 65);
       T('normal', 8, MGREY);
-      doc.text('Kinetic Energy Consulting  —  Industrial & Commercial Solar', ML, 21);
-      // Logo
-      try {
-        const logoImg = document.querySelector('.logo-area img');
-        if (logoImg && logoImg.src) doc.addImage(logoImg.src, 'PNG', PW - MR - 21, 3, 19, 19);
-      } catch(e) {}
+      doc.text('Supporting Notes & User Guide', ML, 21);
       // Separator
       doc.setDrawColor(...LGREY);
       doc.setLineWidth(0.3);
