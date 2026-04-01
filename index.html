@@ -192,6 +192,27 @@
       padding: 32px;
       backdrop-filter: blur(10px);
     }
+    .hero-video {
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      aspect-ratio: 16/9;
+      width: 100%;
+    }
+    .hero-video iframe {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .example-scenario {
+      background: rgba(20,100,170,0.08);
+      border: 1px solid rgba(20,100,170,0.18);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      margin-top: 48px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
     .hero-card-title {
       font-size: 0.72em;
       font-weight: 700;
@@ -366,6 +387,7 @@
     @media (max-width: 960px) {
       .home-hero-inner { grid-template-columns: 1fr; }
       .hero-card { display: none; }
+      .hero-video { max-width: 560px; margin: 0 auto; }
       .features-grid { grid-template-columns: 1fr 1fr; }
       .sectors-grid { grid-template-columns: 1fr 1fr; }
       .stats-band-inner { grid-template-columns: 1fr 1fr; }
@@ -420,30 +442,14 @@
         <a href="about.html" class="btn btn-outline-white btn-lg">Learn How Solar Works</a>
       </div>
     </div>
-    <div class="hero-card">
-      <div class="hero-card-title">Example: 500 kWp Warehouse</div>
-      <div class="hero-stat-list">
-        <div class="hero-stat-row">
-          <span class="hero-stat-label">Annual generation</span>
-          <span class="hero-stat-val"><span class="accent">~440,000</span> kWh</span>
-        </div>
-        <div class="hero-stat-row">
-          <span class="hero-stat-label">Year 1 savings</span>
-          <span class="hero-stat-val"><span class="accent">~£88,000</span></span>
-        </div>
-        <div class="hero-stat-row">
-          <span class="hero-stat-label">Simple payback</span>
-          <span class="hero-stat-val"><span class="accent">6–8</span> years</span>
-        </div>
-        <div class="hero-stat-row">
-          <span class="hero-stat-label">25-year NPV</span>
-          <span class="hero-stat-val"><span class="accent">£900k+</span></span>
-        </div>
-        <div class="hero-stat-row">
-          <span class="hero-stat-label">CO₂ avoided</span>
-          <span class="hero-stat-val"><span class="accent">~200</span> t/yr</span>
-        </div>
-      </div>
+    <div class="hero-video">
+      <iframe
+        src="https://www.youtube.com/embed/55V9f0P9EXI"
+        title="UK Commercial Solar Calculator"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen>
+      </iframe>
     </div>
   </div>
 </section>
@@ -617,6 +623,32 @@
 
     <div style="text-align:center; margin-top:36px">
       <a href="sectors.html" class="btn btn-outline">View All Sectors &amp; Case Data →</a>
+    </div>
+
+    <div class="example-scenario">
+      <div class="hero-card-title">Example: 500 kWp Warehouse</div>
+      <div class="hero-stat-list">
+        <div class="hero-stat-row">
+          <span class="hero-stat-label">Annual generation</span>
+          <span class="hero-stat-val"><span class="accent">~440,000</span> kWh</span>
+        </div>
+        <div class="hero-stat-row">
+          <span class="hero-stat-label">Year 1 savings</span>
+          <span class="hero-stat-val"><span class="accent">~£88,000</span></span>
+        </div>
+        <div class="hero-stat-row">
+          <span class="hero-stat-label">Simple payback</span>
+          <span class="hero-stat-val"><span class="accent">6–8</span> years</span>
+        </div>
+        <div class="hero-stat-row">
+          <span class="hero-stat-label">25-year NPV</span>
+          <span class="hero-stat-val"><span class="accent">£900k+</span></span>
+        </div>
+        <div class="hero-stat-row">
+          <span class="hero-stat-label">CO₂ avoided</span>
+          <span class="hero-stat-val"><span class="accent">~200</span> t/yr</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>
