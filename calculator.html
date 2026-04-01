@@ -3636,8 +3636,8 @@
       livePpaData = computePPA(_baseRate + _bSurch, contractYears);
     }
 
-    // Page 1: Self-Funded
-    const doc = await buildSelfFundedPDFDoc();
+    // Page 1: Self-Funded (pass livePpaData so the 2-line chart can be placed on this page)
+    const doc = await buildSelfFundedPDFDoc(livePpaData);
 
     // Page 2: PPA — add a new page and draw PPA content directly into the same doc
     doc.addPage();
@@ -3923,8 +3923,8 @@
       img.onload = function() {
         try {
           const canvas = document.createElement('canvas');
-          canvas.width = 400; canvas.height = 80;
-          canvas.getContext('2d').drawImage(img, 0, 0, 400, 80);
+          canvas.width = 1080; canvas.height = 216;
+          canvas.getContext('2d').drawImage(img, 0, 0, 1080, 216);
           resolve(canvas.toDataURL('image/png'));
         } catch(e) { resolve(null); }
       };
@@ -3933,7 +3933,7 @@
     });
   }
 
-  async function buildSelfFundedPDFDoc() {
+  async function buildSelfFundedPDFDoc(ppaChartData) {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ unit: 'mm', format: 'a4' });
     const r   = calculationData.results;
@@ -4082,7 +4082,11 @@
     chartY += 4;
 
     // Ensure SF chart is shown before capture — wait for Chart.js to finish rendering
-    buildChart('selffunded', r.totalCost, r.yearlySavings, r.paybackYear || 30, null, null);
+    if (ppaChartData) {
+      buildChart('ppa', r.totalCost, r.yearlySavings, r.paybackYear || 30, ppaChartData.yearlySavings, ppaChartData.contractYears);
+    } else {
+      buildChart('selffunded', r.totalCost, r.yearlySavings, r.paybackYear || 30, null, null);
+    }
     await new Promise(resolve => setTimeout(resolve, 250));
     const chartImg = document.getElementById('savingsChart').toDataURL('image/png');
     const chartH   = 58;
@@ -4266,11 +4270,9 @@
     chartY += 4;
     // Build PPA-mode chart and capture it — wait for Chart.js to finish rendering
     const r2 = calculationData.results;
-    buildChart('ppa', r2.totalCost, r2.yearlySavings, r2.paybackYear || 30, ppa.yearlySavings, ppa.contractYears);
+    buildChart('selffunded', r2.totalCost, r2.yearlySavings, r2.paybackYear || 30, null, null);
     await new Promise(resolve => setTimeout(resolve, 250));
     const chartImg = document.getElementById('savingsChart').toDataURL('image/png');
-    // Restore SF chart
-    buildChart('selffunded', r2.totalCost, r2.yearlySavings, r2.paybackYear || 30, null, null);
     doc.addImage(chartImg, 'PNG', ML, chartY, CW, 58);
     chartY += 63;
 
