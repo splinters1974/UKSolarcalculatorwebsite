@@ -207,6 +207,33 @@
       height: 214%;
       display: block;
     }
+    .hero-video-thumb {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+      display: block;
+    }
+    .hero-video-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, rgba(10,25,60,0.55) 0%, rgba(10,25,60,0.3) 100%);
+    }
+    .hero-video-play {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: transform 0.2s ease;
+    }
+    .hero-video:hover .hero-video-play {
+      transform: translate(-50%, -50%) scale(1.1);
+    }
+    .hero-video { cursor: pointer; }
     .example-scenario {
       background: var(--navy);
       border: 1px solid rgba(255,255,255,0.12);
@@ -446,15 +473,22 @@
         <a href="about.html" class="btn btn-outline-white btn-lg">Learn How Solar Works</a>
       </div>
     </div>
-    <div class="hero-video">
-      <iframe
-        src="https://www.youtube.com/embed/55V9f0P9EXI?rel=0&modestbranding=1"
-        title="UK Commercial Solar Calculator"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen>
-      </iframe>
+    <div class="hero-video" id="heroVideo" onclick="loadHeroVideo(this)" role="button" aria-label="Play video" tabindex="0">
+      <img src="https://img.youtube.com/vi/55V9f0P9EXI/maxresdefault.jpg" alt="UK Commercial Solar Calculator" class="hero-video-thumb">
+      <div class="hero-video-overlay"></div>
+      <button class="hero-video-play" tabindex="-1" aria-hidden="true">
+        <svg viewBox="0 0 68 48" width="68" height="48" xmlns="http://www.w3.org/2000/svg">
+          <path d="M66.5 7.7a8.5 8.5 0 0 0-6-6C55.8.9 34 .9 34 .9S12.2.8 7.5 1.7a8.5 8.5 0 0 0-6 6C.6 12.4.6 24 .6 24s0 11.6.9 16.3a8.5 8.5 0 0 0 6 6c4.7.9 26.5.9 26.5.9s21.8 0 26.5-.9a8.5 8.5 0 0 0 6-6c.9-4.7.9-16.3.9-16.3s0-11.6-.9-16.3z" fill="#ff0000"/>
+          <path d="M27.1 34.6l17.6-10.6-17.6-10.6v21.2z" fill="#fff"/>
+        </svg>
+      </button>
     </div>
+    <script>
+      function loadHeroVideo(el) {
+        el.innerHTML = '<iframe src="https://www.youtube.com/embed/55V9f0P9EXI?autoplay=1&rel=0&modestbranding=1" title="UK Commercial Solar Calculator" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="position:absolute;top:-57%;left:-10%;width:120%;height:214%;display:block;"></iframe>';
+        el.style.cursor = 'default';
+      }
+    </script>
   </div>
 </section>
 
