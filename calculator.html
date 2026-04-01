@@ -3636,8 +3636,8 @@
       livePpaData = computePPA(_baseRate + _bSurch, contractYears);
     }
 
-    // Page 1: Self-Funded (pass livePpaData so the 2-line chart can be placed on this page)
-    const doc = await buildSelfFundedPDFDoc(livePpaData);
+    // Page 1: Self-Funded
+    const doc = await buildSelfFundedPDFDoc();
 
     // Page 2: PPA — add a new page and draw PPA content directly into the same doc
     doc.addPage();
@@ -3918,22 +3918,28 @@
   // Cache the nav logo as a PNG data URL for use in PDF headers
   let pdfLogoData = null;
   async function getLogoForPDF() {
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.onload = function() {
-        try {
-          const canvas = document.createElement('canvas');
-          canvas.width = 1080; canvas.height = 216;
-          canvas.getContext('2d').drawImage(img, 0, 0, 1080, 216);
-          resolve(canvas.toDataURL('image/png'));
-        } catch(e) { resolve(null); }
-      };
-      img.onerror = () => resolve(null);
-      img.src = 'logo-nav.svg';
-    });
+    try {
+      // Fetch SVG as text then convert to data URI — avoids canvas tainting
+      const resp = await fetch('logo-nav.svg');
+      const svgText = await resp.text();
+      const dataUri = 'data:image/svg+xml,' + encodeURIComponent(svgText);
+      return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = function() {
+          try {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1080; canvas.height = 216;
+            canvas.getContext('2d').drawImage(img, 0, 0, 1080, 216);
+            resolve(canvas.toDataURL('image/png'));
+          } catch(e) { resolve(null); }
+        };
+        img.onerror = () => resolve(null);
+        img.src = dataUri;
+      });
+    } catch(e) { return null; }
   }
 
-  async function buildSelfFundedPDFDoc(ppaChartData) {
+  async function buildSelfFundedPDFDoc() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ unit: 'mm', format: 'a4' });
     const r   = calculationData.results;
@@ -4082,11 +4088,7 @@
     chartY += 4;
 
     // Ensure SF chart is shown before capture — wait for Chart.js to finish rendering
-    if (ppaChartData) {
-      buildChart('ppa', r.totalCost, r.yearlySavings, r.paybackYear || 30, ppaChartData.yearlySavings, ppaChartData.contractYears);
-    } else {
-      buildChart('selffunded', r.totalCost, r.yearlySavings, r.paybackYear || 30, null, null);
-    }
+    buildChart('selffunded', r.totalCost, r.yearlySavings, r.paybackYear || 30, null, null);
     await new Promise(resolve => setTimeout(resolve, 250));
     const chartImg = document.getElementById('savingsChart').toDataURL('image/png');
     const chartH   = 58;
