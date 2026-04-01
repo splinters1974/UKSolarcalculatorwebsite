@@ -1,0 +1,23 @@
+# Force correct MIME type for sitemap
+AddType application/xml .xml
+
+# Allow all bots to access sitemap
+<Files "sitemap.xml">
+    Header set X-Robots-Tag "all"
+    Header unset X-Robots-Tag
+</Files>
+
+# Prevent caching issues for sitemap and robots.txt
+<FilesMatch "^(sitemap\.xml|robots\.txt)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+    Header set Pragma "no-cache"
+</FilesMatch>
+
+# Ensure HTTPS canonical access
+RewriteEngine On
+RewriteCond %{HTTPS} off
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# www to non-www (or non-www to www - currently using www in sitemap)
+RewriteCond %{HTTP_HOST} !^www\. [NC]
+RewriteRule ^ https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
