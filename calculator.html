@@ -3915,6 +3915,24 @@
     );
   }
 
+  // Cache the nav logo as a PNG data URL for use in PDF headers
+  let pdfLogoData = null;
+  async function getLogoForPDF() {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = function() {
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = 400; canvas.height = 80;
+          canvas.getContext('2d').drawImage(img, 0, 0, 400, 80);
+          resolve(canvas.toDataURL('image/png'));
+        } catch(e) { resolve(null); }
+      };
+      img.onerror = () => resolve(null);
+      img.src = 'logo-nav.svg';
+    });
+  }
+
   async function buildSelfFundedPDFDoc() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ unit: 'mm', format: 'a4' });
@@ -3977,25 +3995,24 @@
     }
 
     // ── HEADER (white bg, black text, amber top stripe) ──────────────
+    if (!pdfLogoData) pdfLogoData = await getLogoForPDF();
+
     doc.setFillColor(...AMBER);
     doc.rect(0, 0, PW, 2.5, 'F');
 
-    T('bold', 17, BLACK);
-    doc.text('Industrial & Commercial Solar Calculator', ML, 13);
+    // Logo on left replacing title text
+    if (pdfLogoData) {
+      doc.addImage(pdfLogoData, 'PNG', ML, 4, 65, 13);
+    } else {
+      T('bold', 17, BLACK);
+      doc.text('Solar Calculator', ML, 13);
+    }
 
     T('normal', 9, SLATE);
-    doc.text('Solar Energy Solutions  —  Indicative Proposal', ML, 20);
+    doc.text('Self-Funded Analysis  —  Indicative Proposal', ML, 21);
 
     T('normal', 8, MGREY);
-    doc.text('Generated: ' + calculationData.date, PW / 2, 20, { align: 'center' });
-
-    // Logo top-right corner — starts below the 2.5mm amber stripe
-    try {
-      const logoImg = document.querySelector('.logo-area img');
-      if (logoImg && logoImg.src) {
-        doc.addImage(logoImg.src, 'PNG', PW - MR - 21, 3, 19, 19);
-      }
-    } catch(e) {}
+    doc.text('Generated: ' + calculationData.date, PW - MR, 21, { align: 'right' });
 
     doc.setDrawColor(...LGREY);
     doc.setLineWidth(0.4);
@@ -4066,7 +4083,7 @@
 
     // Ensure SF chart is shown before capture — wait for Chart.js to finish rendering
     buildChart('selffunded', r.totalCost, r.yearlySavings, r.paybackYear || 30, null, null);
-    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    await new Promise(resolve => setTimeout(resolve, 250));
     const chartImg = document.getElementById('savingsChart').toDataURL('image/png');
     const chartH   = 58;
     doc.addImage(chartImg, 'PNG', ML, chartY, CW, chartH);
@@ -4082,7 +4099,7 @@
     doc.text('Key Assumptions & Limitations', ML, chartY);
     chartY += 5;
 
-    T('normal', 7.2, DGREY);
+    T('normal', 6.5, DGREY);
     const assumptions = [
       'Maintenance costs are NOT included. Annual maintenance typically costs £15-20 per kWp per year.',
       'Roof/mount coverage: 80-90% of total area assumed usable depending on mount type, accounting for edge setbacks, obstructions, and inter-row spacing.',
@@ -4098,7 +4115,7 @@
     assumptions.forEach(function(a, i) {
       const lines = doc.splitTextToSize((i + 1) + '.  ' + a, CW - 4);
       doc.text(lines, ML, chartY);
-      chartY += lines.length * 3.6 + 2;
+      chartY += lines.length * 3.2 + 1.5;
     });
 
     // ── IMPORTANT NOTICE (bottom of page) ────────────────────────────
@@ -4195,16 +4212,16 @@
       return y + ROW_H;
     }
 
-    // PAGE HEADER — sky blue stripe + title
+    // PAGE HEADER — sky blue stripe + logo
+    if (!pdfLogoData) pdfLogoData = await getLogoForPDF();
     doc.setFillColor(...SKY); doc.rect(0, 0, PW, 2.5, 'F');
-    T('bold', 17, BLACK); doc.text('Industrial & Commercial Solar — PPA Analysis', ML, 13);
-    T('normal', 9, SLATE); doc.text('Power Purchase Agreement  —  Indicative Proposal', ML, 20);
-    T('normal', 8, MGREY); doc.text('Generated: ' + calculationData.date, PW / 2, 20, { align: 'center' });
-    // Logo top-right corner — starts below the 2.5mm sky stripe
-    try {
-      const logoImg = document.querySelector('.logo-area img');
-      if (logoImg && logoImg.src) { doc.addImage(logoImg.src, 'PNG', PW - MR - 21, 3, 19, 19); }
-    } catch(e) {}
+    if (pdfLogoData) {
+      doc.addImage(pdfLogoData, 'PNG', ML, 4, 65, 13);
+    } else {
+      T('bold', 17, BLACK); doc.text('Solar Calculator — PPA Analysis', ML, 13);
+    }
+    T('normal', 9, SLATE); doc.text('Power Purchase Agreement  —  Indicative Proposal', ML, 21);
+    T('normal', 8, MGREY); doc.text('Generated: ' + calculationData.date, PW - MR, 21, { align: 'right' });
     doc.setDrawColor(...LGREY); doc.setLineWidth(0.4); doc.line(ML, 24, PW - MR, 24);
 
     const startY = 28;
@@ -4250,7 +4267,7 @@
     // Build PPA-mode chart and capture it — wait for Chart.js to finish rendering
     const r2 = calculationData.results;
     buildChart('ppa', r2.totalCost, r2.yearlySavings, r2.paybackYear || 30, ppa.yearlySavings, ppa.contractYears);
-    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    await new Promise(resolve => setTimeout(resolve, 250));
     const chartImg = document.getElementById('savingsChart').toDataURL('image/png');
     // Restore SF chart
     buildChart('selffunded', r2.totalCost, r2.yearlySavings, r2.paybackYear || 30, null, null);
