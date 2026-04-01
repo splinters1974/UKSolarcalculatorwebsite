@@ -3916,26 +3916,11 @@
   }
 
   // Cache the nav logo as a PNG data URL for use in PDF headers
-  let pdfLogoData = null;
-  async function getLogoForPDF() {
+  // Get logo PNG directly from the already-loaded DOM element — no canvas, no taint risk
+  function getLogoForPDF() {
     try {
-      // Fetch SVG as text then convert to data URI — avoids canvas tainting
-      const resp = await fetch('logo-nav.svg');
-      const svgText = await resp.text();
-      const dataUri = 'data:image/svg+xml,' + encodeURIComponent(svgText);
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = function() {
-          try {
-            const canvas = document.createElement('canvas');
-            canvas.width = 1080; canvas.height = 216;
-            canvas.getContext('2d').drawImage(img, 0, 0, 1080, 216);
-            resolve(canvas.toDataURL('image/png'));
-          } catch(e) { resolve(null); }
-        };
-        img.onerror = () => resolve(null);
-        img.src = dataUri;
-      });
+      const el = document.querySelector('.logo-area img');
+      return (el && el.src) ? el.src : null;
     } catch(e) { return null; }
   }
 
@@ -4001,14 +3986,14 @@
     }
 
     // ── HEADER (white bg, black text, amber top stripe) ──────────────
-    if (!pdfLogoData) pdfLogoData = await getLogoForPDF();
+    const logoSrc = getLogoForPDF();
 
     doc.setFillColor(...AMBER);
     doc.rect(0, 0, PW, 2.5, 'F');
 
     // Logo on left replacing title text
-    if (pdfLogoData) {
-      doc.addImage(pdfLogoData, 'PNG', ML, 4, 65, 13);
+    if (logoSrc) {
+      doc.addImage(logoSrc, 'PNG', ML, 4, 18, 18);
     } else {
       T('bold', 17, BLACK);
       doc.text('Solar Calculator', ML, 13);
@@ -4219,10 +4204,10 @@
     }
 
     // PAGE HEADER — sky blue stripe + logo
-    if (!pdfLogoData) pdfLogoData = await getLogoForPDF();
+    const logoSrc2 = getLogoForPDF();
     doc.setFillColor(...SKY); doc.rect(0, 0, PW, 2.5, 'F');
-    if (pdfLogoData) {
-      doc.addImage(pdfLogoData, 'PNG', ML, 4, 65, 13);
+    if (logoSrc2) {
+      doc.addImage(logoSrc2, 'PNG', ML, 4, 18, 18);
     } else {
       T('bold', 17, BLACK); doc.text('Solar Calculator — PPA Analysis', ML, 13);
     }
@@ -4272,9 +4257,11 @@
     chartY += 4;
     // Build PPA-mode chart and capture it — wait for Chart.js to finish rendering
     const r2 = calculationData.results;
-    buildChart('selffunded', r2.totalCost, r2.yearlySavings, r2.paybackYear || 30, null, null);
+    buildChart('ppa', r2.totalCost, r2.yearlySavings, r2.paybackYear || 30, ppa.yearlySavings, ppa.contractYears);
     await new Promise(resolve => setTimeout(resolve, 250));
     const chartImg = document.getElementById('savingsChart').toDataURL('image/png');
+    // Restore SF chart for on-screen display
+    buildChart('selffunded', r2.totalCost, r2.yearlySavings, r2.paybackYear || 30, null, null);
     doc.addImage(chartImg, 'PNG', ML, chartY, CW, 58);
     chartY += 63;
 
