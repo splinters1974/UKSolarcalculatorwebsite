@@ -116,7 +116,7 @@ ul { list-style: none; }
 }
 
 .nav-logo-icon svg { width: 20px; height: 20px; }
-.nav-logo-img { height: 64px; width: auto; max-width: min(256px, 55vw); display: block; flex-shrink: 0; }
+.nav-logo-img { height: 128px; width: auto; max-width: min(512px, 55vw); display: block; flex-shrink: 0; }
 
 .nav-logo-text { display: flex; flex-direction: column; }
 
@@ -264,7 +264,7 @@ ul { list-style: none; }
 }
 
 .footer-logo-icon svg { width: 16px; height: 16px; }
-.footer-logo-img { height: 56px; width: auto; display: block; }
+.footer-logo-img { height: 112px; width: auto; display: block; }
 
 .footer-logo-main {
   font-size: 0.9em;
@@ -683,7 +683,7 @@ ul { list-style: none; }
   }
   .nav-inner { gap: 8px; }
   .nav-logo { flex-shrink: 1; min-width: 0; }
-  .nav-logo-img { width: auto; max-width: 55vw; height: 44px; }
+  .nav-logo-img { width: auto; max-width: 55vw; height: 88px; }
   .footer-grid { grid-template-columns: 1fr; gap: 28px; }
   .footer-disclaimer { text-align: left; }
   .footer-bottom { flex-direction: column; align-items: flex-start; }
