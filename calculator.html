@@ -367,6 +367,30 @@
       .mode-card-icon { flex-shrink: 0; margin-bottom: 0; }
       .mode-card-desc { max-width: none; }
     }
+    /* ── SESSION CLEAR BAR ───────────────────────────── */
+    .session-clear-bar {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: -10px;
+      margin-bottom: 18px;
+    }
+    .session-clear-btn {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 11px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Familjen Grotesk', sans-serif;
+      transition: color 0.2s, border-color 0.2s;
+      letter-spacing: 0.02em;
+    }
+    .session-clear-btn:hover { color: #ef4444; border-color: #ef4444; }
 
     /* ── NAV BADGE ───────────────────────────────────── */
     .mode-nav-badge {
@@ -2311,6 +2335,14 @@
     </button>
   </div>
 
+  <!-- SESSION CLEAR BAR -->
+  <div class="session-clear-bar">
+    <button class="session-clear-btn" onclick="clearSession()" type="button">
+      <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+      Clear Saved Session
+    </button>
+  </div>
+
   <!-- STEP INDICATOR -->
   <div class="steps" id="stepIndicator">
     <div class="step active" id="step1">
@@ -3141,6 +3173,43 @@
     selectMode(isMapMode);
   }
 
+  function clearSession() {
+    if (!confirm('Clear all saved data and reset the calculator?')) return;
+    try { localStorage.removeItem(STATE_KEY); } catch(e) {}
+    // Reset state variables
+    buildings = [{ id: 1 }];
+    oversizeFactor = 1.0;
+    calculationData = null;
+    // Reset form fields
+    const regionEl = document.getElementById('region');
+    if (regionEl) regionEl.value = 'national';
+    const priceEl = document.getElementById('energyPrice');
+    if (priceEl) priceEl.value = '25';
+    const roofEl = document.getElementById('roofType');
+    if (roofEl) roofEl.value = 'pitched';
+    const battEl = document.getElementById('batteryToggle');
+    if (battEl) battEl.checked = false;
+    const battPreview = document.getElementById('batteryPreview');
+    if (battPreview) battPreview.style.display = 'none';
+    // Reset oversize buttons
+    document.querySelectorAll('.oversize-btn').forEach(b => {
+      b.classList.toggle('active', parseFloat(b.dataset.factor) === 1.0);
+    });
+    const hintEl = document.getElementById('oversizeHint');
+    if (hintEl) hintEl.style.display = 'none';
+    // Hide results and reset steps
+    document.getElementById('results').style.display = 'none';
+    document.getElementById('step1').className = 'step active';
+    document.getElementById('step2').className = 'step';
+    document.getElementById('step3').className = 'step';
+    // Clear map polygons (guard: only if map is initialised)
+    if (mapInitialised && mapPolygons.length > 0) clearAllPolygons();
+    // Re-render building rows and reset mode
+    renderBuildingRows();
+    isMapMode = window.innerWidth >= 900;
+    selectMode(isMapMode);
+  }
+
   // ── EMAIL MODAL ────────────────────────────────────
   function openEmailModal() {
     if (!calculationData) return;
@@ -3616,11 +3685,12 @@
   }
 
   function onPolygonComplete(polygon) {
-    const areaM2 = Math.round(google.maps.geometry.spherical.computeArea(polygon.getPath()));
+    const areaM2 = parseFloat(google.maps.geometry.spherical.computeArea(polygon.getPath()).toFixed(2));
     const id = Date.now();
     mapPolygons.push({ id, polygon, area: areaM2, roofType: 'pitched' });
     // Store in buildings[] so existing calculateSolar() works unchanged
-    buildings.push({ id, length: Math.sqrt(areaM2), width: Math.sqrt(areaM2), mapArea: areaM2 });
+    const side = parseFloat(Math.sqrt(areaM2).toFixed(2));
+    buildings.push({ id, length: side, width: side, mapArea: areaM2 });
     // Auto-detect region from centroid
     const bounds = new google.maps.LatLngBounds();
     polygon.getPath().forEach(p => bounds.extend(p));
@@ -3635,11 +3705,12 @@
   }
 
   function updatePolygonArea(id, polygon) {
-    const areaM2 = Math.round(google.maps.geometry.spherical.computeArea(polygon.getPath()));
+    const areaM2 = parseFloat(google.maps.geometry.spherical.computeArea(polygon.getPath()).toFixed(2));
     const mp = mapPolygons.find(p => p.id === id);
     if (mp) mp.area = areaM2;
     const b = buildings.find(b => b.id === id);
-    if (b) { b.mapArea = areaM2; b.length = Math.sqrt(areaM2); b.width = Math.sqrt(areaM2); }
+    const updSide = parseFloat(Math.sqrt(areaM2).toFixed(2));
+    if (b) { b.mapArea = areaM2; b.length = updSide; b.width = updSide; }
     renderMapBuildingList();
     updatePortfolioTotal();
   }
@@ -3688,7 +3759,7 @@
       <div class="map-building-row">
         <div class="map-building-row-top">
           <span class="map-building-row-name">Area ${i + 1}</span>
-          <span class="map-building-row-area">${mp.area.toLocaleString()} m²</span>
+          <span class="map-building-row-area">${mp.area.toLocaleString('en-GB', {minimumFractionDigits:2, maximumFractionDigits:2})} m²</span>
           <button class="map-building-remove" onclick="removeMapBuilding(${mp.id})" type="button" title="Remove">×</button>
         </div>
         <div class="map-building-row-bottom">
@@ -3700,7 +3771,7 @@
     const total = mapPolygons.reduce((s, mp) => s + mp.area, 0);
     if (mapPolygons.length > 1) {
       totalEl.style.display = 'flex';
-      totalValEl.textContent = total.toLocaleString() + ' m²';
+      totalValEl.textContent = total.toLocaleString('en-GB', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' m²';
     } else {
       totalEl.style.display = 'none';
     }
