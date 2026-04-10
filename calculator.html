@@ -11,13 +11,13 @@
   <meta property="og:url" content="https://www.uksolarcalculator.co.uk/calculator.html">
   <meta property="og:title" content="Free Commercial Solar ROI Calculator — UK Businesses">
   <meta property="og:description" content="Calculate your commercial solar ROI instantly. Enter your roof size and energy use to get payback period, annual savings, 30-year NPV, and carbon reduction for your UK site.">
-  <meta property="og:image" content="https://www.uksolarcalculator.co.uk/images/logo.png">
+  <meta property="og:image" content="https://www.uksolarcalculator.co.uk/images/logo_light.png">
   <meta property="og:site_name" content="UK Solar Calculator">
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Free Commercial Solar ROI Calculator — UK Businesses">
   <meta name="twitter:description" content="Calculate your commercial solar ROI instantly. Enter your roof size and energy use to get payback period, annual savings, 30-year NPV, and carbon reduction for your UK site.">
-  <meta name="twitter:image" content="https://www.uksolarcalculator.co.uk/images/logo.png">
+  <meta name="twitter:image" content="https://www.uksolarcalculator.co.uk/images/logo_light.png">
   <!-- Schema: BreadcrumbList -->
   <script type="application/ld+json">
   {
@@ -102,8 +102,9 @@
     ]
   }
   </script>
-  <link rel="icon" type="image/png" href="/images/logo.png">
-  <link rel="apple-touch-icon" href="/images/logo.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon_16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon_32.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/images/favicon_192.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/shared.css">
@@ -2235,7 +2236,7 @@
 <nav class="site-nav" id="siteNav">
   <div class="nav-inner">
     <a href="index.html" class="nav-logo">
-      <img src="logo-nav.svg" alt="Industrial &amp; Commercial Solar Calculator" class="nav-logo-img">
+      <img src="images/logo_light.png" alt="Industrial &amp; Commercial Solar Calculator" class="nav-logo-img">
       <span class="mode-nav-badge" id="modeBadge">Standard</span>
     </a>
     <ul class="nav-links" id="navLinks">
@@ -2296,7 +2297,7 @@
       <path d="M0 30 L92 5 L200 30" stroke="#f59e0b" stroke-width="1" fill="none" opacity="0.25"/>
     </svg>
     <div class="header-left">
-      <img src="logo.svg" alt="Industrial &amp; Commercial Solar Calculator" style="height:64px;width:320px;max-width:100%;display:block;margin-bottom:16px;">
+      <img src="images/logo_light.png" alt="Industrial &amp; Commercial Solar Calculator" style="height:64px;width:auto;max-width:100%;display:block;margin-bottom:16px;">
       <p class="header-sub">Estimate your solar potential, installation cost, and 30-year ROI for commercial and industrial rooftops — with optional battery storage and self-funded or PPA funding comparisons.</p>
     </div>
     <div class="header-right">
@@ -4712,50 +4713,24 @@
   // Draw the nav logo as jsPDF vector commands — no canvas, no taint issues
   // ox,oy = top-left in mm; logoW = width in mm (SVG viewBox is 540x108)
   function drawLogoInPDF(doc, ox, oy, logoW) {
-    const s = logoW / 540;
-    const GOLD  = [201, 162,  39];
-    const NAVY  = [ 30,  58, 110];
-    const GLDLT = [218, 193, 110]; // gold at ~0.75 opacity on white
-
-    // Navy solar panel triangle (behind bolt)
-    doc.setFillColor(...NAVY);
-    doc.triangle(ox+8*s, oy+98*s, ox+52*s, oy+46*s, ox+96*s, oy+98*s, 'F');
-
-    // Gold lightning bolt polygon: 58,4 → 80,48 → 60,48 → 37,98 → 16,52 → 37,52
-    const boltPts = [[58,4],[80,48],[60,48],[37,98],[16,52],[37,52]];
-    const boltRel = [];
-    for (let i = 1; i < boltPts.length; i++) {
-      boltRel.push([boltPts[i][0]-boltPts[i-1][0], boltPts[i][1]-boltPts[i-1][1]]);
+    const logoH = logoW * (200 / 800); // 4:1 aspect ratio
+    try {
+      const imgEl = document.getElementById('pdfLogoImg');
+      if (imgEl && imgEl.complete && imgEl.naturalWidth > 0) {
+        doc.addImage(imgEl, 'PNG', ox, oy, logoW, logoH);
+      } else {
+        // Fallback: text if image not loaded
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(13);
+        doc.setTextColor(201, 162, 39);
+        doc.text('SOLAR CALCULATOR', ox, oy + logoH * 0.65);
+      }
+    } catch(e) {
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(13);
+      doc.setTextColor(201, 162, 39);
+      doc.text('SOLAR CALCULATOR', ox, oy + logoH * 0.65);
     }
-    doc.setFillColor(...GOLD);
-    doc.lines(boltRel, ox+58*s, oy+4*s, [s, s], 'F', true);
-
-    // Gold grid lines (opacity 0.75 → lightened shade)
-    doc.setDrawColor(...GLDLT);
-    doc.setLineWidth(1.5*s);
-    doc.line(ox+32*s, oy+70*s, ox+72*s, oy+70*s);
-    doc.line(ox+20*s, oy+84*s, ox+84*s, oy+84*s);
-    doc.line(ox+35*s, oy+66*s, ox+35*s, oy+98*s);
-    doc.line(ox+52*s, oy+46*s, ox+52*s, oy+98*s);
-    doc.line(ox+69*s, oy+66*s, ox+69*s, oy+98*s);
-
-    // Gold base line (stroke-width 2.5)
-    doc.setDrawColor(...GOLD);
-    doc.setLineWidth(2.5*s);
-    doc.line(ox+8*s, oy+104*s, ox+96*s, oy+104*s);
-
-    // "INDUSTRIAL & COMMERCIAL" — navy (SVG white won't show on white PDF)
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(19 * s * (72/25.4));
-    doc.setTextColor(...NAVY);
-    doc.text('INDUSTRIAL & COMMERCIAL', ox+118*s, oy+42*s);
-
-    // "SOLAR CALCULATOR" — gold
-    doc.setFontSize(33 * s * (72/25.4));
-    doc.setTextColor(...GOLD);
-    doc.text('SOLAR CALCULATOR', ox+118*s, oy+83*s);
-
-    // Restore defaults
     doc.setLineWidth(0.2);
   }
 
@@ -5422,7 +5397,7 @@
     <div class="footer-grid">
       <div class="footer-brand">
         <div class="footer-logo">
-          <img src="logo-nav.svg" alt="Industrial &amp; Commercial Solar Calculator" class="footer-logo-img">
+          <img src="images/logo_dark.png" alt="Industrial &amp; Commercial Solar Calculator" class="footer-logo-img">
         </div>
         <p class="footer-desc">Industrial &amp; commercial solar energy solutions for UK businesses. Detailed financial modelling, project timeline planning, and expert consultation from enquiry to commissioning.</p>
         <div class="footer-contact-item"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><a href="mailto:martynsheridan621@gmail.com">martynsheridan621@gmail.com</a></div>
@@ -5452,5 +5427,7 @@
     document.getElementById('siteNav').classList.toggle('nav-mobile-open');
   });
 </script>
+  <!-- Preloaded logo for PDF generation -->
+  <img id="pdfLogoImg" src="images/logo_light.png" style="display:none" alt="">
 </body>
 </html>
