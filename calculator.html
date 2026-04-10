@@ -477,6 +477,25 @@
       margin-top: 4px;
     }
     .map-total-value { color: var(--amber); font-family: 'JetBrains Mono', monospace; font-size: 14px; }
+    .map-draw-another-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-top: 10px;
+      padding: 9px 16px;
+      width: 100%;
+      justify-content: center;
+      background: var(--amber-dim);
+      color: var(--amber);
+      border: 1px dashed var(--amber);
+      border-radius: var(--radius);
+      font-size: 13px;
+      font-weight: 700;
+      font-family: 'Familjen Grotesk', sans-serif;
+      cursor: pointer;
+      transition: background 0.2s, border-style 0.2s;
+    }
+    .map-draw-another-btn:hover { background: rgba(245,158,11,0.18); border-style: solid; }
 
     @media (max-width: 700px) {
       .map-toggle-hint { display: none; }
@@ -2287,6 +2306,10 @@
         <span>Total Roof Area</span>
         <span id="mapTotalArea" class="map-total-value">0 m²</span>
       </div>
+      <button class="map-draw-another-btn" onclick="activateDrawMode()" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Draw Another Building
+      </button>
     </div>
   </div>
 
@@ -3532,8 +3555,8 @@
     google.maps.event.addListener(polygon.getPath(), 'insert_at', () => updatePolygonArea(id, polygon));
     renderMapBuildingList();
     updatePortfolioTotal();
-    // Switch drawing manager back to polygon mode ready for next building
-    drawingManager.setDrawingMode(null);
+    // Auto-reset to polygon draw mode so next building can be drawn immediately
+    drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
   }
 
   function updatePolygonArea(id, polygon) {
@@ -3614,6 +3637,13 @@
     if (match && regionEl) {
       regionEl.value = match.value;
       saveState();
+    }
+  }
+
+  function activateDrawMode() {
+    if (drawingManager) {
+      drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
+      document.getElementById('googleMap').scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }
 
