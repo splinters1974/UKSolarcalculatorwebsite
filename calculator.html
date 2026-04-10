@@ -2691,11 +2691,11 @@
       <div class="assumptions-grid" id="assumptionsGrid">
         <div class="assumption-item">Maintenance costs NOT included. Typically £15–£20/kWp/year.</div>
         <div class="assumption-item">Roof/mount coverage: 80–90% of total area assumed usable depending on mount type, accounting for edge setbacks, obstructions, and inter-row spacing.</div>
-        <div class="assumption-item">Self-consumption: 80% of generation is assumed consumed on-site, displacing grid electricity at the import rate.</div>
+        <div class="assumption-item">Self-consumption: 70% of generation is assumed consumed on-site, displacing grid electricity at the import rate.</div>
         <div class="assumption-item">Export upside: the remaining 20% exported at a nominal 5p/kWh (SEG rate) is shown separately above as additional upside only — excluded from savings as export rates are not guaranteed and vary by DNO and tariff.</div>
-        <div class="assumption-item">Panel degradation: 2% per year (industry standard).</div>
+        <div class="assumption-item">Panel degradation: 0.5% per year (manufacturer linear performance warranty standard).</div>
         <div class="assumption-item">Electricity price inflation: 3% per year.</div>
-        <div class="assumption-item">Panel spec: 450W, 2.27m × 1.13m (2.57m²). System efficiency: 85%.</div>
+        <div class="assumption-item">Panel spec: 450W, 2.27m × 1.13m (2.57m²). System efficiency (performance ratio): 80%. Installation cost is all-inclusive (panels, inverters, mounting, electrical, commissioning).</div>
         <div class="assumption-item">Carbon factor: 0.196 kg CO₂/kWh (UK grid 2026).</div>
         <div class="assumption-item">Does not include costs for scaffolding, surveys such as structural and also any grid associated costs or upgrades.</div>
       </div>
@@ -2766,19 +2766,18 @@
 <script>
   const PANEL_POWER = 450;
   const PANEL_AREA = 2.27 * 1.13;
-  const PANEL_COST_PER_WATT = 0.10;
-  const SYSTEM_EFFICIENCY = 0.85;
-  const DEGRADATION_RATE = 0.02;
+  const SYSTEM_EFFICIENCY = 0.80;
+  const DEGRADATION_RATE = 0.005;
   const PRICE_INFLATION = 0.03;
   const CARBON_FACTOR = 0.196;
   const SYSTEM_LIFETIME = 30;
   const ROOF_COVERAGE = 0.80;
-  const SELF_CONSUMPTION = 0.80;     // 80% of generation consumed on-site
+  const SELF_CONSUMPTION = 0.70;     // 70% of generation consumed on-site
   const BATTERY_COST_PER_KWH = 1000; // £1,000/kWh fully installed
   const BATTERY_LIFETIME_YRS = 10;   // commercial lifespan under daily cycling
 
   const REGIONAL_YIELD = { scotland:850, north:950, midlands:1000, southwest:1150, southeast:1200, national:1000 };
-  const INSTALL_COST   = { pitched:800, flat:900, ground:950, carport:1350 };
+  const INSTALL_COST   = { pitched:900, flat:1000, ground:1050, carport:1500 }; // all-in £/kWp (hardware + installation)
   const GROUND_COVERAGE = { pitched:0.80, flat:0.80, ground:0.90, carport:0.85 };
   const MIN_ROOF_AREA = 350;
   const MIN_SYSTEM_KWP = 50;
@@ -3242,12 +3241,12 @@
         <div class="assumption-item">Maintenance costs NOT included. Typically £15–£20/kWp/year.</div>
         <div class="assumption-item">Roof coverage: ${Math.round((GROUND_COVERAGE[inp.roofType]||ROOF_COVERAGE)*100)}% of total area assumed usable, accounting for edge setbacks, obstructions, vents, and inter-row spacing.</div>
         ${oversizeNote}
-        <div class="assumption-item">Self-consumption: 80% of generation is assumed consumed on-site, displacing grid electricity at the import rate.</div>
-        <div class="assumption-item">Export upside: ${inp.batteryOn ? 'battery captures the 20% export in years 1–10; residual export and all export from year 11 onwards' : 'the remaining 20%'} exported at a nominal 5p/kWh (SEG rate) is shown separately above as additional upside only — excluded from savings as export rates are not guaranteed and vary by DNO and tariff.</div>
+        <div class="assumption-item">Self-consumption: 70% of generation is assumed consumed on-site, displacing grid electricity at the import rate.</div>
+        <div class="assumption-item">Export upside: ${inp.batteryOn ? 'battery captures the 30% export in years 1–10; residual export and all export from year 11 onwards' : 'the remaining 30%'} exported at a nominal 5p/kWh (SEG rate) is shown separately above as additional upside only — excluded from savings as export rates are not guaranteed and vary by DNO and tariff.</div>
         ${batteryNote}
-        <div class="assumption-item">Panel degradation: 2% per year (industry standard).</div>
+        <div class="assumption-item">Panel degradation: 0.5% per year (manufacturer linear performance warranty standard).</div>
         <div class="assumption-item">Electricity price inflation: 3% per year.</div>
-        <div class="assumption-item">Panel spec: 450W, 2.27m × 1.13m (2.57m²). System efficiency: 85%.</div>
+        <div class="assumption-item">Panel spec: 450W, 2.27m × 1.13m (2.57m²). System efficiency (performance ratio): 80%. Installation cost is all-inclusive (panels, inverters, mounting, electrical, commissioning).</div>
         <div class="assumption-item">Carbon factor: 0.196 kg CO₂/kWh (UK grid 2026).</div>
         <div class="assumption-item">Does not include costs for scaffolding, surveys such as structural and also any grid associated costs or upgrades.</div>`;
       buildChart('selffunded', r.totalCost, r.yearlySavings, r.paybackYear || SYSTEM_LIFETIME, null, null);
@@ -3744,14 +3743,13 @@
     // Apply oversizing to kWp (panel count display rounded for clarity)
     const systemSizeKw    = (basePanels * PANEL_POWER) / 1000 * oversize;
     const displayPanels   = Math.round(systemSizeKw * 1000 / PANEL_POWER);
-    const hardwareCost    = systemSizeKw * 1000 * PANEL_COST_PER_WATT;
-    const installationCost = systemSizeKw * INSTALL_COST[roofType];
+    const installationCost = systemSizeKw * INSTALL_COST[roofType]; // all-in cost (hardware + installation)
     const yearOneGeneration = systemSizeKw * REGIONAL_YIELD[region] * SYSTEM_EFFICIENCY;
 
     // ── Battery sizing ─────────────────────────────────────
     const batteryKwh  = batteryOn ? getBatteryKwh(yearOneGeneration) : 0;
     const batteryCost = batteryKwh * BATTERY_COST_PER_KWH;
-    let   totalCost   = hardwareCost + installationCost + batteryCost;
+    let   totalCost   = installationCost + batteryCost;
 
     let yearlyGeneration = [], yearlySavings = [], yearlyBatterySavings = [];
     let totalGeneration = 0, cumulativeSavings = 0, paybackYear = null;
