@@ -111,6 +111,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <!-- Google Maps key — set GOOGLE_MAPS_KEY constant below or replace with your key -->
+  <script>
+    // Replace with your Google Maps API key (restrict to your domain in Google Cloud Console)
+    window.GOOGLE_MAPS_KEY = AIzaSyB_PrQxejgL9o6EQMI4gNOgPaQ2o4P2lGc;
+  </script>
   <style>
     :root {
       --page-bg:   #f5f5f4;
@@ -281,6 +286,204 @@
     .logo-sponsor-wrap .kec-sponsored-by { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
     .logo-area-link { display: block; text-decoration: none; }
     .logo-area-link:hover .logo-area { box-shadow: var(--shadow-lg); border-color: var(--border-hover); transition: box-shadow 0.2s, border-color 0.2s; }
+    /* ── MODE TOGGLE BAR ─────────────────────────────── */
+    .mode-toggle-bar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 20px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    .mode-toggle-inner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .mode-toggle-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: color 0.2s;
+      white-space: nowrap;
+    }
+    .mode-toggle-label.active { color: var(--amber); }
+    .mode-switch { margin: 0 2px; }
+    .mode-toggle-hint {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-left: 4px;
+    }
+
+    /* ── NAV BADGE ───────────────────────────────────── */
+    .mode-nav-badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 20px;
+      background: var(--amber-dim);
+      color: var(--amber);
+      border: 1px solid var(--amber);
+      margin-left: 8px;
+      vertical-align: middle;
+      transition: background 0.2s, color 0.2s;
+    }
+    .mode-nav-badge.pro {
+      background: var(--amber);
+      color: var(--navy);
+    }
+
+    /* ── MAP MODE PANEL ──────────────────────────────── */
+    .map-mode-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-md);
+    }
+    .map-panel-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .map-panel-hint {
+      font-size: 11px;
+      color: var(--text-dim);
+      margin-left: auto;
+    }
+    .map-search-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .map-search-input {
+      flex: 1;
+      padding: 9px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-family: 'Familjen Grotesk', sans-serif;
+      background: var(--surface-2);
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .map-search-input:focus { border-color: var(--amber); }
+    .map-search-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 16px;
+      background: var(--amber);
+      color: var(--navy);
+      border: none;
+      border-radius: var(--radius);
+      font-size: 13px;
+      font-weight: 700;
+      font-family: 'Familjen Grotesk', sans-serif;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: opacity 0.2s;
+    }
+    .map-search-btn:hover { opacity: 0.85; }
+    #googleMap {
+      width: 100%;
+      height: 420px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      background: var(--surface-3);
+    }
+    .map-instructions {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: var(--amber-dim);
+      border-radius: var(--radius);
+      border: 1px solid rgba(245,158,11,0.2);
+    }
+    .map-building-list-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+      margin-bottom: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--text-muted);
+    }
+    .map-clear-btn {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 3px 10px;
+      cursor: pointer;
+      font-family: 'Familjen Grotesk', sans-serif;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .map-clear-btn:hover { color: var(--text); border-color: var(--text-muted); }
+    .map-building-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 9px 12px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 6px;
+      font-size: 13px;
+    }
+    .map-building-row-name { font-weight: 600; color: var(--text); }
+    .map-building-row-area { color: var(--amber); font-weight: 700; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+    .map-building-remove {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 16px;
+      line-height: 1;
+      transition: color 0.2s;
+      font-family: sans-serif;
+    }
+    .map-building-remove:hover { color: #ef4444; }
+    .map-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      background: var(--amber-dim);
+      border: 1px solid rgba(245,158,11,0.3);
+      border-radius: var(--radius);
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+    .map-total-value { color: var(--amber); font-family: 'JetBrains Mono', monospace; font-size: 14px; }
+
+    @media (max-width: 700px) {
+      .map-toggle-hint { display: none; }
+      #googleMap { height: 300px; }
+      .map-panel-hint { display: none; }
+    }
+
 
     /* ── STEP INDICATOR ── */
     .steps {
@@ -1912,6 +2115,7 @@
   <div class="nav-inner">
     <a href="index.html" class="nav-logo">
       <img src="logo-nav.svg" alt="Industrial &amp; Commercial Solar Calculator" class="nav-logo-img">
+      <span class="mode-nav-badge" id="modeBadge">Standard</span>
     </a>
     <ul class="nav-links" id="navLinks">
       <li><a href="index.html">Home</a></li>
@@ -1990,6 +2194,19 @@
     </div>
   </header>
 
+  <!-- MODE TOGGLE BAR -->
+  <div class="mode-toggle-bar" id="modeToggleBar">
+    <div class="mode-toggle-inner">
+      <span class="mode-toggle-label" id="labelManual">Manual Mode</span>
+      <label class="toggle-switch mode-switch">
+        <input type="checkbox" id="mapModeToggle" onchange="onMapModeToggle()">
+        <span class="toggle-slider"></span>
+      </label>
+      <span class="mode-toggle-label mode-toggle-label-right" id="labelMap">Map Mode</span>
+      <span class="mode-toggle-hint" id="modeToggleHint">Draw your building roof on the map — area calculated automatically</span>
+    </div>
+  </div>
+
   <!-- STEP INDICATOR -->
   <div class="steps" id="stepIndicator">
     <div class="step active" id="step1">
@@ -2039,9 +2256,43 @@
     </div>
   </div>
 
+  <!-- MAP MODE PANEL (shown instead of Building Specs card in map mode) -->
+  <div id="mapModePanel" style="display:none" class="map-mode-panel">
+    <div class="map-panel-header">
+      <div class="card-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <span class="card-title">Select Your Building</span>
+      <span class="map-panel-hint">Satellite view · Draw roof polygons · Multiple buildings supported</span>
+    </div>
+    <div class="map-search-row">
+      <input type="text" id="mapSearchInput" placeholder="Search address or postcode…" class="map-search-input" onkeydown="if(event.key==='Enter'){searchMapAddress()}" />
+      <button class="map-search-btn" onclick="searchMapAddress()" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Search
+      </button>
+    </div>
+    <div id="googleMap"></div>
+    <div class="map-instructions">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+      Click the <strong>polygon tool</strong> in the map toolbar, then click around the roof edge to draw its outline. Double-click to close.
+    </div>
+    <div id="mapBuildingList" style="display:none">
+      <div class="map-building-list-header">
+        <span>Drawn Buildings</span>
+        <button class="map-clear-btn" onclick="clearAllPolygons()" type="button">Clear All</button>
+      </div>
+      <div id="mapBuildingRows"></div>
+      <div class="map-total-row" id="mapTotalRow" style="display:none">
+        <span>Total Roof Area</span>
+        <span id="mapTotalArea" class="map-total-value">0 m²</span>
+      </div>
+    </div>
+  </div>
+
   <!-- INPUT SECTION -->
   <div class="input-grid">
-    <div class="card">
+    <div class="card" id="buildingSpecsCard">
       <div class="card-header">
         <div class="card-icon">
           <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
@@ -2542,6 +2793,14 @@
   }
 
   let currentMode = 'selffunded';
+
+  // ── MAP MODE STATE ─────────────────────────────────
+  let mapInstance        = null;
+  let drawingManager     = null;
+  let geocoder           = null;
+  let mapInitialised     = false;
+  let mapPolygons        = [];   // [{id, polygon, area}]
+  let isMapMode          = false;
   let ppaData = null;
   let oversizeFactor = 1.0;  // 1.0 | 1.1 | 1.2 | 1.3
 
@@ -2677,8 +2936,8 @@
 
   function updatePortfolioTotal() {
     const data = getBuildingData();
-    const total = data.reduce((sum, b) => sum + (b.length * b.width || 0), 0);
-    const countFilled = data.filter(b => b.length > 0 && b.width > 0).length;
+    const total = data.reduce((sum, b) => sum + (b.mapArea || b.length * b.width || 0), 0);
+    const countFilled = data.filter(b => (b.mapArea > 0) || (b.length > 0 && b.width > 0)).length;
     const el = document.getElementById('portfolioTotal');
     const valEl = document.getElementById('portfolioTotalValue');
     if (buildings.length > 1 && countFilled > 0) {
@@ -2704,6 +2963,7 @@
         roofType:      document.getElementById('roofType')?.value,
         oversizeFactor,
         batteryOn:     document.getElementById('batteryToggle')?.checked || false,
+        mapMode:       isMapMode,
       };
       localStorage.setItem(STATE_KEY, JSON.stringify(state));
     } catch (e) { /* storage unavailable */ }
@@ -2751,6 +3011,38 @@
     } catch (e) { /* ignore */ }
     // No saved state — fall back to defaults
     initBuildings();
+  }
+
+  function applyMapModeDefault() {
+    // Determine starting mode: desktop (≥900px) defaults to Map Mode,
+    // mobile defaults to Manual Mode, saved preference always wins
+    try {
+      const raw = localStorage.getItem(STATE_KEY);
+      if (raw) {
+        const s = JSON.parse(raw);
+        if (typeof s.mapMode === 'boolean') {
+          isMapMode = s.mapMode;
+        } else {
+          isMapMode = window.innerWidth >= 900;
+        }
+      } else {
+        isMapMode = window.innerWidth >= 900;
+      }
+    } catch(e) {
+      isMapMode = window.innerWidth >= 900;
+    }
+    const toggle = document.getElementById('mapModeToggle');
+    if (toggle) toggle.checked = isMapMode;
+    document.getElementById('buildingSpecsCard').style.display = isMapMode ? 'none' : 'block';
+    document.getElementById('mapModePanel').style.display      = isMapMode ? 'block' : 'none';
+    const badge = document.getElementById('modeBadge');
+    if (badge) {
+      badge.textContent = isMapMode ? 'Pro' : 'Standard';
+      badge.classList.toggle('pro', isMapMode);
+    }
+    document.getElementById('labelManual').classList.toggle('active', !isMapMode);
+    document.getElementById('labelMap').classList.toggle('active',    isMapMode);
+    if (isMapMode) loadGoogleMapsAPI();
   }
 
   // ── EMAIL MODAL ────────────────────────────────────
@@ -3126,34 +3418,263 @@
     document.getElementById('errorMsg').style.display = 'none';
   }
 
+
+  // ══════════════════════════════════════════════════════════════════
+  //  MAP MODE FUNCTIONS
+  // ══════════════════════════════════════════════════════════════════
+
+  function onMapModeToggle() {
+    isMapMode = document.getElementById('mapModeToggle').checked;
+    document.getElementById('buildingSpecsCard').style.display = isMapMode ? 'none' : 'block';
+    document.getElementById('mapModePanel').style.display      = isMapMode ? 'block' : 'none';
+    // Update nav badge
+    const badge = document.getElementById('modeBadge');
+    if (badge) {
+      badge.textContent = isMapMode ? 'Pro' : 'Standard';
+      badge.classList.toggle('pro', isMapMode);
+    }
+    // Update toggle label active states
+    document.getElementById('labelManual').classList.toggle('active', !isMapMode);
+    document.getElementById('labelMap').classList.toggle('active',    isMapMode);
+    // Lazy-load Google Maps API only when first activated
+    if (isMapMode && !mapInitialised) {
+      loadGoogleMapsAPI();
+    }
+    // If switching back to manual and no buildings, reset
+    if (!isMapMode && buildings.length === 0) {
+      initBuildings();
+    }
+    saveState();
+  }
+
+  function loadGoogleMapsAPI() {
+    if (window.google && window.google.maps) { initMap(); return; }
+    const key = window.GOOGLE_MAPS_KEY || '';
+    if (!key || key === 'YOUR_GOOGLE_MAPS_API_KEY') {
+      document.getElementById('googleMap').innerHTML =
+        '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:14px;flex-direction:column;gap:8px;">' +
+        '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>' +
+        '<span>Google Maps API key not configured.</span>' +
+        '<span style="font-size:12px;">Set <code>window.GOOGLE_MAPS_KEY</code> in the page head.</span></div>';
+      return;
+    }
+    window.initMap = initMap; // expose callback
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${key}&libraries=drawing,geometry,places&callback=initMap`;
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
+  }
+
+  function initMap() {
+    mapInitialised = true;
+    mapInstance = new google.maps.Map(document.getElementById('googleMap'), {
+      center: { lat: 52.5, lng: -1.5 },
+      zoom: 6,
+      mapTypeId: 'satellite',
+      tilt: 0,
+      mapTypeControl: true,
+      mapTypeControlOptions: {
+        style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+        mapTypeIds: ['satellite', 'hybrid', 'roadmap']
+      },
+      streetViewControl: false,
+      fullscreenControl: true,
+    });
+    geocoder = new google.maps.Geocoder();
+    // Set up address autocomplete on search input
+    const input = document.getElementById('mapSearchInput');
+    if (input && google.maps.places) {
+      const autocomplete = new google.maps.places.Autocomplete(input, {
+        componentRestrictions: { country: 'gb' },
+        fields: ['geometry', 'name']
+      });
+      autocomplete.addListener('place_changed', () => {
+        const place = autocomplete.getPlace();
+        if (place.geometry && place.geometry.location) {
+          mapInstance.setCenter(place.geometry.location);
+          mapInstance.setZoom(19);
+        }
+      });
+    }
+    drawingManager = new google.maps.drawing.DrawingManager({
+      drawingMode: google.maps.drawing.OverlayType.POLYGON,
+      drawingControl: true,
+      drawingControlOptions: {
+        position: google.maps.ControlPosition.TOP_CENTER,
+        drawingModes: [google.maps.drawing.OverlayType.POLYGON]
+      },
+      polygonOptions: {
+        fillColor:   '#f59e0b',
+        strokeColor: '#f59e0b',
+        fillOpacity: 0.30,
+        strokeWeight: 2,
+        editable: true,
+        draggable: true
+      }
+    });
+    drawingManager.setMap(mapInstance);
+    google.maps.event.addListener(drawingManager, 'polygoncomplete', onPolygonComplete);
+  }
+
+  function onPolygonComplete(polygon) {
+    const areaM2 = Math.round(google.maps.geometry.spherical.computeArea(polygon.getPath()));
+    const id = Date.now();
+    mapPolygons.push({ id, polygon, area: areaM2 });
+    // Store in buildings[] so existing calculateSolar() works unchanged
+    buildings.push({ id, length: Math.sqrt(areaM2), width: Math.sqrt(areaM2), mapArea: areaM2 });
+    // Auto-detect region from centroid
+    const bounds = new google.maps.LatLngBounds();
+    polygon.getPath().forEach(p => bounds.extend(p));
+    detectRegionFromLatLng(bounds.getCenter());
+    // Attach listener to update area if polygon is edited
+    google.maps.event.addListener(polygon.getPath(), 'set_at',    () => updatePolygonArea(id, polygon));
+    google.maps.event.addListener(polygon.getPath(), 'insert_at', () => updatePolygonArea(id, polygon));
+    renderMapBuildingList();
+    updatePortfolioTotal();
+    // Switch drawing manager back to polygon mode ready for next building
+    drawingManager.setDrawingMode(null);
+  }
+
+  function updatePolygonArea(id, polygon) {
+    const areaM2 = Math.round(google.maps.geometry.spherical.computeArea(polygon.getPath()));
+    const mp = mapPolygons.find(p => p.id === id);
+    if (mp) mp.area = areaM2;
+    const b = buildings.find(b => b.id === id);
+    if (b) { b.mapArea = areaM2; b.length = Math.sqrt(areaM2); b.width = Math.sqrt(areaM2); }
+    renderMapBuildingList();
+    updatePortfolioTotal();
+  }
+
+  function removeMapBuilding(id) {
+    const mp = mapPolygons.find(p => p.id === id);
+    if (mp) { mp.polygon.setMap(null); }
+    mapPolygons = mapPolygons.filter(p => p.id !== id);
+    buildings   = buildings.filter(b => b.id !== id);
+    renderMapBuildingList();
+    updatePortfolioTotal();
+    if (mapPolygons.length === 0) drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
+  }
+
+  function clearAllPolygons() {
+    mapPolygons.forEach(mp => mp.polygon.setMap(null));
+    mapPolygons = [];
+    buildings   = [];
+    renderMapBuildingList();
+    updatePortfolioTotal();
+    drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
+  }
+
+  function renderMapBuildingList() {
+    const listEl = document.getElementById('mapBuildingList');
+    const rowsEl = document.getElementById('mapBuildingRows');
+    const totalEl = document.getElementById('mapTotalRow');
+    const totalValEl = document.getElementById('mapTotalArea');
+    if (!listEl) return;
+    if (mapPolygons.length === 0) {
+      listEl.style.display = 'none';
+      return;
+    }
+    listEl.style.display = 'block';
+    rowsEl.innerHTML = mapPolygons.map((mp, i) => `
+      <div class="map-building-row">
+        <span class="map-building-row-name">Building ${i + 1}</span>
+        <span class="map-building-row-area">${mp.area.toLocaleString()} m²</span>
+        <button class="map-building-remove" onclick="removeMapBuilding(${mp.id})" type="button" title="Remove">×</button>
+      </div>`).join('');
+    const total = mapPolygons.reduce((s, mp) => s + mp.area, 0);
+    if (mapPolygons.length > 1) {
+      totalEl.style.display = 'flex';
+      totalValEl.textContent = total.toLocaleString() + ' m²';
+    } else {
+      totalEl.style.display = 'none';
+    }
+  }
+
+  // UK bounding-box region detector — no API call required
+  const UK_REGION_BOUNDS = [
+    { value: 'nscotland',  minLat: 57.5, maxLat: 61.0, minLng: -8.0,  maxLng: 0.0  },
+    { value: 'sscotland',  minLat: 55.0, maxLat: 57.5, minLng: -6.5,  maxLng: -1.0 },
+    { value: 'nengland',   minLat: 53.5, maxLat: 55.0, minLng: -3.5,  maxLng:  0.0 },
+    { value: 'midlands',   minLat: 52.0, maxLat: 53.5, minLng: -3.0,  maxLng:  0.5 },
+    { value: 'eastanglia', minLat: 51.5, maxLat: 53.0, minLng:  0.0,  maxLng:  2.0 },
+    { value: 'southeast',  minLat: 51.0, maxLat: 52.0, minLng: -1.0,  maxLng:  1.5 },
+    { value: 'southwest',  minLat: 49.5, maxLat: 51.5, minLng: -6.0,  maxLng: -1.0 },
+    { value: 'wales',      minLat: 51.3, maxLat: 53.5, minLng: -5.5,  maxLng: -2.5 },
+    { value: 'nireland',   minLat: 54.0, maxLat: 55.5, minLng: -8.5,  maxLng: -5.5 },
+  ];
+
+  function detectRegionFromLatLng(latLng) {
+    const lat = latLng.lat();
+    const lng = latLng.lng();
+    const match = UK_REGION_BOUNDS.find(r =>
+      lat >= r.minLat && lat <= r.maxLat && lng >= r.minLng && lng <= r.maxLng
+    );
+    const regionEl = document.getElementById('region');
+    if (match && regionEl) {
+      regionEl.value = match.value;
+      saveState();
+    }
+  }
+
+  function searchMapAddress() {
+    const input = document.getElementById('mapSearchInput');
+    if (!input || !input.value.trim()) return;
+    if (!geocoder) { geocoder = new google.maps.Geocoder(); }
+    geocoder.geocode({ address: input.value + ', UK', componentRestrictions: { country: 'GB' } }, (results, status) => {
+      if (status === 'OK' && results[0]) {
+        mapInstance.setCenter(results[0].geometry.location);
+        mapInstance.setZoom(19);
+      } else {
+        alert('Address not found. Try a full postcode or street address.');
+      }
+    });
+  }
+
   function calculateSolar() {
     const roofType   = document.getElementById('roofType').value;
     const region     = document.getElementById('region').value;
     const energyPrice = parseFloat(document.getElementById('energyPrice').value) / 100;
 
-    // Collect all buildings
-    const bdata = getBuildingData();
-    const filled = bdata.filter(b => b.length > 0 && b.width > 0);
+    let filled, totalRoofArea;
 
-    if (filled.length === 0) {
-      showError('Please enter valid dimensions for at least one building.');
-      return;
-    }
-    if (filled.some(b => isNaN(b.length) || isNaN(b.width))) {
-      showError('Please check your building dimensions — some entries are invalid.');
-      return;
+    if (isMapMode) {
+      // Map mode: use polygon areas directly
+      if (mapPolygons.length === 0) {
+        showError('Please draw at least one building outline on the map.');
+        return;
+      }
+      totalRoofArea = mapPolygons.reduce((s, mp) => s + mp.area, 0);
+      // Build filled array using mapArea so compute() uses exact polygon area
+      filled = mapPolygons.map(mp => ({
+        id: mp.id,
+        length: Math.sqrt(mp.area),
+        width:  Math.sqrt(mp.area),
+        mapArea: mp.area
+      }));
+    } else {
+      // Manual mode: use typed dimensions
+      const bdata = getBuildingData();
+      filled = bdata.filter(b => b.length > 0 && b.width > 0);
+
+      if (filled.length === 0) {
+        showError('Please enter valid dimensions for at least one building.');
+        return;
+      }
+      if (filled.some(b => isNaN(b.length) || isNaN(b.width))) {
+        showError('Please check your building dimensions — some entries are invalid.');
+        return;
+      }
+      totalRoofArea = filled.reduce((sum, b) => sum + (b.mapArea || b.length * b.width), 0);
     }
 
     // Calculate per-building kWp to check threshold logic
     const buildingKwps = filled.map(b => {
-      const area = b.length * b.width * ROOF_COVERAGE;
+      const area = (b.mapArea || b.length * b.width) * ROOF_COVERAGE;
       return (Math.floor(area / PANEL_AREA) * PANEL_POWER) / 1000;
     });
     const hasLargeBuilding = buildingKwps.some(k => k >= MIN_SYSTEM_KWP);
     const totalKwp = buildingKwps.reduce((a, b) => a + b, 0);
-
-    // Total roof area
-    const totalRoofArea = filled.reduce((sum, b) => sum + b.length * b.width, 0);
 
     if (!hasLargeBuilding) {
       // No single building meets threshold — check combined
@@ -4677,6 +5198,7 @@
 
   // Initialise — restore saved state or fall back to defaults
   loadState();
+  applyMapModeDefault();
 
   // Persist dropdowns and energy price whenever they change; also refresh battery preview
   ['region', 'energyPrice', 'roofType'].forEach(id => {
