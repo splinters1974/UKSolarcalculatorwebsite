@@ -2438,7 +2438,7 @@
       </button>
     </div>
     <div class="detect-roof-row">
-      <button class="detect-roof-btn" id="detectRoofBtn" onclick="detectRoofWithSolarAPI()" type="button">
+      <button class="detect-roof-btn" id="detectRoofBtn" onclick="detectRoof()" type="button">
         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
         Detect Roof Automatically
       </button>
@@ -3898,14 +3898,13 @@
     if (type === 'success') setTimeout(function() { el.style.display = 'none'; }, 6000);
   }
 
-  async function detectRoofWithSolarAPI() {
+  async function detectRoof() {
     if (!mapInstance) return;
     const btn = document.getElementById('detectRoofBtn');
     const center = mapInstance.getCenter();
     const lat = center.lat();
     const lng = center.lng();
     const key = window.GOOGLE_MAPS_KEY || '';
-    if (!key) { showSolarDetectStatus('API key not configured.', 'error'); return; }
 
     const loadIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
     const starIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
@@ -3913,75 +3912,103 @@
     if (btn) { btn.disabled = true; btn.innerHTML = loadIcon + ' Detecting…'; }
 
     try {
-      const url = 'https://solar.googleapis.com/v1/buildingInsights:findClosest?location.latitude=' + lat + '&location.longitude=' + lng + '&requiredQuality=LOW&key=' + key;
-      const res = await fetch(url);
-      const data = await res.json();
+      // Query OSM and Solar API in parallel
+      const osmQuery = encodeURIComponent('[out:json][timeout:10];way["building"](around:30,' + lat + ',' + lng + ');out geom;');
+      const osmUrl   = 'https://overpass-api.de/api/interpreter?data=' + osmQuery;
+      const solarUrl = key ? ('https://solar.googleapis.com/v1/buildingInsights:findClosest?location.latitude=' + lat + '&location.longitude=' + lng + '&requiredQuality=LOW&key=' + key) : null;
 
-      if (data.error) {
-        const notFound = data.error.code === 404 || data.error.status === 'NOT_FOUND';
-        showSolarDetectStatus(
-          notFound
-            ? 'No building found here. Zoom in close to a building rooftop, then try again.'
-            : 'Detection failed: ' + data.error.message,
-          notFound ? 'warn' : 'error'
-        );
-        return;
+      const [osmData, solarData] = await Promise.all([
+        fetch(osmUrl).then(function(r) { return r.json(); }).catch(function() { return null; }),
+        solarUrl ? fetch(solarUrl).then(function(r) { return r.json(); }).catch(function() { return null; }) : Promise.resolve(null),
+      ]);
+
+      // Extract dominant roof segment metadata from Solar API
+      let pitch = undefined, azimuth = undefined, solarTotalArea = null;
+      if (solarData && !solarData.error && solarData.solarPotential) {
+        const segs = solarData.solarPotential.roofSegmentStats || [];
+        const dominant = segs.reduce(function(best, seg) {
+          const a    = (seg.stats && seg.stats.areaMeters2) || 0;
+          const bestA = (best && best.stats && best.stats.areaMeters2) || 0;
+          return a > bestA ? seg : best;
+        }, null);
+        if (dominant) {
+          pitch   = parseFloat((dominant.pitchDegrees || 0).toFixed(1));
+          azimuth = Math.round(dominant.azimuthDegrees || 0);
+        }
+        solarTotalArea = segs.reduce(function(s, sg) { return s + ((sg.stats && sg.stats.areaMeters2) || 0); }, 0) || null;
+        if (solarTotalArea) solarTotalArea = parseFloat(solarTotalArea.toFixed(2));
       }
 
-      const segments = (data.solarPotential && data.solarPotential.roofSegmentStats) || [];
-      if (segments.length === 0) {
-        showSolarDetectStatus('Building found but no roof segments returned. Try drawing manually.', 'warn');
-        return;
-      }
+      // Find nearest OSM building polygon
+      const elements = (osmData && osmData.elements) || [];
+      const building = elements.find(function(e) { return e.type === 'way' && e.geometry && e.geometry.length > 2; });
 
       clearAllPolygons();
 
-      const segColours = ['#f59e0b','#3b82f6','#10b981','#8b5cf6','#ef4444','#06b6d4','#f97316','#84cc16'];
-
-      segments.forEach(function(seg, i) {
-        const bb = seg.boundingBox;
-        if (!bb) return;
-        const ne = bb.ne, sw = bb.sw;
-        const coords = [
-          { lat: ne.latitude, lng: ne.longitude },
-          { lat: ne.latitude, lng: sw.longitude },
-          { lat: sw.latitude, lng: sw.longitude },
-          { lat: sw.latitude, lng: ne.longitude },
-        ];
-        const colour = segColours[i % segColours.length];
+      if (building) {
+        // ── Real building outline from OSM ──────────────────────────────
+        const path = building.geometry.map(function(n) { return { lat: n.lat, lng: n.lon }; });
         const polygon = new google.maps.Polygon({
-          paths: coords,
-          fillColor: colour, strokeColor: colour,
+          paths: path,
+          fillColor: '#f59e0b', strokeColor: '#f59e0b',
           fillOpacity: 0.35, strokeWeight: 2,
           editable: true, draggable: false,
           map: mapInstance,
         });
-        const areaM2 = parseFloat(((seg.stats && seg.stats.areaMeters2) ||
-          google.maps.geometry.spherical.computeArea(polygon.getPath())).toFixed(2));
-        const pitch   = parseFloat((seg.pitchDegrees || 0).toFixed(1));
-        const azimuth = Math.round(seg.azimuthDegrees || 0);
-        const roofType = pitch < 5 ? 'flat' : 'pitched';
-        const id = Date.now() + i;
+        const osmArea   = parseFloat(google.maps.geometry.spherical.computeArea(polygon.getPath()).toFixed(2));
+        // Use Solar area if it exists and is plausible (within 50% of OSM polygon area)
+        const areaM2    = (solarTotalArea && Math.abs(solarTotalArea - osmArea) / osmArea < 0.5) ? solarTotalArea : osmArea;
+        const roofType  = (pitch !== undefined && pitch < 5) ? 'flat' : 'pitched';
+        const id        = Date.now();
         mapPolygons.push({ id, polygon, area: areaM2, roofType, pitch, azimuth });
         buildings.push({ id, length: Math.sqrt(areaM2), width: Math.sqrt(areaM2), mapArea: areaM2 });
         google.maps.event.addListener(polygon.getPath(), 'set_at',    function() { updatePolygonArea(id, polygon); });
         google.maps.event.addListener(polygon.getPath(), 'insert_at', function() { updatePolygonArea(id, polygon); });
-      });
 
-      if (data.center) detectRegionFromLatLng(new google.maps.LatLng(data.center.latitude, data.center.longitude));
-      if (data.boundingBox) {
-        mapInstance.fitBounds({
-          north: data.boundingBox.ne.latitude, south: data.boundingBox.sw.latitude,
-          east:  data.boundingBox.ne.longitude, west: data.boundingBox.sw.longitude,
+        const bounds = new google.maps.LatLngBounds();
+        path.forEach(function(p) { bounds.extend(p); });
+        mapInstance.fitBounds(bounds);
+        detectRegionFromLatLng(bounds.getCenter());
+        renderMapBuildingList();
+        updatePortfolioTotal();
+        showSolarDetectStatus(
+          'Building outline detected' + (pitch !== undefined ? ' with roof data.' : '. Select area type below.'),
+          'success'
+        );
+
+      } else if (solarData && !solarData.error && solarData.boundingBox) {
+        // ── OSM not found — fall back to single Solar API bounding box ──
+        const bb = solarData.boundingBox;
+        const coords = [
+          { lat: bb.ne.latitude, lng: bb.ne.longitude },
+          { lat: bb.ne.latitude, lng: bb.sw.longitude },
+          { lat: bb.sw.latitude, lng: bb.sw.longitude },
+          { lat: bb.sw.latitude, lng: bb.ne.longitude },
+        ];
+        const polygon = new google.maps.Polygon({
+          paths: coords,
+          fillColor: '#f59e0b', strokeColor: '#f59e0b',
+          fillOpacity: 0.35, strokeWeight: 2,
+          editable: true, draggable: false,
+          map: mapInstance,
         });
+        const areaM2   = solarTotalArea || parseFloat(google.maps.geometry.spherical.computeArea(polygon.getPath()).toFixed(2));
+        const roofType = (pitch !== undefined && pitch < 5) ? 'flat' : 'pitched';
+        const id       = Date.now();
+        mapPolygons.push({ id, polygon, area: areaM2, roofType, pitch, azimuth });
+        buildings.push({ id, length: Math.sqrt(areaM2), width: Math.sqrt(areaM2), mapArea: areaM2 });
+        google.maps.event.addListener(polygon.getPath(), 'set_at',    function() { updatePolygonArea(id, polygon); });
+        google.maps.event.addListener(polygon.getPath(), 'insert_at', function() { updatePolygonArea(id, polygon); });
+        if (solarData.center) detectRegionFromLatLng(new google.maps.LatLng(solarData.center.latitude, solarData.center.longitude));
+        mapInstance.fitBounds({ north: bb.ne.latitude, south: bb.sw.latitude, east: bb.ne.longitude, west: bb.sw.longitude });
+        renderMapBuildingList();
+        updatePortfolioTotal();
+        showSolarDetectStatus('Approximate outline shown — building not in OpenStreetMap. You can adjust the outline manually.', 'warn');
+
+      } else {
+        showSolarDetectStatus('No building found here. Zoom in close to a rooftop and try again, or draw manually.', 'warn');
       }
 
-      renderMapBuildingList();
-      updatePortfolioTotal();
-      showSolarDetectStatus(
-        segments.length + ' roof segment' + (segments.length > 1 ? 's' : '') + ' detected. Check types below, then calculate.',
-        'success'
-      );
     } catch(e) {
       showSolarDetectStatus('Detection error. Check your connection and try again.', 'error');
     } finally {
