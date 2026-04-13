@@ -600,6 +600,34 @@
     }
     .map-draw-another-btn:hover { background: rgba(245,158,11,0.18); border-style: solid; }
 
+    .detect-roof-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+    .detect-roof-btn {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 10px 16px; width: 100%;
+      background: linear-gradient(135deg, #1464aa 0%, #1a3057 100%);
+      color: #fff; border: none; border-radius: var(--radius);
+      font-size: 13px; font-weight: 700; font-family: 'Familjen Grotesk', sans-serif;
+      cursor: pointer; transition: opacity 0.2s;
+    }
+    .detect-roof-btn:hover { opacity: 0.9; }
+    .detect-roof-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .solar-detect-status {
+      font-size: 12px; padding: 8px 12px;
+      border-radius: var(--radius); font-weight: 600;
+    }
+    .solar-detect-status.success { background: rgba(16,185,129,0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+    .solar-detect-status.warn    { background: rgba(245,158,11,0.12); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
+    .solar-detect-status.error   { background: rgba(239,68,68,0.10); color: #ef4444; border: 1px solid rgba(239,68,68,0.25); }
+    .seg-badges { display: flex; gap: 5px; flex-wrap: wrap; margin: 4px 0; }
+    .seg-badge {
+      font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--surface-3); color: var(--text-muted); border: 1px solid var(--border);
+    }
+    .seg-badge.south { background: rgba(16,185,129,0.12); color: #10b981; border-color: rgba(16,185,129,0.3); }
+    .seg-badge.north { background: rgba(239,68,68,0.08); color: #ef4444; border-color: rgba(239,68,68,0.2); }
+
+
     @media (max-width: 700px) {
       .map-toggle-hint { display: none; }
       #googleMap { height: 300px; }
@@ -2409,7 +2437,14 @@
         Search
       </button>
     </div>
-    <div id="googleMap"></div>
+    <div class="detect-roof-row">
+      <button class="detect-roof-btn" id="detectRoofBtn" onclick="detectRoofWithSolarAPI()" type="button">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Detect Roof Automatically
+      </button>
+      <div id="solarDetectStatus" class="solar-detect-status" style="display:none"></div>
+    </div>
+        <div id="googleMap"></div>
     <div class="map-instructions">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
       Click the <strong>polygon tool</strong> in the map toolbar, then click around the roof edge to draw its outline. Double-click to close.
@@ -3763,6 +3798,11 @@
           <span class="map-building-row-area">${mp.area.toLocaleString('en-GB', {minimumFractionDigits:2, maximumFractionDigits:2})} m²</span>
           <button class="map-building-remove" onclick="removeMapBuilding(${mp.id})" type="button" title="Remove">×</button>
         </div>
+        ${(mp.pitch !== undefined) ? `
+        <div class="seg-badges">
+          <span class="seg-badge">${mp.pitch}° pitch</span>
+          <span class="seg-badge ${azimuthClass(mp.azimuth)}">${azimuthLabel(mp.azimuth)}</span>
+        </div>` : ''}
         <div class="map-building-row-bottom">
           <span class="map-area-roof-label">Area type:</span>
           <select class="map-area-roof-select" onchange="onMapAreaRoofTypeChange(${mp.id}, this.value)">${opts}</select>
@@ -3828,6 +3868,125 @@
         alert('Address not found. Try a full postcode or street address.');
       }
     });
+  }
+
+  function azimuthLabel(az) {
+    if (az === undefined || az === null) return '';
+    if (az >= 337.5 || az < 22.5)  return 'N-facing';
+    if (az < 67.5)  return 'NE-facing';
+    if (az < 112.5) return 'E-facing';
+    if (az < 157.5) return 'SE-facing';
+    if (az < 202.5) return 'S-facing';
+    if (az < 247.5) return 'SW-facing';
+    if (az < 292.5) return 'W-facing';
+    return 'NW-facing';
+  }
+
+  function azimuthClass(az) {
+    if (az === undefined || az === null) return '';
+    if (az >= 112.5 && az < 247.5) return 'south';   // SE / S / SW = good
+    if (az < 67.5 || az >= 292.5)  return 'north';   // N / NE / NW = poor
+    return '';
+  }
+
+  function showSolarDetectStatus(msg, type) {
+    const el = document.getElementById('solarDetectStatus');
+    if (!el) return;
+    el.textContent = msg;
+    el.className = 'solar-detect-status ' + type;
+    el.style.display = 'block';
+    if (type === 'success') setTimeout(function() { el.style.display = 'none'; }, 6000);
+  }
+
+  async function detectRoofWithSolarAPI() {
+    if (!mapInstance) return;
+    const btn = document.getElementById('detectRoofBtn');
+    const center = mapInstance.getCenter();
+    const lat = center.lat();
+    const lng = center.lng();
+    const key = window.GOOGLE_MAPS_KEY || '';
+    if (!key) { showSolarDetectStatus('API key not configured.', 'error'); return; }
+
+    const loadIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+    const starIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+
+    if (btn) { btn.disabled = true; btn.innerHTML = loadIcon + ' Detecting…'; }
+
+    try {
+      const url = 'https://solar.googleapis.com/v1/buildingInsights:findClosest?location.latitude=' + lat + '&location.longitude=' + lng + '&requiredQuality=LOW&key=' + key;
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if (data.error) {
+        const notFound = data.error.code === 404 || data.error.status === 'NOT_FOUND';
+        showSolarDetectStatus(
+          notFound
+            ? 'No building found here. Zoom in close to a building rooftop, then try again.'
+            : 'Detection failed: ' + data.error.message,
+          notFound ? 'warn' : 'error'
+        );
+        return;
+      }
+
+      const segments = (data.solarPotential && data.solarPotential.roofSegmentStats) || [];
+      if (segments.length === 0) {
+        showSolarDetectStatus('Building found but no roof segments returned. Try drawing manually.', 'warn');
+        return;
+      }
+
+      clearAllPolygons();
+
+      const segColours = ['#f59e0b','#3b82f6','#10b981','#8b5cf6','#ef4444','#06b6d4','#f97316','#84cc16'];
+
+      segments.forEach(function(seg, i) {
+        const bb = seg.boundingBox;
+        if (!bb) return;
+        const ne = bb.ne, sw = bb.sw;
+        const coords = [
+          { lat: ne.latitude, lng: ne.longitude },
+          { lat: ne.latitude, lng: sw.longitude },
+          { lat: sw.latitude, lng: sw.longitude },
+          { lat: sw.latitude, lng: ne.longitude },
+        ];
+        const colour = segColours[i % segColours.length];
+        const polygon = new google.maps.Polygon({
+          paths: coords,
+          fillColor: colour, strokeColor: colour,
+          fillOpacity: 0.35, strokeWeight: 2,
+          editable: true, draggable: false,
+          map: mapInstance,
+        });
+        const areaM2 = parseFloat(((seg.stats && seg.stats.areaMeters2) ||
+          google.maps.geometry.spherical.computeArea(polygon.getPath())).toFixed(2));
+        const pitch   = parseFloat((seg.pitchDegrees || 0).toFixed(1));
+        const azimuth = Math.round(seg.azimuthDegrees || 0);
+        const roofType = pitch < 5 ? 'flat' : 'pitched';
+        const id = Date.now() + i;
+        mapPolygons.push({ id, polygon, area: areaM2, roofType, pitch, azimuth });
+        buildings.push({ id, length: Math.sqrt(areaM2), width: Math.sqrt(areaM2), mapArea: areaM2 });
+        google.maps.event.addListener(polygon.getPath(), 'set_at',    function() { updatePolygonArea(id, polygon); });
+        google.maps.event.addListener(polygon.getPath(), 'insert_at', function() { updatePolygonArea(id, polygon); });
+      });
+
+      if (data.center) detectRegionFromLatLng(new google.maps.LatLng(data.center.latitude, data.center.longitude));
+      if (data.boundingBox) {
+        mapInstance.fitBounds({
+          north: data.boundingBox.ne.latitude, south: data.boundingBox.sw.latitude,
+          east:  data.boundingBox.ne.longitude, west: data.boundingBox.sw.longitude,
+        });
+      }
+
+      renderMapBuildingList();
+      updatePortfolioTotal();
+      showSolarDetectStatus(
+        segments.length + ' roof segment' + (segments.length > 1 ? 's' : '') + ' detected. Check types below, then calculate.',
+        'success'
+      );
+    } catch(e) {
+      showSolarDetectStatus('Detection error. Check your connection and try again.', 'error');
+    } finally {
+      if (btn) { btn.disabled = false; btn.innerHTML = starIcon + ' Detect Roof Automatically'; }
+    }
   }
 
   function calculateSolar() {
