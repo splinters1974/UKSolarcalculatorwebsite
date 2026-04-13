@@ -2447,7 +2447,7 @@
         <div id="googleMap"></div>
     <div class="map-instructions">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
-      Click the <strong>polygon tool</strong> in the map toolbar, then click around the roof edge to draw its outline. Double-click to close.
+      <strong>Click on a building</strong> to detect its outline automatically — or use the <strong>polygon tool</strong> to draw manually.
     </div>
     <div id="mapBuildingList" style="display:none">
       <div class="map-building-list-header">
@@ -3718,6 +3718,11 @@
     });
     drawingManager.setMap(mapInstance);
     google.maps.event.addListener(drawingManager, 'polygoncomplete', onPolygonComplete);
+    // Click-to-detect: clicking map (not drawing) triggers building detection
+    google.maps.event.addListener(mapInstance, 'click', function(e) {
+      if (drawingManager.getDrawingMode() !== null) return; // ignore during draw
+      detectRoof(e.latLng.lat(), e.latLng.lng());
+    });
   }
 
   function onPolygonComplete(polygon) {
@@ -3898,12 +3903,12 @@
     if (type === 'success') setTimeout(function() { el.style.display = 'none'; }, 6000);
   }
 
-  async function detectRoof() {
+  async function detectRoof(clickLat, clickLng) {
     if (!mapInstance) return;
     const btn = document.getElementById('detectRoofBtn');
     const center = mapInstance.getCenter();
-    const lat = center.lat();
-    const lng = center.lng();
+    const lat = (clickLat !== undefined) ? clickLat : center.lat();
+    const lng = (clickLng !== undefined) ? clickLng : center.lng();
     const key = window.GOOGLE_MAPS_KEY || '';
 
     const loadIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
@@ -3913,7 +3918,7 @@
 
     try {
       // Query OSM and Solar API in parallel
-      const osmQuery = encodeURIComponent('[out:json][timeout:10];way["building"](around:30,' + lat + ',' + lng + ');out geom;');
+      const osmQuery = encodeURIComponent('[out:json][timeout:15];(way["building"](around:75,' + lat + ',' + lng + ');relation["building"](around:75,' + lat + ',' + lng + '););out geom;');
       const osmUrl   = 'https://overpass-api.de/api/interpreter?data=' + osmQuery;
       const solarUrl = key ? ('https://solar.googleapis.com/v1/buildingInsights:findClosest?location.latitude=' + lat + '&location.longitude=' + lng + '&requiredQuality=LOW&key=' + key) : null;
 
@@ -3941,7 +3946,18 @@
 
       // Find nearest OSM building polygon
       const elements = (osmData && osmData.elements) || [];
-      const building = elements.find(function(e) { return e.type === 'way' && e.geometry && e.geometry.length > 2; });
+      // Prefer way with most nodes (closest/largest building); also accept relation members
+      const ways = elements.filter(function(e) { return e.type === 'way' && e.geometry && e.geometry.length > 2; });
+      // Sort by distance to clicked point so nearest building wins
+      ways.sort(function(a, b) {
+        function centDist(w) {
+          const c = w.geometry.reduce(function(acc, n) { return { lat: acc.lat + n.lat, lng: acc.lng + n.lon }; }, { lat: 0, lng: 0 });
+          const dl = c.lat / w.geometry.length - lat, dn = c.lng / w.geometry.length - lng;
+          return dl*dl + dn*dn;
+        }
+        return centDist(a) - centDist(b);
+      });
+      const building = ways[0] || null;
 
       clearAllPolygons();
 
