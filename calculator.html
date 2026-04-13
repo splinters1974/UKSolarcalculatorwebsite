@@ -3701,7 +3701,7 @@
       });
     }
     drawingManager = new google.maps.drawing.DrawingManager({
-      drawingMode: google.maps.drawing.OverlayType.POLYGON,
+      drawingMode: null,
       drawingControl: true,
       drawingControlOptions: {
         position: google.maps.ControlPosition.TOP_CENTER,
@@ -3741,8 +3741,8 @@
     google.maps.event.addListener(polygon.getPath(), 'insert_at', () => updatePolygonArea(id, polygon));
     renderMapBuildingList();
     updatePortfolioTotal();
-    // Auto-reset to polygon draw mode so next building can be drawn immediately
-    drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
+    // Return to click-to-detect mode after completing a polygon
+    drawingManager.setDrawingMode(null);
   }
 
   function updatePolygonArea(id, polygon) {
@@ -3763,7 +3763,7 @@
     buildings   = buildings.filter(b => b.id !== id);
     renderMapBuildingList();
     updatePortfolioTotal();
-    if (mapPolygons.length === 0) drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
+    if (mapPolygons.length === 0) drawingManager.setDrawingMode(null);
   }
 
   function clearAllPolygons() {
