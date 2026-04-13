@@ -618,6 +618,15 @@
       border: 1px solid var(--border); margin-left: auto;
     }
     .map-action-clear-session:hover { color: #ef4444; border-color: #ef4444; }
+    .map-action-draw {
+      display: flex; align-items: center; gap: 5px;
+      padding: 6px 12px; border-radius: var(--radius);
+      font-size: 12px; font-weight: 600; font-family: 'Familjen Grotesk', sans-serif;
+      cursor: pointer; transition: all 0.2s; white-space: nowrap;
+      background: var(--surface-2); color: var(--text-muted); border: 1px solid var(--border);
+    }
+    .map-action-draw:hover { color: var(--amber); border-color: var(--amber); }
+    .map-action-draw.active { background: var(--amber-dim); color: var(--amber); border-color: var(--amber); }
 
     .detect-roof-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
     .detect-roof-btn {
@@ -2457,12 +2466,13 @@
     </div>
     <div class="map-action-row">
       <button class="map-action-clear-polygons" onclick="clearAllPolygons()" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Clear Map</button>
+      <button class="map-action-draw" id="drawManuallyBtn" onclick="toggleDrawMode()" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Draw Manually</button>
       <button class="map-action-clear-session" onclick="clearSession()" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg> Clear Session</button>
     </div>
     <div id="googleMap"></div>
     <div class="map-instructions">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
-      <strong>Click on a building</strong> to detect its outline automatically — or use the <strong>polygon tool</strong> to draw manually.
+      <strong>Click any building</strong> to detect its outline — or click <strong>Draw Manually</strong> below to trace your own outline.
     </div>
     <div id="mapBuildingList" style="display:none">
       <div class="map-building-list-header">
@@ -3718,11 +3728,7 @@
     }
     drawingManager = new google.maps.drawing.DrawingManager({
       drawingMode: null,
-      drawingControl: true,
-      drawingControlOptions: {
-        position: google.maps.ControlPosition.TOP_CENTER,
-        drawingModes: [google.maps.drawing.OverlayType.POLYGON]
-      },
+      drawingControl: false,
       polygonOptions: {
         fillColor:   '#f59e0b',
         strokeColor: '#f59e0b',
@@ -3759,6 +3765,8 @@
     updatePortfolioTotal();
     // Return to click-to-detect mode after completing a polygon
     drawingManager.setDrawingMode(null);
+    const drawBtn = document.getElementById('drawManuallyBtn');
+    if (drawBtn) drawBtn.classList.remove('active');
   }
 
   function updatePolygonArea(id, polygon) {
@@ -3874,6 +3882,23 @@
     if (drawingManager) {
       drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
       document.getElementById('googleMap').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const btn = document.getElementById('drawManuallyBtn');
+      if (btn) btn.classList.add('active');
+    }
+  }
+
+  function toggleDrawMode() {
+    if (!drawingManager) return;
+    const btn = document.getElementById('drawManuallyBtn');
+    const isDrawing = drawingManager.getDrawingMode() !== null;
+    if (isDrawing) {
+      // Switch back to detect mode
+      drawingManager.setDrawingMode(null);
+      if (btn) btn.classList.remove('active');
+    } else {
+      // Switch to polygon draw mode
+      drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
+      if (btn) btn.classList.add('active');
     }
   }
 
