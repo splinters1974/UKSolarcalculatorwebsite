@@ -599,6 +599,25 @@
       transition: background 0.2s, border-style 0.2s;
     }
     .map-draw-another-btn:hover { background: rgba(245,158,11,0.18); border-style: solid; }
+    .map-action-row {
+      display: flex; gap: 8px; margin-bottom: 8px;
+    }
+    .map-action-clear-polygons, .map-action-clear-session {
+      display: flex; align-items: center; gap: 5px;
+      padding: 6px 12px; border-radius: var(--radius);
+      font-size: 12px; font-weight: 600; font-family: 'Familjen Grotesk', sans-serif;
+      cursor: pointer; transition: all 0.2s; white-space: nowrap;
+    }
+    .map-action-clear-polygons {
+      background: var(--surface-2); color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+    .map-action-clear-polygons:hover { color: var(--amber); border-color: var(--amber); }
+    .map-action-clear-session {
+      background: var(--surface-2); color: var(--text-muted);
+      border: 1px solid var(--border); margin-left: auto;
+    }
+    .map-action-clear-session:hover { color: #ef4444; border-color: #ef4444; }
 
     .detect-roof-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
     .detect-roof-btn {
@@ -2364,14 +2383,6 @@
     </button>
   </div>
 
-  <!-- SESSION CLEAR BAR -->
-  <div class="session-clear-bar">
-    <button class="session-clear-btn" onclick="clearSession()" type="button">
-      <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
-      Clear Saved Session
-    </button>
-  </div>
-
   <!-- STEP INDICATOR -->
   <div class="steps" id="stepIndicator">
     <div class="step active" id="step1">
@@ -2444,7 +2455,11 @@
       </button>
       <div id="solarDetectStatus" class="solar-detect-status" style="display:none"></div>
     </div>
-        <div id="googleMap"></div>
+    <div class="map-action-row">
+      <button class="map-action-clear-polygons" onclick="clearAllPolygons()" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Clear Map</button>
+      <button class="map-action-clear-session" onclick="clearSession()" type="button"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg> Clear Session</button>
+    </div>
+    <div id="googleMap"></div>
     <div class="map-instructions">
       <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
       <strong>Click on a building</strong> to detect its outline automatically — or use the <strong>polygon tool</strong> to draw manually.
