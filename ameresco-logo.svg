@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 100" width="220" height="100">
+  <rect width="220" height="100" fill="#ffffff"/>
+
+  <!-- Dual-ellipse orbital mark -->
+  <!-- Outer ellipse (blue) -->
+  <ellipse cx="188" cy="50" rx="28" ry="16" fill="none" stroke="#1B72BE" stroke-width="3.5" transform="rotate(-30 188 50)"/>
+  <!-- Inner ellipse (green) -->
+  <ellipse cx="188" cy="50" rx="28" ry="16" fill="none" stroke="#3AAA3C" stroke-width="3.5" transform="rotate(30 188 50)"/>
+  <!-- Centre dot -->
+  <circle cx="188" cy="50" r="4" fill="#1B72BE"/>
+
+  <!-- AMERESCO wordmark -->
+  <text
+    x="8"
+    y="48"
+    font-family="Arial Black, Arial, sans-serif"
+    font-weight="900"
+    font-size="30"
+    fill="#1B72BE"
+    letter-spacing="1">AMERESCO</text>
+
+  <!-- Tagline -->
+  <text
+    x="8"
+    y="68"
+    font-family="Georgia, Times New Roman, serif"
+    font-style="italic"
+    font-size="12"
+    fill="#3AAA3C"
+    letter-spacing="0.5">Green • Clean • Sustainable</text>
+</svg>
