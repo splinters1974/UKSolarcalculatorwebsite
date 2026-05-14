@@ -1,31 +1,50 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 100" width="220" height="100">
-  <rect width="220" height="100" fill="#ffffff"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 175" width="560" height="175">
+  <rect width="560" height="175" fill="#ffffff"/>
 
-  <!-- Dual-ellipse orbital mark -->
-  <!-- Outer ellipse (blue) -->
-  <ellipse cx="188" cy="50" rx="28" ry="16" fill="none" stroke="#1B72BE" stroke-width="3.5" transform="rotate(-30 188 50)"/>
-  <!-- Inner ellipse (green) -->
-  <ellipse cx="188" cy="50" rx="28" ry="16" fill="none" stroke="#3AAA3C" stroke-width="3.5" transform="rotate(30 188 50)"/>
-  <!-- Centre dot -->
-  <circle cx="188" cy="50" r="4" fill="#1B72BE"/>
-
-  <!-- AMERESCO wordmark -->
+  <!-- ── AMERESCO wordmark ───────────────────────────────── -->
   <text
-    x="8"
-    y="48"
-    font-family="Arial Black, Arial, sans-serif"
+    x="10" y="108"
+    font-family="'Arial Black','Franklin Gothic Heavy','Impact',Arial,sans-serif"
     font-weight="900"
-    font-size="30"
+    font-size="82"
     fill="#1B72BE"
-    letter-spacing="1">AMERESCO</text>
+    letter-spacing="2">AMERESCO</text>
 
-  <!-- Tagline -->
+  <!-- ── Tagline ─────────────────────────────────────────── -->
   <text
-    x="8"
-    y="68"
-    font-family="Georgia, Times New Roman, serif"
-    font-style="italic"
-    font-size="12"
+    x="12" y="142"
+    font-family="Arial,'Helvetica Neue',Helvetica,sans-serif"
+    font-weight="700"
+    font-size="17"
     fill="#3AAA3C"
-    letter-spacing="0.5">Green • Clean • Sustainable</text>
+    letter-spacing="0.5">Green &#8226; Clean &#8226; Sustainable</text>
+
+  <!-- ── Orbital mark ────────────────────────────────────── -->
+  <!-- Two intersecting ellipse rings, green + blue, centred at (508,82) -->
+
+  <!-- Green ring (tilted ~35° left of vertical) -->
+  <ellipse
+    cx="508" cy="82"
+    rx="30" ry="58"
+    fill="none"
+    stroke="#3AAA3C"
+    stroke-width="6"
+    transform="rotate(-35 508 82)"/>
+
+  <!-- Blue ring (tilted ~35° right of vertical) -->
+  <ellipse
+    cx="508" cy="82"
+    rx="30" ry="58"
+    fill="none"
+    stroke="#1B72BE"
+    stroke-width="6"
+    transform="rotate(35 508 82)"/>
+
+  <!-- ® symbol, top-right of orbital mark -->
+  <text
+    x="535" y="36"
+    font-family="Arial,sans-serif"
+    font-size="13"
+    font-weight="400"
+    fill="#1B72BE">&#174;</text>
 </svg>
