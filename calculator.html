@@ -5,19 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Free Commercial Solar ROI Calculator — UK Businesses</title>
   <meta name="description" content="Calculate your commercial solar ROI instantly. Enter your roof size and energy use to get payback period, annual savings, 30-year NPV, and carbon reduction for your UK site.">
-  <link rel="canonical" href="https://www.uksolarcalculator.co.uk/calculator.html">
+  <link rel="canonical" href="https://uksolarcalculator.co.uk/calculator.html">
   <!-- Open Graph -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.uksolarcalculator.co.uk/calculator.html">
+  <meta property="og:url" content="https://uksolarcalculator.co.uk/calculator.html">
   <meta property="og:title" content="Free Commercial Solar ROI Calculator — UK Businesses">
   <meta property="og:description" content="Calculate your commercial solar ROI instantly. Enter your roof size and energy use to get payback period, annual savings, 30-year NPV, and carbon reduction for your UK site.">
-  <meta property="og:image" content="https://www.uksolarcalculator.co.uk/images/logo_light.png">
+  <meta property="og:image" content="https://uksolarcalculator.co.uk/images/logo_light.png">
   <meta property="og:site_name" content="UK Solar Calculator">
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Free Commercial Solar ROI Calculator — UK Businesses">
   <meta name="twitter:description" content="Calculate your commercial solar ROI instantly. Enter your roof size and energy use to get payback period, annual savings, 30-year NPV, and carbon reduction for your UK site.">
-  <meta name="twitter:image" content="https://www.uksolarcalculator.co.uk/images/logo_light.png">
+  <meta name="twitter:image" content="https://uksolarcalculator.co.uk/images/logo_light.png">
   <!-- Schema: BreadcrumbList -->
   <script type="application/ld+json">
   {
@@ -28,13 +28,13 @@
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://www.uksolarcalculator.co.uk/"
+        "item": "https://uksolarcalculator.co.uk/"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Calculator",
-        "item": "https://www.uksolarcalculator.co.uk/calculator.html"
+        "item": "https://uksolarcalculator.co.uk/calculator.html"
       }
     ]
   }
@@ -47,7 +47,7 @@
     "name": "Industrial & Commercial Solar Calculator",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Web",
-    "url": "https://www.uksolarcalculator.co.uk/calculator.html",
+    "url": "https://uksolarcalculator.co.uk/calculator.html",
     "description": "Free solar ROI calculator for UK commercial and industrial businesses. Calculates system size, installation cost, annual savings, payback period, 30-year NPV, and carbon reduction based on roof area, region, and energy price.",
     "offers": {
       "@type": "Offer",
@@ -2800,7 +2800,7 @@
       <div class="export-banner-body">
         <div class="export-banner-title">Additional Export Upside <span class="export-not-included">not included in savings</span></div>
         <div class="export-banner-detail" id="exportBannerDetail">
-          <span id="exportBannerPre">Based on 20% of generation exported at 5p/kWh (SEG nominal rate), your estimated 30-year export revenue is </span><strong id="exportRevenue">—</strong><span id="exportBannerPost">. This is purely additional upside and is excluded from all savings calculations above as export rates are not guaranteed and vary by DNO and tariff.</span>
+          <span id="exportBannerPre">Based on 30% of generation exported at 5p/kWh (SEG nominal rate), your estimated 30-year export revenue is </span><strong id="exportRevenue">—</strong><span id="exportBannerPost">. This is purely additional upside and is excluded from all savings calculations above as export rates are not guaranteed and vary by DNO and tariff.</span>
         </div>
       </div>
     </div>
@@ -2867,7 +2867,7 @@
         <div class="assumption-item">Maintenance costs NOT included. Typically £15–£20/kWp/year.</div>
         <div class="assumption-item">Roof/mount coverage: 80–90% of total area assumed usable depending on mount type, accounting for edge setbacks, obstructions, and inter-row spacing.</div>
         <div class="assumption-item">Self-consumption: 70% of generation is assumed consumed on-site, displacing grid electricity at the import rate.</div>
-        <div class="assumption-item">Export upside: the remaining 20% exported at a nominal 5p/kWh (SEG rate) is shown separately above as additional upside only — excluded from savings as export rates are not guaranteed and vary by DNO and tariff.</div>
+        <div class="assumption-item">Export upside: the remaining 30% exported at a nominal 5p/kWh (SEG rate) is shown separately above as additional upside only — excluded from savings as export rates are not guaranteed and vary by DNO and tariff.</div>
         <div class="assumption-item">Panel degradation: 0.5% per year (manufacturer linear performance warranty standard).</div>
         <div class="assumption-item">Electricity price inflation: 3% per year.</div>
         <div class="assumption-item">Panel spec: 450W, 2.27m × 1.13m (2.57m²). System efficiency (performance ratio): 80%. Installation cost is all-inclusive (panels, inverters, mounting, electrical, commissioning).</div>
@@ -2928,7 +2928,7 @@
         <div class="contact-text">This is a rough, hypothetical calculation based on very basic input information. For a more detailed design and accurate costings and savings please contact:</div>
         <div class="contact-person">Martyn Sheridan</div>
         <div class="contact-details">
-          <a href="mailto:msheridan@ameresco.com">msheridan@ameresco.com</a>
+          <a href="mailto:martynsheridan621@gmail.com">martynsheridan621@gmail.com</a>
           <span class="contact-divider">·</span>
           <a href="tel:+447872015769">+44 (0) 787 2015769</a>
         </div>
@@ -3066,8 +3066,12 @@
   const EMAILJS_SERVICE_ID  = 'service_u4kh62c';
   const EMAILJS_TEMPLATE_ID = 'template_qvzha1q';
 
-  // Initialise EmailJS v4 once at page load (v4 requires object syntax)
-  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+  // Initialise EmailJS v4 once at page load (v4 requires object syntax).
+  // Guarded: ad-blockers commonly block the EmailJS CDN, and an unguarded
+  // ReferenceError here would abort the whole script and brick the page.
+  if (typeof emailjs !== 'undefined') {
+    emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+  }
 
   // ── MULTI-BUILDING ──────────────────────────────────
   let buildings = [];
@@ -3238,6 +3242,7 @@
     buildings = [{ id: 1 }];
     oversizeFactor = 1.0;
     calculationData = null;
+    ppaData = null;
     // Reset form fields
     const regionEl = document.getElementById('region');
     if (regionEl) regionEl.value = 'national';
@@ -3301,6 +3306,15 @@
     btn.disabled = true;
     txt.textContent = 'Sending\u2026';
 
+    // EmailJS unavailable (CDN blocked) — fall back to a direct PDF download
+    if (typeof emailjs === 'undefined') {
+      downloadPDF();
+      txt.textContent = 'Send Report';
+      btn.disabled = false;
+      showModalMsg('Email service unavailable — your PDF is downloading instead.', 'error');
+      return;
+    }
+
     const systemSize = calculationData.results.systemSizeKw.toFixed(2);
     const reportDate = calculationData.date;
     const region     = calculationData.inputs.region;
@@ -3359,7 +3373,7 @@
         + 'Annual CO2 saving: ' + (+(_r.carbonOffset||0)).toFixed(1) + ' t/yr';
 
       emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-        to_email:    'msheridan@ameresco.com',
+        to_email:    'martynsheridan621@gmail.com',
         to_name:     'Martyn',
         report_date: reportDate,
         system_size: systemSize,
@@ -3614,9 +3628,9 @@
       <div class="assumption-item">Maintenance, operation and insurance costs are included in the PPA rate — no additional cost to you.</div>
       <div class="assumption-item">Roof coverage: 80% of total roof area assumed usable, accounting for edge setbacks, obstructions, vents, and inter-row spacing.</div>
       <div class="assumption-item">The project has been modelled that the business will purchase all the energy that is generated whether they use it or not — the project is sized that typical usage is between 80–100% and the rest will be exported if available.</div>
-      <div class="assumption-item">Panel degradation: 2% per year (industry standard).</div>
+      <div class="assumption-item">Panel degradation: 0.5% per year (manufacturer linear performance warranty standard).</div>
       <div class="assumption-item">Electricity price inflation: 3% per year. PPA rate escalator: 2% per year.</div>
-      <div class="assumption-item">Panel spec: 450W, 2.27m × 1.13m (2.57m²). System efficiency: 85%.</div>
+      <div class="assumption-item">Panel spec: 450W, 2.27m × 1.13m (2.57m²). System efficiency (performance ratio): 80%.</div>
       <div class="assumption-item">Carbon factor: 0.196 kg CO₂/kWh (UK grid 2026).</div>
       <div class="assumption-item">PPA rates for flat roof, ground mount and carport installations include a +0.2p/kWh surcharge. Does not include costs for scaffolding, structural surveys, or grid connection upgrades.</div>`;
 
@@ -3849,17 +3863,20 @@
     if (mp) mp.roofType = value;
   }
 
-  // UK bounding-box region detector — no API call required
+  // UK bounding-box region detector — no API call required.
+  // Values MUST match the options of the #region select (see REGIONAL_YIELD keys):
+  // scotland, north, midlands (incl. Wales), southwest, southeast, national.
+  // First match wins, so more specific boxes (Wales, East Anglia) come before
+  // the broader latitude bands they overlap.
   const UK_REGION_BOUNDS = [
-    { value: 'nscotland',  minLat: 57.5, maxLat: 61.0, minLng: -8.0,  maxLng: 0.0  },
-    { value: 'sscotland',  minLat: 55.0, maxLat: 57.5, minLng: -6.5,  maxLng: -1.0 },
-    { value: 'nengland',   minLat: 53.5, maxLat: 55.0, minLng: -3.5,  maxLng:  0.0 },
-    { value: 'midlands',   minLat: 52.0, maxLat: 53.5, minLng: -3.0,  maxLng:  0.5 },
-    { value: 'eastanglia', minLat: 51.5, maxLat: 53.0, minLng:  0.0,  maxLng:  2.0 },
-    { value: 'southeast',  minLat: 51.0, maxLat: 52.0, minLng: -1.0,  maxLng:  1.5 },
-    { value: 'southwest',  minLat: 49.5, maxLat: 51.5, minLng: -6.0,  maxLng: -1.0 },
-    { value: 'wales',      minLat: 51.3, maxLat: 53.5, minLng: -5.5,  maxLng: -2.5 },
-    { value: 'nireland',   minLat: 54.0, maxLat: 55.5, minLng: -8.5,  maxLng: -5.5 },
+    { value: 'scotland',  minLat: 55.0, maxLat: 61.0, minLng: -8.0,  maxLng:  0.0 }, // all Scotland
+    { value: 'midlands',  minLat: 51.3, maxLat: 53.5, minLng: -5.5,  maxLng: -2.65 }, // Wales (grouped with Midlands in the select)
+    { value: 'southeast', minLat: 51.5, maxLat: 53.0, minLng:  0.0,  maxLng:  2.0 }, // East Anglia (closest yield profile)
+    { value: 'north',     minLat: 53.5, maxLat: 55.0, minLng: -3.5,  maxLng:  0.0 }, // North England
+    { value: 'north',     minLat: 54.0, maxLat: 55.5, minLng: -8.5,  maxLng: -5.5 }, // Northern Ireland (closest yield profile)
+    { value: 'midlands',  minLat: 52.0, maxLat: 53.5, minLng: -3.0,  maxLng:  0.5 },
+    { value: 'southeast', minLat: 51.0, maxLat: 52.0, minLng: -1.0,  maxLng:  1.5 },
+    { value: 'southwest', minLat: 49.5, maxLat: 51.5, minLng: -6.0,  maxLng: -1.0 },
   ];
 
   function detectRegionFromLatLng(latLng) {
@@ -3869,7 +3886,11 @@
       lat >= r.minLat && lat <= r.maxLat && lng >= r.minLng && lng <= r.maxLng
     );
     const regionEl = document.getElementById('region');
-    if (match && regionEl) {
+    if (!match || !regionEl) return;
+    // Only apply values the select actually offers — an unmatched value would
+    // blank the select and cascade NaN through every calculation.
+    const valid = Array.from(regionEl.options).some(o => o.value === match.value);
+    if (valid) {
       regionEl.value = match.value;
       saveState();
     }
@@ -4236,6 +4257,10 @@
     const r   = data.results;
     const inp = data.inputs;
 
+    // Discard any PPA comparison from a previous calculation — it was computed
+    // against the old system and would otherwise leak stale figures into PDFs
+    ppaData = null;
+
     // Show header notes button now that results are available
     const headerNotesBtn = document.getElementById('headerNotesBtn');
     if (headerNotesBtn) headerNotesBtn.style.display = 'flex';
@@ -4275,7 +4300,7 @@
         ') represents residual uncaptured export in yrs 1–10 plus the full export from yr 11 onwards, at 5p/kWh (SEG nominal). Excluded from savings — export rates are not guaranteed and vary by DNO and tariff.';
     } else {
       document.getElementById('exportBannerPre').textContent  =
-        `Based on 20% of generation exported at 5p/kWh (SEG nominal rate) — £${fmt(Math.round(r.yearOneExportRevenue))} in year 1 — your estimated 30-year export revenue is `;
+        `Based on 30% of generation exported at 5p/kWh (SEG nominal rate) — £${fmt(Math.round(r.yearOneExportRevenue))} in year 1 — your estimated 30-year export revenue is `;
       document.getElementById('exportBannerPost').textContent =
         '. This is purely additional upside and is excluded from all savings calculations above as export rates are not guaranteed and vary by DNO and tariff.';
     }
@@ -4348,12 +4373,12 @@
       <div class="assumption-item">Maintenance costs NOT included. Typically £15–£20/kWp/year.</div>
       <div class="assumption-item">Roof coverage: ${Math.round((GROUND_COVERAGE[inp.roofType]||ROOF_COVERAGE)*100)}% of total area assumed usable, accounting for edge setbacks, obstructions, vents, and inter-row spacing.</div>
       ${oversizeNote}
-      <div class="assumption-item">Self-consumption: 80% of generation is assumed consumed on-site, displacing grid electricity at the import rate.</div>
-      <div class="assumption-item">Export upside: ${inp.batteryOn ? 'battery captures the 20% export in years 1–10; residual export and all export from year 11 onwards' : 'the remaining 20%'} exported at a nominal 5p/kWh (SEG rate) is shown separately above as additional upside only — excluded from savings as export rates are not guaranteed and vary by DNO and tariff.</div>
+      <div class="assumption-item">Self-consumption: 70% of generation is assumed consumed on-site, displacing grid electricity at the import rate.</div>
+      <div class="assumption-item">Export upside: ${inp.batteryOn ? 'battery captures the 30% export in years 1–10; residual export and all export from year 11 onwards' : 'the remaining 30%'} exported at a nominal 5p/kWh (SEG rate) is shown separately above as additional upside only — excluded from savings as export rates are not guaranteed and vary by DNO and tariff.</div>
       ${batteryNote}
-      <div class="assumption-item">Panel degradation: 2% per year (industry standard).</div>
+      <div class="assumption-item">Panel degradation: 0.5% per year (manufacturer linear performance warranty standard).</div>
       <div class="assumption-item">Electricity price inflation: 3% per year.</div>
-      <div class="assumption-item">Panel spec: 450W, 2.27m × 1.13m (2.57m²). System efficiency: 85%.</div>
+      <div class="assumption-item">Panel spec: 450W, 2.27m × 1.13m (2.57m²). System efficiency (performance ratio): 80%.</div>
       <div class="assumption-item">Carbon factor: 0.196 kg CO₂/kWh (UK grid 2026).</div>
       <div class="assumption-item">Does not include costs for scaffolding, surveys such as structural and also any grid associated costs or upgrades.</div>`;
 
@@ -4945,7 +4970,7 @@
     doc.setFontSize(6);
     doc.setTextColor(...MGREY);
     doc.text(
-      'Kinetic Energy Consulting  |  msheridan@ameresco.com  |  07872 015769  |  Timeline is indicative — actual durations subject to site, council, and DNO variables.',
+      'Kinetic Energy Consulting  |  martynsheridan621@gmail.com  |  07872 015769  |  Timeline is indicative — actual durations subject to site, council, and DNO variables.',
       ML, PH - 6
     );
   }
@@ -5057,9 +5082,10 @@
     let ly = sectionHead('Building Specifications', BLUE, [235, 244, 255], C1L, startY, COL_W);
     ly = dataRow('No. of Buildings:', inp.buildingCount + (inp.buildingCount > 1 ? ' buildings (portfolio)' : ' building'), C1L, ly, COL_W);
     ly = dataRow('Total Roof Area:', r.roofArea.toFixed(0) + ' m2', C1L, ly, COL_W);
-    ly = dataRow('Usable Roof (80%):', (r.roofArea * 0.8).toFixed(0) + ' m2', C1L, ly, COL_W);
+    const coverage = GROUND_COVERAGE[inp.roofType] || 0.8;
+    ly = dataRow('Usable Roof (' + Math.round(coverage * 100) + '%):', (r.roofArea * coverage).toFixed(0) + ' m2', C1L, ly, COL_W);
     const mountLabels = { pitched:'Pitched Roof', flat:'Flat Roof', ground:'Ground Mount', carport:'Car Port' };
-    const costLabels  = { pitched:'£800 / kWp', flat:'£900 / kWp', ground:'£950 / kWp', carport:'£1,350 / kWp' };
+    const costLabels  = Object.fromEntries(Object.entries(INSTALL_COST).map(([k, v]) => [k, '£' + v.toLocaleString('en-GB') + ' / kWp']));
     ly = dataRow('Mount Type:', mountLabels[inp.roofType] || inp.roofType, C1L, ly, COL_W);
     ly = dataRow('Region:', inp.region.charAt(0).toUpperCase() + inp.region.slice(1), C1L, ly, COL_W);
 
@@ -5098,7 +5124,7 @@
     // RIGHT: Environmental & Key Inputs
     ry = sectionHead('Environmental & Key Inputs', GREEN, [236, 253, 245], C2L, ry, COL_W);
     ry = dataRow('CO2 Offset (30yr):', r.carbonOffset.toFixed(1) + ' tonnes', C2L, ry, COL_W);
-    ry = dataRow('Self-Consumption Rate:', '80%', C2L, ry, COL_W);
+    ry = dataRow('Self-Consumption Rate:', Math.round(SELF_CONSUMPTION * 100) + '%', C2L, ry, COL_W);
     ry = dataRow('Energy Price (yr 1):', inp.energyPrice + 'p / kWh', C2L, ry, COL_W);
     ry = dataRow('Cost Basis:', costLabels[inp.roofType] || '—', C2L, ry, COL_W);
 
@@ -5140,11 +5166,11 @@
       'Maintenance costs are NOT included. Annual maintenance typically costs £15-20 per kWp per year.',
       'Roof/mount coverage: 80-90% of total area assumed usable depending on mount type, accounting for edge setbacks, obstructions, and inter-row spacing.',
       inp.oversize > 1.0 ? `System oversized by ${Math.round((inp.oversize-1)*100)}% above the roof-area baseline to increase winter generation and export available for battery storage.` : null,
-      'Self-consumption: 80% of generation is assumed consumed on-site, displacing grid electricity at the import rate.',
-      '*Export upside: ' + (inp.batteryOn ? 'battery captures the 20% export in years 1-10; residual export and all export from year 11' : 'the remaining 20% of generation exported') + ' is valued at a nominal 5p/kWh (SEG rate) — £' + fmt(r.totalExportRevenue) + ' over 30 years. Excluded from main savings as rates are not guaranteed.',
+      'Self-consumption: 70% of generation is assumed consumed on-site, displacing grid electricity at the import rate.',
+      '*Export upside: ' + (inp.batteryOn ? 'battery captures the 30% export in years 1-10; residual export and all export from year 11' : 'the remaining 30% of generation exported') + ' is valued at a nominal 5p/kWh (SEG rate) — £' + fmt(r.totalExportRevenue) + ' over 30 years. Excluded from main savings as rates are not guaranteed.',
       inp.batteryOn ? `Battery storage: ${fmt(r.batteryKwh)} kWh system installed at £1,000/kWh (£${fmt(r.batteryCost)}). Savings apply to years 1-10 only, reflecting a 10-year commercial lifespan under daily cycling. Solar reverts to standard self-consumption from year 11. Capacity degradation not modelled.` : null,
-      'Panel degradation: 2% per year. Electricity price inflation: 3% per year.',
-      'Panel specification: 450W, 2.27m x 1.13m. Overall system efficiency: 85%.',
+      'Panel degradation: 0.5% per year. Electricity price inflation: 3% per year.',
+      'Panel specification: 450W, 2.27m x 1.13m. Overall system efficiency: 80%.',
       'Carbon factor: 0.196 kg CO2 per kWh (UK grid 2026).',
       'Does not include costs for scaffolding, structural surveys, or any grid connection costs or upgrades.',
     ].filter(Boolean);
@@ -5162,7 +5188,7 @@
 
     // Pre-calculate all text to size the box correctly before drawing it
     const discText    = 'This is a rough, hypothetical calculation based on very basic input information. For a more detailed design and accurate costings and savings please contact:';
-    const contactLine = 'Martyn Sheridan  |  msheridan@ameresco.com  |  +44 (0) 787 2015769';
+    const contactLine = 'Martyn Sheridan  |  martynsheridan621@gmail.com  |  +44 (0) 787 2015769';
     const maxTextW    = CW - 12;
     T('normal', 7.2, [100, 60, 0]);
     const discLines    = doc.splitTextToSize(discText, maxTextW);
@@ -5313,7 +5339,7 @@
       'Post-contract (after year ' + ppa.contractYears + '): energy assumed free — full grid price valued as saving.',
       'All generated energy purchased by the business. Sized so typical usage assumption is 80% of total energy generated. Surplus exported if available.',
       'Roof mount coverage: 80% of total area assumed usable depending on mount type.',
-      'Carbon factor: 0.196 kg CO2/kWh (UK grid 2026). System efficiency: 85%.',
+      'Carbon factor: 0.196 kg CO2/kWh (UK grid 2026). System efficiency: 80%.',
       'PPA: no upfront cost, no maintenance liability. Funder owns, operates and maintains the system.',
       'Does not include costs for scaffolding, structural surveys, or any grid connection upgrades.',
     ];
@@ -5325,7 +5351,7 @@
     // IMPORTANT NOTICE BOX
     doc.setDrawColor(...LGREY); doc.setLineWidth(0.4); doc.line(ML, chartY, PW - MR, chartY); chartY += 4;
     const discText = 'This is a rough, hypothetical calculation based on very basic input information. For a more detailed design and accurate costings and savings please contact:';
-    const contactLine = 'Martyn Sheridan  |  msheridan@ameresco.com  |  +44 (0) 787 2015769';
+    const contactLine = 'Martyn Sheridan  |  martynsheridan621@gmail.com  |  +44 (0) 787 2015769';
     T('normal', 7.2, [100,60,0]);
     const dL = doc.splitTextToSize(discText, CW - 10);
     T('bold', 7.5, [130,80,0]);
@@ -5456,7 +5482,7 @@
       doc.setFillColor(...AMBER);
       doc.rect(0, PH - 3, PW, 3, 'F');
       T('normal', 6, MGREY);
-      doc.text('Kinetic Energy Consulting  |  msheridan@ameresco.com  |  07872 015769  |  For information purposes only — not a formal quotation or guarantee of performance.', ML, PH - 6);
+      doc.text('Kinetic Energy Consulting  |  martynsheridan621@gmail.com  |  07872 015769  |  For information purposes only — not a formal quotation or guarantee of performance.', ML, PH - 6);
     }
 
     // ════════════════════════════════
@@ -5475,12 +5501,12 @@
     // How the Calculator Works
     y = sectionHead('How the Calculator Works', y);
     y = para('You provide basic information about your site — roof area, roof type, location, and current energy price — and the calculator estimates the maximum system size, annual generation based on regional solar irradiance data, and models the financial picture over 30 years under two funding routes.', y);
-    y = para('Core assumptions: panels are 450W modules (~2.57 m² each); the system operates at 85% efficiency; generation degrades at 2% per year; energy prices rise at 3% per year; and 80% of generation is consumed on-site. These figures are deliberately conservative — in practice, many sites perform better.', y);
+    y = para('Core assumptions: panels are 450W modules (~2.57 m² each); the system operates at 80% efficiency (performance ratio); generation degrades at 0.5% per year; energy prices rise at 3% per year; and 70% of generation is consumed on-site. These figures are deliberately conservative — in practice, many sites perform better.', y);
     y += 3;
 
     // Limitations
     y = sectionHead('Limitations & Caveats', y);
-    y = labelPara('Roof area is the starting point, not the end point.', 'The calculator applies a standard coverage factor by roof type. It cannot account for rooflights, plant, drainage outlets, access hatches, or structural constraints. Usable area is typically 60–85% of the gross figure; the calculator assumes 80%.', y);
+    y = labelPara('Roof area is the starting point, not the end point.', 'The calculator applies a standard coverage factor by roof type. It cannot account for rooflights, plant, drainage outlets, access hatches, or structural constraints. Usable area is typically 60–85% of the gross figure; the calculator assumes 80–90% depending on mount type.', y);
     y = labelPara('Shading is not modelled.', 'The calculator assumes a reasonably unobstructed roof. Significant shading from adjacent buildings, rooftop plant, or trees will reduce actual generation below the figures shown. A full shading analysis is part of any proper design.', y);
     y = labelPara('Energy prices are an estimate.', 'Most commercial businesses pay 18p–28p per kWh depending on contract type and tariff structure. Use a figure from your most recent bill. Savings modelled are directly sensitive to this input.', y);
     y = labelPara('Grid connection varies.', 'Every site requires a DNO application. Time and cost depend on local network capacity, system size, and the current application queue. For systems over 5MWp, the process escalates to NESO, adding significant time.', y);
@@ -5601,7 +5627,7 @@
     T('bold', 9, BLACK);
     doc.text('Martyn Sheridan  —  Kinetic Energy Consulting', ML + 7, contactY);
     T('normal', 8, [0, 90, 160]);
-    doc.text('msheridan@ameresco.com', ML + 7, contactY + 6);
+    doc.text('martynsheridan621@gmail.com', ML + 7, contactY + 6);
     doc.text('+44 (0) 7872 015769', ML + 7, contactY + 12);
     y += 63;
 
@@ -5640,7 +5666,7 @@
           <img src="images/logo_light.png" alt="Industrial &amp; Commercial Solar Calculator" class="footer-logo-img">
         </div>
         <p class="footer-desc">Industrial &amp; commercial solar energy solutions for UK businesses. Detailed financial modelling, project timeline planning, and expert consultation from enquiry to commissioning.</p>
-        <div class="footer-contact-item"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><a href="mailto:msheridan@ameresco.com">msheridan@ameresco.com</a></div>
+        <div class="footer-contact-item"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><a href="mailto:martynsheridan621@gmail.com">martynsheridan621@gmail.com</a></div>
         <div class="footer-contact-item"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 012 2.18 2 2 0 014 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14z"/></svg><a href="tel:+447872015769">+44 (0) 7872 015769</a></div>
       </div>
       <div class="footer-col">
