@@ -4,23 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Free Commercial Solar Calculator — ROI, Savings &amp; Payback</title>
-  <meta name="description" content="Calculate your commercial solar ROI in 60 seconds. Instant payback period, 30-year savings forecast &amp; carbon figures — free for UK businesses.">
+  <meta name="description" content="Calculate your commercial solar ROI in under three minutes. Instant payback period, 30-year savings forecast &amp; carbon figures — free for UK businesses.">
   <link rel="canonical" href="https://uksolarcalculator.co.uk/">
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://uksolarcalculator.co.uk/">
   <meta property="og:title" content="Free Commercial Solar Calculator — ROI, Savings &amp; Payback">
-  <meta property="og:description" content="Calculate your commercial solar ROI in 60 seconds. Instant payback period, 30-year savings forecast &amp; carbon figures — free for UK businesses.">
+  <meta property="og:description" content="Calculate your commercial solar ROI in under three minutes. Instant payback period, 30-year savings forecast &amp; carbon figures — free for UK businesses.">
   <meta property="og:image" content="https://uksolarcalculator.co.uk/images/logo_light.png">
-  <meta property="og:image:width" content="800">
-  <meta property="og:image:height" content="200">
+  <meta property="og:image:width" content="732">
+  <meta property="og:image:height" content="341">
   <meta property="og:site_name" content="UK Solar Calculator">
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Free Commercial Solar Calculator — ROI, Savings &amp; Payback">
-  <meta name="twitter:description" content="Calculate your commercial solar ROI in 60 seconds. Instant payback period, 30-year savings forecast &amp; carbon figures — free for UK businesses.">
+  <meta name="twitter:description" content="Calculate your commercial solar ROI in under three minutes. Instant payback period, 30-year savings forecast &amp; carbon figures — free for UK businesses.">
   <meta name="twitter:image" content="https://uksolarcalculator.co.uk/images/logo_light.png">
-  <!-- Schema: Organization + WebSite + FAQPage -->
+  <!-- Schema: Organization + WebSite -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -48,51 +48,6 @@
         "name": "Industrial & Commercial Solar Calculator",
         "description": "Free solar ROI calculator for UK businesses",
         "publisher": { "@id": "https://uksolarcalculator.co.uk/#organization" }
-      },
-      {
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "How much can a commercial solar system save a UK business?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "A 500 kWp commercial solar system in the UK can save approximately £85,000 per year in energy costs, with a typical payback period of 4–6 years and a 30-year operational lifespan generating over £1 million in cumulative savings."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "What is the typical payback period for commercial solar in the UK?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "The typical payback period for a commercial solar installation in the UK is 4–6 years, depending on system size, location, energy consumption, and funding model. Self-funded systems generally achieve payback faster than PPA arrangements."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "How much does a commercial solar installation cost in the UK?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Commercial solar installations in the UK typically cost between £600–£900 per kWp installed, depending on roof type, system size, and location. A 100 kWp system costs approximately £70,000–£90,000, while a 500 kWp system costs £300,000–£450,000."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "What size solar system does a commercial building need?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "The ideal solar system size depends on available roof or ground area and energy consumption. As a guide, 1 kWp requires approximately 6–8 m² of roof space. A typical warehouse with 2,000 m² of roof could accommodate a 200–300 kWp system generating 180,000–270,000 kWh per year."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Is commercial solar a good investment for UK businesses?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes. Commercial solar offers strong, predictable returns for UK businesses. With energy prices remaining elevated, a well-designed system delivers 4–6 year payback, 30+ year operational life, and 30-year ROI typically exceeding 400–600%. It also reduces carbon emissions and supports ESG reporting."
-            }
-          }
-        ]
       }
     ]
   }
@@ -478,7 +433,7 @@
       <li><a href="contact.html">Contact</a></li>
       <li><a href="calculator.html" class="nav-cta">Calculator</a></li>
     </ul>
-    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
       <span></span><span></span><span></span>
     </button>
   </div>
@@ -577,6 +532,13 @@
       document.getElementById('heroVideo').addEventListener('click', function() {
         if (!ytPlayer) startPlayer();
       });
+      // role="button" divs don't fire click on Enter/Space — handle keyboard explicitly
+      document.getElementById('heroVideo').addEventListener('keydown', function(e) {
+        if ((e.key === 'Enter' || e.key === ' ') && !ytPlayer) {
+          e.preventDefault();
+          startPlayer();
+        }
+      });
     </script>
   </div>
 </section>
@@ -585,7 +547,7 @@
 <div class="stats-band">
   <div class="stats-band-inner">
     <div class="stat-item">
-      <div class="stat-num"><span>4–6</span>yr</div>
+      <div class="stat-num"><span>5–7</span>yr</div>
       <div class="stat-label">Typical payback period on a solar project</div>
     </div>
     <div class="stat-item">
@@ -593,11 +555,11 @@
       <div class="stat-label">Typical operational lifespan of a solar project</div>
     </div>
     <div class="stat-item">
-      <div class="stat-num">£<span>85k</span></div>
-      <div class="stat-label">Average annual savings on a 500 kWp system</div>
+      <div class="stat-num">£<span>70k</span></div>
+      <div class="stat-label">Year-one energy savings on a 500 kWp system</div>
     </div>
     <div class="stat-item">
-      <div class="stat-num"><span>62</span>t CO₂</div>
+      <div class="stat-num"><span>78</span>t CO₂</div>
       <div class="stat-label">Annual carbon savings on a 500 kWp system</div>
     </div>
   </div>
@@ -757,23 +719,23 @@
       <div class="hero-stat-list">
         <div class="hero-stat-row">
           <span class="hero-stat-label">Annual generation</span>
-          <span class="hero-stat-val"><span class="accent">~440,000</span> kWh</span>
+          <span class="hero-stat-val"><span class="accent">~400,000</span> kWh</span>
         </div>
         <div class="hero-stat-row">
           <span class="hero-stat-label">Year 1 savings</span>
-          <span class="hero-stat-val"><span class="accent">~£88,000</span></span>
+          <span class="hero-stat-val"><span class="accent">~£70,000</span></span>
         </div>
         <div class="hero-stat-row">
           <span class="hero-stat-label">Simple payback</span>
-          <span class="hero-stat-val"><span class="accent">6–8</span> years</span>
+          <span class="hero-stat-val"><span class="accent">~6</span> years</span>
         </div>
         <div class="hero-stat-row">
-          <span class="hero-stat-label">25-year NPV</span>
-          <span class="hero-stat-val"><span class="accent">£900k+</span></span>
+          <span class="hero-stat-label">30-year net benefit</span>
+          <span class="hero-stat-val"><span class="accent">£2.5m+</span></span>
         </div>
         <div class="hero-stat-row">
           <span class="hero-stat-label">CO₂ avoided</span>
-          <span class="hero-stat-val"><span class="accent">~200</span> t/yr</span>
+          <span class="hero-stat-val"><span class="accent">~78</span> t/yr</span>
         </div>
       </div>
     </div>
@@ -814,7 +776,7 @@
       </div>
       <div class="footer-col">
         <div class="footer-col-title">Sectors</div>
-        <ul><li><a href="sectors.html#manufacturing">Manufacturing</a></li><li><a href="sectors.html#logistics">Logistics</a></li><li><a href="sectors.html#retail">Retail</a></li><li><a href="sectors.html#agriculture">Agriculture</a></li><li><a href="sectors.html#education">Education</a></li></ul>
+        <ul><li><a href="sectors.html#manufacturing">Manufacturing</a></li><li><a href="sectors.html#logistics">Logistics</a></li><li><a href="sectors.html#retail">Retail</a></li><li><a href="sectors.html#agriculture">Agriculture</a></li><li><a href="sectors.html#education">Education</a></li><li><a href="sectors.html#healthcare">Healthcare</a></li></ul>
       </div>
     </div>
     <div class="footer-bottom">
@@ -825,8 +787,9 @@
 </footer>
 
 <script>
-  document.getElementById('navToggle').addEventListener('click', () => {
-    document.getElementById('siteNav').classList.toggle('nav-mobile-open');
+  document.getElementById('navToggle').addEventListener('click', (e) => {
+    const open = document.getElementById('siteNav').classList.toggle('nav-mobile-open');
+    e.currentTarget.setAttribute('aria-expanded', open ? 'true' : 'false');
   });
 </script>
 </body>

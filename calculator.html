@@ -4,19 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Free Commercial Solar ROI Calculator — UK Businesses</title>
-  <meta name="description" content="Calculate your commercial solar ROI instantly. Enter your roof size and energy use to get payback period, annual savings, 30-year NPV, and carbon reduction for your UK site.">
+  <meta name="description" content="Calculate your commercial solar ROI instantly. Enter your roof size and energy use to get payback period, annual savings, 30-year savings, and carbon reduction for your UK site.">
   <link rel="canonical" href="https://uksolarcalculator.co.uk/calculator.html">
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://uksolarcalculator.co.uk/calculator.html">
   <meta property="og:title" content="Free Commercial Solar ROI Calculator — UK Businesses">
-  <meta property="og:description" content="Calculate your commercial solar ROI instantly. Enter your roof size and energy use to get payback period, annual savings, 30-year NPV, and carbon reduction for your UK site.">
+  <meta property="og:description" content="Calculate your commercial solar ROI instantly. Enter your roof size and energy use to get payback period, annual savings, 30-year savings, and carbon reduction for your UK site.">
   <meta property="og:image" content="https://uksolarcalculator.co.uk/images/logo_light.png">
   <meta property="og:site_name" content="UK Solar Calculator">
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Free Commercial Solar ROI Calculator — UK Businesses">
-  <meta name="twitter:description" content="Calculate your commercial solar ROI instantly. Enter your roof size and energy use to get payback period, annual savings, 30-year NPV, and carbon reduction for your UK site.">
+  <meta name="twitter:description" content="Calculate your commercial solar ROI instantly. Enter your roof size and energy use to get payback period, annual savings, 30-year savings, and carbon reduction for your UK site.">
   <meta name="twitter:image" content="https://uksolarcalculator.co.uk/images/logo_light.png">
   <!-- Schema: BreadcrumbList -->
   <script type="application/ld+json">
@@ -48,7 +48,7 @@
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Web",
     "url": "https://uksolarcalculator.co.uk/calculator.html",
-    "description": "Free solar ROI calculator for UK commercial and industrial businesses. Calculates system size, installation cost, annual savings, payback period, 30-year NPV, and carbon reduction based on roof area, region, and energy price.",
+    "description": "Free solar ROI calculator for UK commercial and industrial businesses. Calculates system size, installation cost, annual savings, payback period, 30-year savings, and carbon reduction based on roof area, region, and energy price.",
     "offers": {
       "@type": "Offer",
       "price": "0",
@@ -72,7 +72,7 @@
         "name": "How do I use the commercial solar calculator?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Enter your available roof area in square metres, your annual electricity usage in kWh, your current unit price in pence per kWh, and select your UK region. The calculator instantly estimates your recommended system size, installation cost, annual savings, payback period, 30-year NPV, and carbon reduction."
+          "text": "Enter your available roof area in square metres, your annual electricity usage in kWh, your current unit price in pence per kWh, and select your UK region. The calculator instantly estimates your recommended system size, installation cost, annual savings, payback period, 30-year savings, and carbon reduction."
         }
       },
       {
@@ -88,7 +88,7 @@
         "name": "What is the difference between self-funded and PPA solar?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Self-funded solar means you purchase and own the system outright, paying upfront capital but retaining all savings and achieving full payback typically within 4–6 years. A Power Purchase Agreement (PPA) means a third party owns and installs the panels at no upfront cost to you — you buy the electricity generated at a fixed rate below market price, with savings from day one but no asset ownership."
+          "text": "Self-funded solar means you purchase and own the system outright, paying upfront capital but retaining all savings and achieving full payback typically within 5–7 years. A Power Purchase Agreement (PPA) means a third party owns and installs the panels at no upfront cost to you — you buy the electricity generated at a fixed rate below market price, with savings from day one but no asset ownership."
         }
       },
       {
@@ -96,7 +96,7 @@
         "name": "Does the calculator include battery storage?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "The calculator focuses on solar PV generation and ROI. Battery storage can be discussed as an add-on during a consultation with Kinetic Energy Consulting, where the impact on self-consumption rates and payback can be modelled for your specific site."
+          "text": "Yes. The calculator includes optional battery storage modelling — it sizes a battery to capture exported solar energy and shows the impact on savings and payback. For a detailed battery design tailored to your site's load profile, book a consultation with Kinetic Energy Consulting."
         }
       }
     ]
@@ -110,7 +110,6 @@
   <link rel="stylesheet" href="css/shared.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <!-- Google Maps key — set GOOGLE_MAPS_KEY constant below or replace with your key -->
   <script>
@@ -124,6 +123,7 @@
       --surface-2: #f9fafb;
       --surface-3: #f3f4f6;
       --amber: #f59e0b;
+      --amber-text: #b45309; /* WCAG AA (4.6:1) on white — use for amber TEXT on light backgrounds */
       --amber-light: #fbbf24;
       --amber-dim: rgba(245,158,11,0.10);
       --amber-mid: rgba(245,158,11,0.18);
@@ -534,7 +534,7 @@
       gap: 8px;
     }
     .map-building-row-name { font-weight: 600; color: var(--text); }
-    .map-building-row-area { color: var(--amber); font-weight: 700; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+    .map-building-row-area { color: var(--amber-text); font-weight: 700; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
     .map-building-remove {
       background: none;
       border: none;
@@ -1048,7 +1048,7 @@
       margin-bottom: 4px;
     }
 
-    .metric.big .metric-value { color: var(--amber); }
+    .metric.big .metric-value { color: var(--amber-text); }
     .metric.sky-big .metric-value { color: var(--sky); }
     .metric.green-big .metric-value { color: var(--green); }
 
@@ -1170,7 +1170,7 @@
     .bar-value {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.78em;
-      color: var(--amber);
+      color: var(--amber-text);
       text-align: right;
     }
 
@@ -2018,7 +2018,7 @@
       color: var(--text);
       text-align: right;
     }
-    .self-funded .comparison-metric-value.highlight { color: var(--amber); }
+    .self-funded .comparison-metric-value.highlight { color: var(--amber-text); }
     .ppa .comparison-metric-value.highlight         { color: var(--sky); }
 
     .winner-badge {
@@ -2220,7 +2220,7 @@
     }
     .battery-preview-row:last-of-type { margin-bottom: 8px; }
     .bp-label { font-size: 0.78em; color: var(--text-muted); }
-    .bp-value { font-size: 0.88em; font-weight: 700; color: var(--amber); font-family: 'JetBrains Mono', monospace; }
+    .bp-value { font-size: 0.88em; font-weight: 700; color: var(--amber-text); font-family: 'JetBrains Mono', monospace; }
     .bp-note { font-size: 0.72em; color: var(--text-dim); line-height: 1.4; border-top: 1px solid var(--border); padding-top: 8px; }
 
     /* ── BATTERY RESULTS CARD ───────────────────────────────── */
@@ -2301,7 +2301,7 @@
       <li><a href="contact.html">Contact</a></li>
       <li><a href="calculator.html" class="nav-cta active">Calculator</a></li>
     </ul>
-    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
       <span></span><span></span><span></span>
     </button>
   </div>
@@ -2514,7 +2514,7 @@
       </div>
 
       <div class="form-row" style="margin-top:18px">
-        <label>Mount Type</label>
+        <label for="roofType">Mount Type</label>
         <select id="roofType">
           <option value="pitched">Pitched Roof</option>
           <option value="flat">Flat Roof</option>
@@ -2525,9 +2525,9 @@
 
       <div class="form-row" style="margin-top:18px">
         <div class="battery-header">
-          <label>Battery Storage (optional)</label>
+          <label for="batteryToggle">Battery Storage (optional)</label>
           <label class="toggle-switch">
-            <input type="checkbox" id="batteryToggle" onchange="onBatteryToggle()">
+            <input type="checkbox" id="batteryToggle" onchange="onBatteryToggle()" aria-label="Enable battery storage">
             <span class="toggle-slider"></span>
           </label>
         </div>
@@ -2547,10 +2547,10 @@
       <div class="form-row" style="margin-top:18px">
         <label>System Sizing</label>
         <div class="oversize-group" id="oversizeGroup">
-          <button class="oversize-btn active" data-factor="1.0" onclick="setOversize(this)" type="button">Standard</button>
-          <button class="oversize-btn" data-factor="1.1" onclick="setOversize(this)" type="button">+10%</button>
-          <button class="oversize-btn" data-factor="1.2" onclick="setOversize(this)" type="button">+20%</button>
-          <button class="oversize-btn" data-factor="1.3" onclick="setOversize(this)" type="button">+30%</button>
+          <button class="oversize-btn active" data-factor="1.0" onclick="setOversize(this)" type="button" aria-pressed="true">Standard</button>
+          <button class="oversize-btn" data-factor="1.1" onclick="setOversize(this)" type="button" aria-pressed="false">+10%</button>
+          <button class="oversize-btn" data-factor="1.2" onclick="setOversize(this)" type="button" aria-pressed="false">+20%</button>
+          <button class="oversize-btn" data-factor="1.3" onclick="setOversize(this)" type="button" aria-pressed="false">+30%</button>
         </div>
         <div class="oversize-hint" id="oversizeHint" style="display:none"></div>
       </div>
@@ -2564,7 +2564,7 @@
         <span class="card-title">Energy & Location</span>
       </div>
       <div class="form-row">
-        <label>Region</label>
+        <label for="region">Region</label>
         <select id="region">
           <option value="national" selected>UK National (Average)</option>
           <option value="scotland">Scotland</option>
@@ -2575,7 +2575,7 @@
         </select>
       </div>
       <div class="form-row">
-        <label>Current Energy Price (p/kWh)</label>
+        <label for="energyPrice">Current Energy Price (p/kWh)</label>
         <input type="number" id="energyPrice" value="25" step="0.1" min="1">
       </div>
     </div>
@@ -2586,18 +2586,18 @@
     Calculate Solar Potential
   </button>
 
-  <div class="error-msg" id="errorMsg" style="display:none"></div>
+  <div class="error-msg" id="errorMsg" style="display:none" role="alert" aria-live="assertive"></div>
 
   <!-- EMAIL MODAL -->
   <div class="modal-overlay" id="emailModal" style="display:none" onclick="closeEmailModal(event)">
-    <div class="modal-box">
-      <div class="modal-title">
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="emailModalTitle">
+      <div class="modal-title" id="emailModalTitle">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
         Email Me This Report
       </div>
       <p class="modal-sub">Enter your email below. The PDF will download to your device instantly, and we'll also send you a follow-up message so Martyn can get in touch.</p>
       <div class="form-row">
-        <label>Your Email Address</label>
+        <label for="recipientEmail">Your Email Address</label>
         <input type="email" id="recipientEmail" placeholder="yourname@company.com">
       </div>
       <div class="modal-actions">
@@ -3003,8 +3003,12 @@
 
   // ── OVERSIZING ──────────────────────────────────────────────
   function setOversize(btn) {
-    document.querySelectorAll('.oversize-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.oversize-btn').forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-pressed', 'false');
+    });
     btn.classList.add('active');
+    btn.setAttribute('aria-pressed', 'true');
     oversizeFactor = parseFloat(btn.dataset.factor);
     const hintEl = document.getElementById('oversizeHint');
     if (oversizeFactor > 1.0) {
@@ -3281,7 +3285,15 @@
     document.getElementById('recipientEmail').value = '';
     document.getElementById('sendBtnText').textContent = 'Send Report';
     document.getElementById('emailModal').querySelector('.modal-send').disabled = false;
+    document.getElementById('recipientEmail').focus();
   }
+
+  // Escape closes the email modal from anywhere
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && document.getElementById('emailModal').style.display === 'flex') {
+      closeEmailModal();
+    }
+  });
 
   function closeEmailModal(event) {
     // Only block if the click was on a child element (not the backdrop itself)
@@ -3365,7 +3377,7 @@
         + 'Install cost: GBP ' + Math.round(_r.totalCost||0).toLocaleString('en-GB') + '\n'
         + 'Year 1 savings: GBP ' + _yr1sav.toLocaleString('en-GB') + '\n'
         + '30yr savings: GBP ' + Math.round(_r.totalSavings||0).toLocaleString('en-GB') + '\n'
-        + 'Payback: ' + (+(_r.paybackYear||0)).toFixed(1) + ' years\n'
+        + 'Payback: ' + (_r.paybackYear ? (+_r.paybackYear).toFixed(1) + ' years' : 'beyond 30 years') + '\n'
         + 'ROI: ' + (+(_r.roi||0)).toFixed(1) + '%\n\n'
         + 'BATTERY\n'
         + _battery + '\n\n'
@@ -3464,7 +3476,7 @@
         <div class="assumption-item">Panel spec: 450W, 2.27m × 1.13m (2.57m²). System efficiency (performance ratio): 80%. Installation cost is all-inclusive (panels, inverters, mounting, electrical, commissioning).</div>
         <div class="assumption-item">Carbon factor: 0.196 kg CO₂/kWh (UK grid 2026).</div>
         <div class="assumption-item">Does not include costs for scaffolding, surveys such as structural and also any grid associated costs or upgrades.</div>`;
-      buildChart('selffunded', r.totalCost, r.yearlySavings, r.paybackYear || SYSTEM_LIFETIME, null, null);
+      buildChart('selffunded', r.totalCost, r.yearlySavings, r.paybackYear, null, null);
       document.getElementById('chartTitle').textContent = 'Break-Even Analysis';
       document.getElementById('chartLegend').innerHTML = `
         <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Cumulative Savings</div>
@@ -3513,18 +3525,23 @@
     let totalSavings    = 0;
     let contractSavings = 0;
 
+    // Savings are computed on the same self-consumption basis as the
+    // self-funded model (70% of generation displaces grid import; export is
+    // excluded), so the two funding routes compare like-for-like.
     for (let y = 1; y <= SYSTEM_LIFETIME; y++) {
-      const gen       = r.yearlyGeneration[y-1]; // full generation — PPA bills on all kWh generated
+      const gen       = r.yearlyGeneration[y-1];
+      const selfUsed  = gen * SELF_CONSUMPTION;
       const gridPrice = gridPriceStart * Math.pow(1 + PRICE_INFLATION, y - 1);
 
       let sav;
       if (y <= contractYears) {
-        // During contract: saving = (grid price – PPA rate) × ALL generated kWh
+        // During contract: saving = (grid price – PPA rate) × self-consumed kWh
         const ppaPrice = ppaRateStart * Math.pow(1 + PPA_RATE_ESCALATOR, y - 1);
-        sav = gen * (gridPrice - ppaPrice);
+        sav = selfUsed * (gridPrice - ppaPrice);
 
-        // Battery benefit: years 1–10 only — captures solar export and delivers at PPA rate,
-        // saving the customer the grid-import vs PPA-rate spread on those stored kWh
+        // Battery benefit: years 1–10 only — captures the exported share and
+        // delivers it at the PPA rate, extending the spread to those stored kWh
+        // (additive: the base saving above covers self-consumed kWh only)
         if (batteryOn && y <= BATTERY_LIFETIME_YRS && r.batteryKwh > 0) {
           const exportKwh = gen * (1 - SELF_CONSUMPTION);
           const captured  = Math.min(r.batteryKwh * 365, exportKwh);
@@ -3533,8 +3550,9 @@
 
         contractSavings += sav;
       } else {
-        // Post-contract: energy is completely free — full grid price on all generated kWh
-        sav = gen * gridPrice;
+        // Post-contract: the system transfers to the customer — self-consumed
+        // energy is free, displacing grid import at full price
+        sav = selfUsed * gridPrice;
       }
       yearlySavings.push(sav);
       totalSavings += sav;
@@ -3571,7 +3589,7 @@
     document.getElementById('cmpSFCost').textContent    = '£' + fmt(sf.totalCost);
     document.getElementById('cmpSFSavings').textContent = '£' + fmt(sf.totalSavings);
     document.getElementById('cmpSFProfit').textContent  = '£' + fmt(sf.totalSavings - sf.totalCost);
-    document.getElementById('cmpSFPayback').textContent = sf.paybackYear.toFixed(1) + ' yrs';
+    document.getElementById('cmpSFPayback').textContent = sf.paybackYear ? sf.paybackYear.toFixed(1) + ' yrs' : '30+ yrs';
     document.getElementById('cmpSFRoi').textContent     = sf.roi.toFixed(1) + '%';
 
     // PPA comparison column
@@ -3627,7 +3645,7 @@
     document.getElementById('assumptionsGrid').innerHTML = `
       <div class="assumption-item">Maintenance, operation and insurance costs are included in the PPA rate — no additional cost to you.</div>
       <div class="assumption-item">Roof coverage: 80% of total roof area assumed usable, accounting for edge setbacks, obstructions, vents, and inter-row spacing.</div>
-      <div class="assumption-item">The project has been modelled that the business will purchase all the energy that is generated whether they use it or not — the project is sized that typical usage is between 80–100% and the rest will be exported if available.</div>
+      <div class="assumption-item">Savings are modelled on the 70% of generation consumed on-site (the same basis as the self-funded comparison): during the contract you pay the PPA rate instead of the grid rate for that energy; after the contract the system transfers to you and that energy is free.</div>
       <div class="assumption-item">Panel degradation: 0.5% per year (manufacturer linear performance warranty standard).</div>
       <div class="assumption-item">Electricity price inflation: 3% per year. PPA rate escalator: 2% per year.</div>
       <div class="assumption-item">Panel spec: 450W, 2.27m × 1.13m (2.57m²). System efficiency (performance ratio): 80%.</div>
@@ -3641,7 +3659,7 @@
       <div class="legend-item"><div class="legend-dot" style="background:var(--sky)"></div>PPA</div>
       <div class="legend-item"><div class="legend-dot" style="background:rgba(245,158,11,0.4)"></div>SF Investment</div>`;
 
-    buildChart('ppa', sf.totalCost, sf.yearlySavings, sf.paybackYear || SYSTEM_LIFETIME, ppa.yearlySavings, ppa.contractYears);
+    buildChart('ppa', sf.totalCost, sf.yearlySavings, sf.paybackYear, ppa.yearlySavings, ppa.contractYears);
   }
 
   function showError(msg) {
@@ -4244,7 +4262,7 @@
                oversize, batteryOn },
       results:{ roofArea: totalRoofArea, maxPanels: displayPanels, systemSizeKw, totalCost,
                 yearOneGeneration, totalGeneration, totalSavings, roi,
-                paybackYear: paybackYear || SYSTEM_LIFETIME,
+                paybackYear: paybackYear, // null = never breaks even within SYSTEM_LIFETIME
                 carbonOffset, yearlySavings, yearlyGeneration, yearlyBatterySavings,
                 totalExportRevenue, yearOneExportRevenue,
                 batteryKwh, batteryCost, batteryTotalSaving, batteryNetPosition },
@@ -4274,7 +4292,11 @@
     animateCount(document.getElementById('totalCost'), 0, r.totalCost, '£');
     animateCount(document.getElementById('totalSavings'), 0, r.totalSavings, '£');
     animateCount(document.getElementById('roi'), 0, r.roi, '', '', 1);
-    animateCount(document.getElementById('payback'), 0, r.paybackYear, '', '', 1);
+    if (r.paybackYear) {
+      animateCount(document.getElementById('payback'), 0, r.paybackYear, '', '', 1);
+    } else {
+      document.getElementById('payback').textContent = '30+';
+    }
     animateCount(document.getElementById('carbon'), 0, r.carbonOffset, '', '', 1);
 
     // ── Battery results card ──────────────────────────────
@@ -4349,7 +4371,7 @@
     }, 100);
 
     // Line chart
-    buildChart('selffunded', r.totalCost, r.yearlySavings, r.paybackYear || SYSTEM_LIFETIME, null, null);
+    buildChart('selffunded', r.totalCost, r.yearlySavings, r.paybackYear, null, null);
 
     // Reset to self-funded card on new calculation
     currentMode = 'selffunded';
@@ -4395,7 +4417,7 @@
     // Build SF cumulative
     let cum = 0;
     const sfCumulative = sfYearlySavings.map(s => { cum += s; return cum; });
-    const paybackIndex = Math.round(paybackYear) - 1;
+    const paybackIndex = paybackYear ? Math.round(paybackYear) - 1 : null;
 
     const datasets = [];
 
@@ -4471,8 +4493,8 @@
         const { ctx: c, scales: { x, y } } = chart;
         const top = y.top, bottom = y.bottom;
 
-        // Break-even line (self-funded mode only)
-        if (mode === 'selffunded') {
+        // Break-even line (self-funded mode only; omitted if never reached)
+        if (mode === 'selffunded' && paybackIndex !== null) {
           const xPos = x.getPixelForValue(paybackIndex);
           c.save();
           c.setLineDash([4, 3]);
@@ -5116,7 +5138,7 @@
     ry = dataRow('30-Year Savings:', '£' + fmt(r.totalSavings), C2L, ry, COL_W);
     ry = dataRow('Net Profit (30yr):', '£' + fmt(r.totalSavings - r.totalCost), C2L, ry, COL_W);
     ry = dataRow('Return on Investment:', r.roi.toFixed(1) + '%', C2L, ry, COL_W);
-    ry = dataRow('Payback Period:', r.paybackYear.toFixed(1) + ' years', C2L, ry, COL_W);
+    ry = dataRow('Payback Period:', r.paybackYear ? r.paybackYear.toFixed(1) + ' years' : 'Beyond 30 years', C2L, ry, COL_W);
     ry = dataRow('Export Upside (30yr)*:', '£' + fmt(r.totalExportRevenue), C2L, ry, COL_W);
 
     ry += 5;
@@ -5142,9 +5164,9 @@
     // Build comparison chart — await onComplete so canvas is fully painted before capture
     const _ppa = ppa || ppaData;
     if (_ppa) {
-      await buildChart('ppa', r.totalCost, r.yearlySavings, r.paybackYear || 30, _ppa.yearlySavings, _ppa.contractYears);
+      await buildChart('ppa', r.totalCost, r.yearlySavings, r.paybackYear, _ppa.yearlySavings, _ppa.contractYears);
     } else {
-      await buildChart('selffunded', r.totalCost, r.yearlySavings, r.paybackYear || 30, null, null);
+      await buildChart('selffunded', r.totalCost, r.yearlySavings, r.paybackYear, null, null);
     }
     const chartImg = document.getElementById('savingsChart').toDataURL('image/png');
     const chartH   = 58;
@@ -5311,7 +5333,7 @@
     ry = dataRow('SF Upfront Cost:', '£' + fmt(r.totalCost), C2L, ry, COL_W);
     ry = dataRow('SF 30-Year Savings:', '£' + fmt(r.totalSavings), C2L, ry, COL_W);
     ry = dataRow('SF Net Profit:', '£' + fmt(r.totalSavings - r.totalCost), C2L, ry, COL_W);
-    ry = dataRow('SF Payback Period:', r.paybackYear.toFixed(1) + ' years', C2L, ry, COL_W);
+    ry = dataRow('SF Payback Period:', r.paybackYear ? r.paybackYear.toFixed(1) + ' years' : 'Beyond 30 years', C2L, ry, COL_W);
     ry = dataRow('CO2 Offset (30yr):', r.carbonOffset.toFixed(1) + ' tonnes', C2L, ry, COL_W);
 
     // CHART
@@ -5323,7 +5345,7 @@
     chartY += 4;
     // Build SF break-even chart and capture — await onComplete so canvas is fully painted
     const r2 = calculationData.results;
-    await buildChart('selffunded', r2.totalCost, r2.yearlySavings, r2.paybackYear || 30, null, null);
+    await buildChart('selffunded', r2.totalCost, r2.yearlySavings, r2.paybackYear, null, null);
     const chartImg = document.getElementById('savingsChart').toDataURL('image/png');
     doc.addImage(chartImg, 'PNG', ML, chartY, CW, 58);
     chartY += 63;
@@ -5336,9 +5358,9 @@
     const assumptions = [
       'PPA rates sourced from regional rate card based on system size and contract length.',
       'PPA escalator: 2% per year. Grid price escalator: 3% per year.',
-      'Post-contract (after year ' + ppa.contractYears + '): energy assumed free — full grid price valued as saving.',
-      'All generated energy purchased by the business. Sized so typical usage assumption is 80% of total energy generated. Surplus exported if available.',
-      'Roof mount coverage: 80% of total area assumed usable depending on mount type.',
+      'Post-contract (after year ' + ppa.contractYears + '): system transfers to the customer — self-consumed energy (70% of generation) valued at full grid price.',
+      'Savings modelled on the 70% of generation consumed on-site — the same basis as the self-funded comparison. Surplus exported if available.',
+      'Roof mount coverage: 80-90% of total area assumed usable depending on mount type.',
       'Carbon factor: 0.196 kg CO2/kWh (UK grid 2026). System efficiency: 80%.',
       'PPA: no upfront cost, no maintenance liability. Funder owns, operates and maintains the system.',
       'Does not include costs for scaffolding, structural surveys, or any grid connection upgrades.',
@@ -5679,7 +5701,7 @@
       </div>
       <div class="footer-col">
         <div class="footer-col-title">Sectors</div>
-        <ul><li><a href="sectors.html#manufacturing">Manufacturing</a></li><li><a href="sectors.html#logistics">Logistics</a></li><li><a href="sectors.html#retail">Retail</a></li><li><a href="sectors.html#agriculture">Agriculture</a></li><li><a href="sectors.html#education">Education</a></li></ul>
+        <ul><li><a href="sectors.html#manufacturing">Manufacturing</a></li><li><a href="sectors.html#logistics">Logistics</a></li><li><a href="sectors.html#retail">Retail</a></li><li><a href="sectors.html#agriculture">Agriculture</a></li><li><a href="sectors.html#education">Education</a></li><li><a href="sectors.html#healthcare">Healthcare</a></li></ul>
       </div>
     </div>
     <div class="footer-bottom">
@@ -5689,8 +5711,9 @@
   </div>
 </footer>
 <script>
-  document.getElementById('navToggle').addEventListener('click', () => {
-    document.getElementById('siteNav').classList.toggle('nav-mobile-open');
+  document.getElementById('navToggle').addEventListener('click', (e) => {
+    const open = document.getElementById('siteNav').classList.toggle('nav-mobile-open');
+    e.currentTarget.setAttribute('aria-expanded', open ? 'true' : 'false');
   });
 </script>
   <!-- Preloaded logo for PDF generation -->

@@ -332,12 +332,12 @@ ul { list-style: none; }
 
 .footer-copy {
   font-size: 0.78em;
-  color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.65);
 }
 
 .footer-disclaimer {
   font-size: 0.74em;
-  color: rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.55);
   max-width: 500px;
   text-align: right;
   line-height: 1.5;
