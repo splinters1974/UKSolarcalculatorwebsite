@@ -5,19 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact — Commercial Solar Advice from Kinetic Energy Consulting</title>
   <meta name="description" content="Get in touch with Kinetic Energy Consulting for commercial solar enquiries, site surveys, and expert advice.">
-  <link rel="canonical" href="https://www.uksolarcalculator.co.uk/contact.html">
+  <link rel="canonical" href="https://uksolarcalculator.co.uk/contact.html">
   <!-- Open Graph -->
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.uksolarcalculator.co.uk/contact.html">
+  <meta property="og:url" content="https://uksolarcalculator.co.uk/contact.html">
   <meta property="og:title" content="Contact — Commercial Solar Advice from Kinetic Energy Consulting">
   <meta property="og:description" content="Get in touch with Kinetic Energy Consulting for commercial solar enquiries, site surveys, and expert advice.">
-  <meta property="og:image" content="https://www.uksolarcalculator.co.uk/images/logo_light.png">
+  <meta property="og:image" content="https://uksolarcalculator.co.uk/images/logo_light.png">
   <meta property="og:site_name" content="UK Solar Calculator">
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Contact — Commercial Solar Advice from Kinetic Energy Consulting">
   <meta name="twitter:description" content="Get in touch with Kinetic Energy Consulting for commercial solar enquiries, site surveys, and expert advice.">
-  <meta name="twitter:image" content="https://www.uksolarcalculator.co.uk/images/logo_light.png">
+  <meta name="twitter:image" content="https://uksolarcalculator.co.uk/images/logo_light.png">
   <!-- Schema: BreadcrumbList -->
   <script type="application/ld+json">
   {
@@ -28,13 +28,13 @@
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://www.uksolarcalculator.co.uk/"
+        "item": "https://uksolarcalculator.co.uk/"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Contact",
-        "item": "https://www.uksolarcalculator.co.uk/contact.html"
+        "item": "https://uksolarcalculator.co.uk/contact.html"
       }
     ]
   }
@@ -48,7 +48,7 @@
         "@type": "LocalBusiness",
         "name": "Kinetic Energy Consulting",
         "url": "https://www.kinetic-energy.co.uk",
-        "image": "https://www.uksolarcalculator.co.uk/images/logo_light.png",
+        "image": "https://uksolarcalculator.co.uk/images/logo_light.png",
         "description": "Commercial and industrial solar consultancy helping UK businesses calculate, plan, and implement solar PV systems.",
         "telephone": "+447872015769",
         "email": "martynsheridan621@gmail.com",
@@ -301,7 +301,7 @@
       <li><a href="contact.html" class="active">Contact</a></li>
       <li><a href="calculator.html" class="nav-cta">Calculator</a></li>
     </ul>
-    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
       <span></span><span></span><span></span>
     </button>
   </div>
@@ -504,7 +504,7 @@
       </div>
       <div class="footer-col">
         <div class="footer-col-title">Sectors</div>
-        <ul><li><a href="sectors.html#manufacturing">Manufacturing</a></li><li><a href="sectors.html#logistics">Logistics</a></li><li><a href="sectors.html#retail">Retail</a></li><li><a href="sectors.html#agriculture">Agriculture</a></li><li><a href="sectors.html#education">Education</a></li></ul>
+        <ul><li><a href="sectors.html#manufacturing">Manufacturing</a></li><li><a href="sectors.html#logistics">Logistics</a></li><li><a href="sectors.html#retail">Retail</a></li><li><a href="sectors.html#agriculture">Agriculture</a></li><li><a href="sectors.html#education">Education</a></li><li><a href="sectors.html#healthcare">Healthcare</a></li></ul>
       </div>
     </div>
     <div class="footer-bottom">
@@ -515,8 +515,9 @@
 </footer>
 
 <script>
-  document.getElementById('navToggle').addEventListener('click', () => {
-    document.getElementById('siteNav').classList.toggle('nav-mobile-open');
+  document.getElementById('navToggle').addEventListener('click', (e) => {
+    const open = document.getElementById('siteNav').classList.toggle('nav-mobile-open');
+    e.currentTarget.setAttribute('aria-expanded', open ? 'true' : 'false');
   });
 
   document.getElementById('contactForm').addEventListener('submit', async function(e) {
