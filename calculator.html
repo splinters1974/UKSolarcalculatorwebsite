@@ -2564,8 +2564,13 @@
         <span class="card-title">Energy & Location</span>
       </div>
       <div class="form-row">
+        <label for="sitePostcode">Site Postcode (optional)</label>
+        <input type="text" id="sitePostcode" placeholder="e.g. SO15 2AB" autocomplete="postal-code" maxlength="9" oninput="onPostcodeInput()">
+        <div class="oversize-hint" id="postcodeStatus" role="status" aria-live="polite">Add a postcode for a more precise solar yield, or pick a region below.</div>
+      </div>
+      <div class="form-row">
         <label for="region">Region</label>
-        <select id="region">
+        <select id="region" onchange="onRegionManualChange()">
           <option value="national" selected>UK National (Average)</option>
           <option value="scotland">Scotland</option>
           <option value="north">North England</option>
@@ -2580,8 +2585,8 @@
       </div>
       <div class="form-row">
         <label for="selfConsumption">Solar Used On Site (%)</label>
-        <input type="number" id="selfConsumption" value="90" step="5" min="30" max="100" onchange="saveState(); updateBatteryPreview();">
-        <div class="oversize-hint" id="selfConsumptionHint" style="display:block">The share of solar output your site uses itself. 90% suits sites busy through the day. Warehouses, farms and sites closed at weekends are often 40-70%. The rest is exported at 5p/kWh.</div>
+        <input type="number" id="selfConsumption" value="80" step="5" min="30" max="100" onchange="saveState(); updateBatteryPreview();">
+        <div class="oversize-hint" id="selfConsumptionHint" style="display:block">The share of solar output your site uses itself. 80% suits most sites busy through the working week; sites with steady daytime load seven days a week can be higher. Warehouses, farms and sites closed at weekends are often 40-70%. The rest is exported at 5p/kWh.</div>
       </div>
     </div>
   </div>
@@ -2871,7 +2876,7 @@
       <div class="assumptions-grid" id="assumptionsGrid">
         <div class="assumption-item">Maintenance costs NOT included. Typically £15–£20/kWp/year. A one-off inverter replacement allowance is included in year 13.</div>
         <div class="assumption-item">Roof/mount coverage: 80–90% of total area assumed usable depending on mount type, accounting for edge setbacks, obstructions, and inter-row spacing.</div>
-        <div class="assumption-item">Self-consumption: 90% of generation used on site by default (you can change this). The rest is exported at 5p/kWh and included in savings.</div>
+        <div class="assumption-item">Self-consumption: 80% of generation used on site by default (you can change this). The rest is exported at 5p/kWh and included in savings.</div>
         <div class="assumption-item">Generation: regional yields from SAP 10.3 sunshine data, east-west layout at 10° tilt, net of system losses. Degradation 1% in year 1, then 0.4% a year.</div>
         <div class="assumption-item">Electricity price inflation: 3% per year.</div>
         <div class="assumption-item">Panel spec: 510W, 2.27m × 1.13m (2.57m²). Installation cost is all-inclusive (panels, inverters, mounting, electrical, commissioning).</div>
@@ -2954,7 +2959,7 @@
   const CARBON_FACTOR = 0.196;
   const SYSTEM_LIFETIME = 25;        // modelled term; well-kept systems last longer
   const ROOF_COVERAGE = 0.80;
-  const SELF_CONSUMPTION_DEFAULT = 0.90;
+  const SELF_CONSUMPTION_DEFAULT = 0.80;
   let   SELF_CONSUMPTION = SELF_CONSUMPTION_DEFAULT; // set from the input at each calculation
   const EXPORT_RATE = 0.05;          // 5p/kWh, flat (not indexed)
   // Inverter replacement: one-off allowance in year 13 (first year after a 12-year warranty).
@@ -2983,6 +2988,103 @@
   // scotland 14-16, north 7/8/10/11, midlands 6/13 (Wales), southwest 4/5,
   // southeast 1/2/3/12, national = SAP UK average. Already net of losses.
   const REGIONAL_YIELD = { scotland:845, north:900, midlands:950, southwest:1025, southeast:1010, national:905 };
+
+  // Postcode-level yields. SAP 10.3 (12-06-2026) Appendix U: Table U6 maps postcode
+  // districts to 21 sunshine regions; yields use the same method as REGIONAL_YIELD
+  // (Table U3 sunshine, U4 latitude, equations U1-U4, east-west at 10°, scaled to 905
+  // kWh/kWp for East Pennines). b = the broad region used for the PPA rate card.
+  const SAP_REGIONS = [
+    { n:'UK average',                y:905,  b:'national'  },
+    { n:'Thames',                    y:969,  b:'southeast' },
+    { n:'South East England',        y:1029, b:'southeast' },
+    { n:'Southern England',          y:1053, b:'southeast' },
+    { n:'South West England',        y:1043, b:'southwest' },
+    { n:'Severn',                    y:1003, b:'southwest' },
+    { n:'Midlands',                  y:931,  b:'midlands'  },
+    { n:'West Pennines',             y:895,  b:'north'     },
+    { n:'NW England & SW Scotland',  y:908,  b:'north'     },
+    { n:'Borders',                   y:887,  b:'north'     },
+    { n:'North East England',        y:902,  b:'north'     },
+    { n:'East Pennines',             y:905,  b:'north'     },
+    { n:'East Anglia',               y:990,  b:'southeast' },
+    { n:'Wales',                     y:968,  b:'midlands'  },
+    { n:'West Scotland',             y:851,  b:'scotland'  },
+    { n:'East Scotland',             y:857,  b:'scotland'  },
+    { n:'North East Scotland',       y:832,  b:'scotland'  },
+    { n:'Highland',                  y:806,  b:'scotland'  },
+    { n:'Western Isles',             y:856,  b:'scotland'  },
+    { n:'Orkney',                    y:828,  b:'scotland'  },
+    { n:'Shetland',                  y:780,  b:'scotland'  },
+    { n:'Northern Ireland',          y:888,  b:'north'     },
+  ];
+  const SAP_POSTCODES = {"AB":16,"G":14,"N":1,"SL":1,"AL":1,"GL":5,"NE":9,"SM":1,"B":6,"GU":1,"NG":11,"SN":5,"BA":5,"GU11-12":3,"NN":6,"SN7":1,"BB":7,"GU14":3,"NP":5,"SO":3,"BD":11,"GU28-29":2,"NP8":13,"SP":5,"BD23-24":10,"GU30-35":3,"NR":12,"SP6-11":3,"BH":3,"GU46":3,"NW":1,"SR":9,"BL":7,"GU51-52":3,"OL":7,"SR7-8":10,"BN":2,"HA":1,"OX":1,"SS":12,"BR":2,"HD":11,"PA":14,"ST":6,"BS":5,"HG":10,"PE":12,"SW":1,"BT":21,"HP":1,"PE9-12":11,"SY":6,"CA":8,"HR":6,"PE20-25":11,"SY14":7,"CB":12,"HS":18,"PH":15,"SY15-25":13,"CF":5,"HU":11,"PH19-25":17,"TA":5,"CH":7,"HX":11,"PH26":16,"TD":9,"CH5-8":7,"IG":12,"PH30-44":17,"TD12":9,"CM":12,"IP":12,"PH49":14,"TD15":9,"CM21-23":1,"IV":17,"PH50":14,"TF":6,"CO":12,"IV30-32":16,"PL":4,"TN":2,"CR":1,"IV36":16,"PO":3,"TQ":4,"CT":2,"KA":14,"PO18-22":2,"TR":4,"CV":6,"KT":1,"PR":7,"TS":10,"CW":7,"KW":17,"RG":1,"TW":1,"DA":2,"KW15-17":19,"RG21-29":3,"UB":1,"DD":15,"KY":15,"RH":1,"W":1,"DE":6,"L":7,"RH10-20":2,"WA":7,"DG":8,"LA":7,"RM":12,"WC":1,"DH":10,"LA7-23":8,"S":11,"WD":1,"DH4-5":9,"LD":13,"S18":6,"WF":11,"DL":10,"LE":6,"S32-33":6,"WN":7,"DN":11,"LL":7,"S40-45":6,"WR":6,"DT":3,"LL23-27":13,"SA":5,"WS":6,"DY":6,"LL30-78":13,"SA14-20":13,"WV":6,"E":1,"LN":11,"SA31-48":13,"YO":10,"EC":1,"LS":11,"SA61-73":13,"YO15-16":11,"EH":15,"LS24":10,"SE":1,"YO25":11,"EH43-46":9,"LU":1,"SG":1,"ZE":20,"EN":1,"M":7,"SK":7,"EN9":12,"ME":2,"SK13":6,"EX":4,"MK":1,"SK17":6,"FK":14,"ML":14,"SK22-23":6,"FY":7};
+  let postcodeRegionId = null;   // SAP region index when a postcode is recognised
+
+  function sapRegionFromPostcode(raw) {
+    const parts = String(raw || '').trim().toUpperCase().split(/\s+/);
+    const pc = parts.join('').replace(/[^A-Z0-9]/g, '');
+    if (pc.length < 2) return null;
+    // With a space, the part before it is the outward code (copes with half-typed postcodes)
+    const outward = parts.length > 1 ? parts[0].replace(/[^A-Z0-9]/g, '')
+      : (/\d[A-Z]{2}$/.test(pc) && pc.length >= 5 ? pc.slice(0, -3) : pc);
+    const m = outward.match(/^([A-Z]{1,2})(\d{1,2})[A-Z]?$/);
+    if (!m) return null;
+    const area = m[1], dist = parseInt(m[2], 10);
+    let hit = null;
+    Object.keys(SAP_POSTCODES).forEach(key => {
+      const km = key.match(/^([A-Z]+)(\d+)(?:-(\d+))?$/);
+      if (km && km[1] === area) {
+        const lo = parseInt(km[2], 10), hi = km[3] ? parseInt(km[3], 10) : lo;
+        if (dist >= lo && dist <= hi) hit = SAP_POSTCODES[key];
+      }
+    });
+    if (hit !== null) return hit;
+    return SAP_POSTCODES[area] !== undefined ? SAP_POSTCODES[area] : null;
+  }
+
+  function currentYield(region) {
+    return postcodeRegionId !== null ? SAP_REGIONS[postcodeRegionId].y : REGIONAL_YIELD[region];
+  }
+
+  function currentRegionLabel(region) {
+    if (postcodeRegionId !== null) {
+      const pc = document.getElementById('sitePostcode').value.trim().toUpperCase();
+      return pc + ' (' + SAP_REGIONS[postcodeRegionId].n + ')';
+    }
+    const sel = document.getElementById('region');
+    const opt = sel && Array.from(sel.options).find(o => o.value === region);
+    return opt ? opt.textContent : region;
+  }
+
+  function onPostcodeInput(restoring) {
+    const el = document.getElementById('sitePostcode');
+    const st = document.getElementById('postcodeStatus');
+    const raw = el.value.trim();
+    if (!/\d/.test(raw)) {   // nothing to look up until the district number is typed
+      postcodeRegionId = null;
+      st.textContent = 'Add a postcode for a more precise solar yield, or pick a region below.';
+    } else {
+      const id = sapRegionFromPostcode(raw);
+      if (id === null) {
+        postcodeRegionId = null;
+        st.textContent = 'Postcode not recognised, so the region below is used.';
+      } else {
+        postcodeRegionId = id;
+        document.getElementById('region').value = SAP_REGIONS[id].b;
+        st.textContent = SAP_REGIONS[id].n + ': ' + SAP_REGIONS[id].y.toLocaleString('en-GB') + ' kWh per kWp a year.';
+      }
+    }
+    if (restoring === true) return;   // loading saved state: don't re-save half-restored inputs
+    updateBatteryPreview();
+    saveState();
+  }
+
+  function onRegionManualChange() {
+    // A region picked by hand overrides any postcode
+    const el = document.getElementById('sitePostcode');
+    if (el && el.value) el.value = '';
+    onPostcodeInput();
+  }
   const INSTALL_COST   = { pitched:900, flat:1000, ground:1050, carport:1500 }; // all-in £/kWp (hardware + installation)
   const GROUND_COVERAGE = { pitched:0.80, flat:0.80, ground:0.90, carport:0.85 };
   const MIN_ROOF_AREA = 350;
@@ -3088,7 +3190,7 @@
     const panels = Math.floor(usable / PANEL_AREA);
     const kwp = (panels * PANEL_POWER) / 1000 * oversizeFactor;
     SELF_CONSUMPTION = readSelfConsumption();
-    const yearOneGen = kwp * REGIONAL_YIELD[region] * degFactor(1);
+    const yearOneGen = kwp * currentYield(region) * degFactor(1);
 
     const bKwh = getBatteryKwh(yearOneGen);
     const bCost = bKwh * BATTERY_COST_PER_KWH;
@@ -3198,6 +3300,7 @@
         region:        document.getElementById('region')?.value,
         energyPrice:   document.getElementById('energyPrice')?.value,
         selfConsumption: document.getElementById('selfConsumption')?.value,
+        postcode:      document.getElementById('sitePostcode')?.value || '',
         roofType:      document.getElementById('roofType')?.value,
         oversizeFactor,
         batteryOn:     document.getElementById('batteryToggle')?.checked || false,
@@ -3221,6 +3324,7 @@
         document.getElementById('region').value = s.region || 'national';
         if (s.energyPrice) document.getElementById('energyPrice').value = s.energyPrice;
         if (s.selfConsumption) document.getElementById('selfConsumption').value = s.selfConsumption;
+        if (s.postcode) { document.getElementById('sitePostcode').value = s.postcode; onPostcodeInput(true); }
         if (s.roofType)    document.getElementById('roofType').value     = s.roofType;
 
         // Restore oversize selection
@@ -3543,7 +3647,7 @@
       `Self-consumption: ${sc}% of generation used on site, displacing grid electricity at the import rate. If your site uses less in the day (for example a warehouse or a site closed at weekends), lower this figure.`,
       `Export: ${inp.batteryOn ? 'the battery captures exported solar in years 1–10; what it does not capture, and all export from year 11,' : `the remaining ${100 - sc}% of generation`} is valued at 5p/kWh and included in savings. Export rates are not guaranteed.`,
       inp.batteryOn ? `Battery storage: ${fmt(r.batteryKwh)} kWh system installed at £1,000/kWh (£${fmt(r.batteryCost)}). Savings apply to years 1–10 only, reflecting a 10-year commercial lifespan under daily cycling. From year 11 the system reverts to solar-only self-consumption. Battery capacity degradation not modelled.` : null,
-      `Generation: ${fmt(REGIONAL_YIELD[inp.region])} kWh/kWp a year for this region (SAP 10.3 sunshine data, east-west layout at 10° tilt, net of losses). South-facing or ground-mounted arrays often do better. Degradation 1% in year 1, then 0.4% a year.`,
+      `Generation: ${fmt(inp.yieldKwp || REGIONAL_YIELD[inp.region])} kWh/kWp a year for ${inp.regionLabel || 'this region'}, from SAP 10.3 sunshine data for an east-west layout at 10° tilt, net of losses. South-facing or ground-mounted arrays often do better. Degradation 1% in year 1, then 0.4% a year.`,
       'Electricity price inflation: 3% per year.',
       'Panel spec: 510W, 2.27m × 1.13m (2.57m²). Installation cost is all-inclusive (panels, inverters, mounting, electrical, commissioning).',
       'Carbon factor: 0.196 kg CO₂/kWh (UK grid 2026).',
@@ -3563,7 +3667,7 @@
       `Roof coverage: ${Math.round((GROUND_COVERAGE[inp.roofType]||ROOF_COVERAGE)*100)}% of total area assumed usable, accounting for edge setbacks, obstructions, vents, and inter-row spacing.`,
       `Savings are modelled on the ${sc}% of generation used on site (the same basis as the self-funded comparison): during the contract you pay the PPA rate instead of the grid rate for that energy, and the funder keeps any export income. After the contract the system transfers to you, that energy is free and export income (5p/kWh) is yours.`,
       invNote,
-      `Generation: ${fmt(REGIONAL_YIELD[inp.region])} kWh/kWp a year for this region (SAP 10.3 sunshine data, east-west at 10° tilt, net of losses). Degradation 1% in year 1, then 0.4% a year.`,
+      `Generation: ${fmt(inp.yieldKwp || REGIONAL_YIELD[inp.region])} kWh/kWp a year for ${inp.regionLabel || 'this region'}, from SAP 10.3 sunshine data for an east-west layout at 10° tilt, net of losses. Degradation 1% in year 1, then 0.4% a year.`,
       'Electricity price inflation: 3% per year. PPA rate escalator: 2.5% per year.',
       'Panel spec: 510W, 2.27m × 1.13m (2.57m²).',
       'Carbon factor: 0.196 kg CO₂/kWh (UK grid 2026).',
@@ -4000,6 +4104,11 @@
       if (status === 'OK' && results[0]) {
         mapInstance.setCenter(results[0].geometry.location);
         mapInstance.setZoom(19);
+        const pcComp = (results[0].address_components || []).find(c => (c.types || []).includes('postal_code'));
+        if (pcComp && pcComp.long_name) {
+          document.getElementById('sitePostcode').value = pcComp.long_name;
+          onPostcodeInput();
+        }
       } else {
         alert('Address not found. Try a full postcode or street address.');
       }
@@ -4261,7 +4370,8 @@
     const systemSizeKw    = (basePanels * PANEL_POWER) / 1000 * oversize;
     const displayPanels   = Math.round(systemSizeKw * 1000 / PANEL_POWER);
     const installationCost = systemSizeKw * (opts.blendedInstallCostPerKwp || INSTALL_COST[roofType]); // all-in cost
-    const yearOneGeneration = systemSizeKw * REGIONAL_YIELD[region] * degFactor(1); // year 1, after first-year degradation
+    const yieldKwp = currentYield(region);
+    const yearOneGeneration = systemSizeKw * yieldKwp * degFactor(1); // year 1, after first-year degradation
     const inverterCost = inverterAllowance(systemSizeKw);
 
     // ── Battery sizing ─────────────────────────────────────
@@ -4316,6 +4426,7 @@
 
     calculationData = {
       inputs:{ roofType, region, energyPrice: energyPrice*100, selfConsumption: SELF_CONSUMPTION,
+               yieldKwp, regionLabel: currentRegionLabel(region),
                buildingCount: buildings ? buildings.length : 1,
                oversize, batteryOn },
       results:{ roofArea: totalRoofArea, maxPanels: displayPanels, systemSizeKw, totalCost,
@@ -5150,7 +5261,7 @@
     const mountLabels = { pitched:'Pitched Roof', flat:'Flat Roof', ground:'Ground Mount', carport:'Car Port' };
     const costLabels  = Object.fromEntries(Object.entries(INSTALL_COST).map(([k, v]) => [k, '£' + v.toLocaleString('en-GB') + ' / kWp']));
     ly = dataRow('Mount Type:', mountLabels[inp.roofType] || inp.roofType, C1L, ly, COL_W);
-    ly = dataRow('Region:', inp.region.charAt(0).toUpperCase() + inp.region.slice(1), C1L, ly, COL_W);
+    ly = dataRow('Region:', inp.regionLabel || (inp.region.charAt(0).toUpperCase() + inp.region.slice(1)), C1L, ly, COL_W);
 
     ly += 5;
 
@@ -5232,7 +5343,7 @@
       'Self-consumption: ' + Math.round((inp.selfConsumption || SELF_CONSUMPTION) * 100) + '% of generation used on site, displacing grid electricity at the import rate.',
       '*Export: ' + (inp.batteryOn ? 'what the battery does not capture in years 1-10, and all export from year 11,' : 'the remaining ' + (100 - Math.round((inp.selfConsumption || SELF_CONSUMPTION) * 100)) + '% of generation') + ' is valued at 5p/kWh (£' + fmt(r.totalExportRevenue) + ' over 25 years) and included in savings. Export rates are not guaranteed.',
       inp.batteryOn ? `Battery storage: ${fmt(r.batteryKwh)} kWh system installed at £1,000/kWh (£${fmt(r.batteryCost)}). Savings apply to years 1-10 only, reflecting a 10-year commercial lifespan under daily cycling. Solar reverts to standard self-consumption from year 11. Capacity degradation not modelled.` : null,
-      'Generation: ' + fmt(REGIONAL_YIELD[inp.region]) + ' kWh/kWp a year (SAP 10.3 regional sunshine data, east-west at 10 degrees, net of losses). Degradation 1% in year 1, then 0.4% a year. Electricity price inflation: 3% per year.',
+      'Generation: ' + fmt(inp.yieldKwp || REGIONAL_YIELD[inp.region]) + ' kWh/kWp a year (SAP 10.3 regional sunshine data, east-west at 10 degrees, net of losses). Degradation 1% in year 1, then 0.4% a year. Electricity price inflation: 3% per year.',
       'Panel specification: 510W, 2.27m x 1.13m. Carbon factor: 0.196 kg CO2 per kWh (UK grid 2026).',
       'Figures run for 25 years to keep the view prudent. A well looked-after solar system will keep generating well beyond 25 years.',
       'Does not include costs for scaffolding, structural surveys, or any grid connection costs or upgrades.',
@@ -5351,7 +5462,7 @@
     ly = dataRow('System Size:', r.systemSizeKw.toFixed(2) + ' kWp', C1L, ly, COL_W);
     ly = dataRow('No. of Panels:', fmt(r.maxPanels) + ' x 510W', C1L, ly, COL_W);
     ly = dataRow('Roof Area:', r.roofArea.toFixed(0) + ' m2 (' + (r.roofArea*0.8).toFixed(0) + ' usable)', C1L, ly, COL_W);
-    ly = dataRow('Region:', inp.region.charAt(0).toUpperCase() + inp.region.slice(1), C1L, ly, COL_W);
+    ly = dataRow('Region:', inp.regionLabel || (inp.region.charAt(0).toUpperCase() + inp.region.slice(1)), C1L, ly, COL_W);
     ly = dataRow('Year 1 Generation:', fmt(r.yearOneGeneration) + ' kWh', C1L, ly, COL_W);
     ly = dataRow('25-Year Generation:', fmt(r.totalGeneration) + ' kWh', C1L, ly, COL_W);
     ly += 5;
@@ -5401,7 +5512,7 @@
       'PPA escalator: 2.5% per year. Grid price escalator: 3% per year.',
       'Savings use the ' + Math.round((inp.selfConsumption || SELF_CONSUMPTION) * 100) + '% of generation used on site (as self-funded). The funder keeps export income in contract.',
       ppa.contractYears < SYSTEM_LIFETIME ? 'Post-contract (after year ' + ppa.contractYears + '): system transfers to the customer. Self-consumed energy is valued at the full grid price and export at 5p/kWh' + (ppa.contractYears < INVERTER_YEAR ? '; the customer pays the year-' + INVERTER_YEAR + ' inverter allowance (£' + fmt(r.inverterCost) + ').' : '.') : null,
-      'Generation: ' + fmt(REGIONAL_YIELD[inp.region]) + ' kWh/kWp a year (SAP 10.3, net of losses). Degradation 1% in year 1, then 0.4% a year. Carbon factor: 0.196 kg CO2/kWh.',
+      'Generation: ' + fmt(inp.yieldKwp || REGIONAL_YIELD[inp.region]) + ' kWh/kWp a year (SAP 10.3, net of losses). Degradation 1% in year 1, then 0.4% a year. Carbon factor: 0.196 kg CO2/kWh.',
       'Figures run for 25 years to stay prudent. A well looked-after system will keep generating well beyond that.',
       'PPA: no upfront cost, no maintenance liability. Funder owns, operates and maintains the system.',
       'Does not include costs for scaffolding, structural surveys, or any grid connection upgrades.',
@@ -5564,7 +5675,7 @@
     // How the Calculator Works
     y = sectionHead('How the Calculator Works', y);
     y = para('You provide basic information about your site — roof area, roof type, location, and current energy price — and the calculator estimates the maximum system size, annual generation based on regional solar irradiance data, and models the financial picture over 25 years under two funding routes. A well looked-after system will keep generating well beyond 25 years; the model stops there to stay prudent.', y);
-    y = para('Core assumptions: panels are 510W modules (about 2.57 m2 each); generation uses regional yields from SAP 10.3 sunshine data (east-west layout at 10 degrees, net of system losses); generation degrades by 1% in year 1 and 0.4% a year after; energy prices rise at 3% per year; 90% of generation is used on site by default (you can change this) and the rest is exported at 5p/kWh; and a one-off inverter replacement allowance is included in year 13.', y);
+    y = para('Core assumptions: panels are 510W modules (about 2.57 m2 each); generation uses regional yields from SAP 10.3 sunshine data (east-west layout at 10 degrees, net of system losses); generation degrades by 1% in year 1 and 0.4% a year after; energy prices rise at 3% per year; 80% of generation is used on site by default (you can change this) and the rest is exported at 5p/kWh; and a one-off inverter replacement allowance is included in year 13.', y);
     y += 3;
 
     // Limitations
@@ -5574,7 +5685,7 @@
     y = labelPara('Energy prices are an estimate.', 'Most commercial businesses pay 18p–28p per kWh depending on contract type and tariff structure. Use a figure from your most recent bill. Savings modelled are directly sensitive to this input.', y);
     y = labelPara('Grid connection varies.', 'Every site requires a DNO application. Time and cost depend on local network capacity, system size, and the current application queue. For systems over 5MWp, the process escalates to NESO, adding significant time.', y);
     y = labelPara('Planning permission.', 'Most rooftop installations fall within permitted development rights. Ground-mounted systems and carports typically require planning permission. Permitted development rights can be removed by Article 4 directions — always check with your local planning authority early.', y);
-    y = labelPara('Self-consumption drives the result.', 'Solar used on site is worth your full grid price; exported solar earns only around 5p/kWh. The calculator assumes 90% on-site use unless you change it. Sites with low daytime demand, such as warehouses or sites closed at weekends, should use a lower figure. A detailed proposal uses your half-hourly meter data.', y);
+    y = labelPara('Self-consumption drives the result.', 'Solar used on site is worth your full grid price; exported solar earns only around 5p/kWh. The calculator assumes 80% on-site use unless you change it. Sites with low daytime demand, such as warehouses or sites closed at weekends, should use a lower figure. A detailed proposal uses your half-hourly meter data.', y);
 
     // ════════════════════════════════
     // PAGE 2
