@@ -453,3 +453,18 @@ button, input, select, textarea { font-family: inherit; }
 
 .range-bar { position: relative; flex: 1; height: 10px; background: var(--rule-2); border-radius: 5px; min-width: 80px; }
 .range-bar span { position: absolute; top: 0; bottom: 0; background: var(--green); border-radius: 5px; }
+
+/* ── Photos and illustrations ───────────────────────────────── */
+.figure { margin: 28px 0 32px; }
+.figure img { display: block; width: 100%; height: auto; border-radius: 10px; background: var(--mist); }
+.figure figcaption { margin-top: 10px; font-size: 14px; line-height: 1.5; color: var(--grey); }
+.figure-render img { border-radius: 0; background: none; mix-blend-mode: multiply; }
+.figure-wide { max-width: 960px; margin: 0 auto 40px; }
+.photo-cards { margin-top: 36px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+.photo-card { display: flex; flex-direction: column; border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; background: #fff; color: var(--ink); transition: border-color 0.15s; }
+.photo-card:hover { border-color: var(--ink); }
+.photo-card img { display: block; width: 100%; aspect-ratio: 4 / 3; height: auto; object-fit: cover; background: var(--mist); }
+.photo-card-body { display: flex; flex-direction: column; gap: 8px; padding: 22px 24px 24px; flex: 1; }
+.photo-card h3 { font-size: 21px; font-weight: 800; letter-spacing: -0.01em; }
+.photo-card p { font-size: 16px; line-height: 1.55; color: var(--text-2); }
+.photo-card .more { margin-top: auto; padding-top: 6px; font-size: 15px; font-weight: 600; color: var(--blue); }
