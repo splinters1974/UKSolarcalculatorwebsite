@@ -78,16 +78,16 @@
 .qe-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 18px; }
 .qe-full { grid-column: 1 / -1; }
 .lbl { display: block; font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
-.fld { width: 100%; height: 48px; padding: 0 14px; border: 1px solid var(--field); border-radius: 6px; background: #fff; color: var(--ink); font: 500 17px var(--font); font-variant-numeric: tabular-nums; }
+.fld { width: 100%; height: 48px; padding: 0 14px; border: 1px solid var(--field); border-radius: 6px; background: #fff; color: var(--ink); font: 500 17px var(--font); font-variant-numeric: lining-nums; }
 .fld:focus { outline: 3px solid rgba(0,101,164,0.25); border-color: var(--blue); }
 .help { font-size: 14px; color: var(--grey); line-height: 1.45; margin-top: 6px; }
 .range { width: 100%; accent-color: var(--blue); height: 28px; }
 .qe-result { margin-top: 24px; background: var(--ink); color: #fff; border-radius: 8px; padding: 22px 24px; }
 .qe-result .k { font-size: 15px; color: var(--lime); font-weight: 600; }
-.qe-result .big { font-size: 46px; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; margin-top: 2px; line-height: 1.1; }
+.qe-result .big { font-size: 46px; font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: lining-nums; margin-top: 2px; line-height: 1.1; }
 .qe-trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 16px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.18); }
 .qe-trio span { display: block; font-size: 14px; color: #C9D9E2; }
-.qe-trio strong { display: block; font-size: 20px; font-variant-numeric: tabular-nums; }
+.qe-trio strong { display: block; font-size: 20px; font-variant-numeric: lining-nums; }
 .qe .btn { width: 100%; margin-top: 16px; }
 .qe-note { margin-top: 12px; font-size: 15px; color: var(--text-2); }
 .qe-note a { color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
@@ -156,7 +156,7 @@
         <select class="fld" id="qe-mount"><option value="pitched">Pitched roof</option><option value="flat">Flat roof</option><option value="ground">Ground mount</option><option value="carport">Carport</option></select></div>
       <div><label class="lbl" for="qe-price">Unit price (p/kWh)</label><input class="fld" id="qe-price" type="number" min="1" step="0.5" value="25" inputmode="decimal"></div>
       <div class="qe-full">
-        <div style="display:flex;justify-content:space-between;align-items:baseline"><label class="lbl" for="qe-sc">Solar used on site</label><strong id="qe-sc-val" style="font-size:17px;font-variant-numeric:tabular-nums">80%</strong></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><label class="lbl" for="qe-sc">Solar used on site</label><strong id="qe-sc-val" style="font-size:17px;font-variant-numeric: lining-nums">80%</strong></div>
         <input class="range" id="qe-sc" type="range" min="30" max="100" step="5" value="80">
         <div class="help">80% suits most sites busy through the week. Warehouses and farms are often lower.</div>
       </div>
