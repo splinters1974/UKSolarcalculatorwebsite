@@ -27,7 +27,8 @@
 [[headers]]
   for = "/css/*"
   [headers.values]
-    Cache-Control = "public, max-age=86400"
+    # Revalidate on every visit so a new design never shows with an old stylesheet
+    Cache-Control = "public, max-age=0, must-revalidate"
 
 [[headers]]
   for = "/sitemap.xml"
