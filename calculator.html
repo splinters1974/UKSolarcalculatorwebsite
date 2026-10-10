@@ -1218,6 +1218,10 @@
     if (priceEl) priceEl.value = '25';
     const roofEl = document.getElementById('roofType');
     if (roofEl) roofEl.value = 'pitched';
+    const scEl = document.getElementById('selfConsumption');
+    if (scEl) scEl.value = String(Math.round(SELF_CONSUMPTION_DEFAULT * 100));
+    const pcEl = document.getElementById('sitePostcode');
+    if (pcEl) { pcEl.value = ''; onPostcodeInput(true); }
     const battEl = document.getElementById('batteryToggle');
     if (battEl) battEl.checked = false;
     const battPreview = document.getElementById('batteryPreview');
@@ -1239,6 +1243,7 @@
     renderBuildingRows();
     isMapMode = window.innerWidth >= 900;
     selectMode(isMapMode);
+    if (typeof window.afterReset === 'function') window.afterReset();
   }
 
   // ── EMAIL MODAL ────────────────────────────────────
@@ -3720,6 +3725,7 @@
     if (q.get('postcode')) { document.getElementById('sitePostcode').value = q.get('postcode'); onPostcodeInput(); }
     if ([...q.keys()].length) { saveState(); history.replaceState(null, '', location.pathname); }
 
+    window.afterReset = function () { showSc(); syncMount(); window.scheduleLive(); };
     showSc();
     syncMount();
     document.addEventListener('DOMContentLoaded', function () { ready = true; liveRecalc(); });
