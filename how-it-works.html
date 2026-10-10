@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How the Solar Calculator Works: Method and Assumptions</title>
+  <meta name="description" content="How the UK Solar Calculator estimates system size, generation, savings and payback: postcode sunshine data from SAP 10.3, degradation, self-consumption, export value and the 25-year model.">
+  <link rel="canonical" href="https://uksolarcalculator.co.uk/how-it-works.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:url" content="https://uksolarcalculator.co.uk/how-it-works.html">
+  <meta property="og:title" content="How the Solar Calculator Works: Method and Assumptions">
+  <meta property="og:description" content="How the UK Solar Calculator estimates system size, generation, savings and payback: postcode sunshine data from SAP 10.3, degradation, self-consumption, export value and the 25-year model.">
+  <meta property="og:image" content="https://uksolarcalculator.co.uk/images/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="UK Solar Calculator">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How the Solar Calculator Works: Method and Assumptions">
+  <meta name="twitter:description" content="How the UK Solar Calculator estimates system size, generation, savings and payback: postcode sunshine data from SAP 10.3, degradation, self-consumption, export value and the 25-year model.">
+  <meta name="twitter:image" content="https://uksolarcalculator.co.uk/images/og-image.png">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://uksolarcalculator.co.uk/#organization",
+      "name": "Kinetic Energy Consulting",
+      "url": "https://www.kinetic-energy.co.uk",
+      "logo": "https://uksolarcalculator.co.uk/images/og-image.png",
+      "description": "Commercial and industrial solar consultancy helping UK organisations assess, fund and deliver solar PV.",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "Sales",
+        "telephone": "+447872015769",
+        "email": "martynsheridan621@gmail.com",
+        "areaServed": "GB"
+      },
+      "sameAs": [
+        "https://www.linkedin.com/in/martynsheridan"
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://uksolarcalculator.co.uk/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "How it works",
+          "item": "https://uksolarcalculator.co.uk/how-it-works.html"
+        }
+      ]
+    },
+    {
+      "@type": "Article",
+      "headline": "How the calculator works",
+      "description": "How the UK Solar Calculator estimates system size, generation, savings and payback: postcode sunshine data from SAP 10.3, degradation, self-consumption, export value and the 25-year model.",
+      "mainEntityOfPage": "https://uksolarcalculator.co.uk/how-it-works.html",
+      "datePublished": "2026-10-10",
+      "dateModified": "2026-10-10",
+      "author": {
+        "@id": "https://uksolarcalculator.co.uk/#organization"
+      },
+      "publisher": {
+        "@id": "https://uksolarcalculator.co.uk/#organization"
+      },
+      "inLanguage": "en-GB",
+      "image": "https://uksolarcalculator.co.uk/images/og-image.png"
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How accurate is the calculator?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It is a first estimate, not a design. Generation uses published regional sunshine data for a typical layout, so a south-facing roof may do better and a shaded one worse. Savings depend most on the share of solar you use on site and your unit price, so check those two inputs carefully. A site survey and your half-hourly meter data turn it into a firm figure."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where does the sunshine data come from?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "From SAP 10.3, the Standard Assessment Procedure used across UK building regulations. It gives monthly sunshine for 21 UK regions and maps postcode districts to them."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why does my postcode matter?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Annual generation varies by about a third across the UK, from around 780 kWh per kWp in Shetland to over 1,050 in Southern England on the same layout. Using your postcode puts you in the right SAP region."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does the calculator include VAT?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. All costs are shown before VAT. Commercial installations are charged VAT at the standard 20%, which VAT-registered organisations can normally recover."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I see the cost rates and PPA rates behind the results?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The calculator shows your total installed cost and your indicative PPA rate. The underlying benchmarks are reviewed regularly and are not published, because real prices depend on site, scale and timing. A survey gives you a firm price."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon_16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon_32.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/images/favicon_192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/shared.css">
+
+</head>
+<body>
+<nav class="site-nav" id="siteNav" aria-label="Main">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo" aria-label="UK Solar Calculator home">
+      <svg viewBox="0 0 34 34" aria-hidden="true"><path d="M3 24a14 14 0 0 1 28 0z" fill="#F8C05D"/><rect x="1" y="26" width="32" height="3" rx="1.5" fill="#063C55"/></svg>
+      <span class="nav-logo-name">UK Solar Calculator</span>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="sectors.html">Sectors</a></li>
+      <li><a href="funding.html">Funding</a></li>
+      <li><a href="planning-and-grid.html">Planning and grid</a></li>
+      <li><a href="how-it-works.html" class="active" aria-current="page">How it works</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="calculator.html" class="nav-cta">Open the calculator</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<section class="page-hero">
+  <div class="page-hero-inner">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Home</a> <span aria-hidden="true">/</span> <span>How it works</span></nav>
+    <span class="page-hero-kicker">Method and assumptions</span>
+    <h1 class="page-hero-title">How the calculator works</h1>
+    <p class="page-hero-lead">What goes into the numbers, where the data comes from, and what the calculator deliberately leaves out.</p>
+    <p class="byline">By <strong>Kinetic Energy Consulting</strong> · Updated <time datetime="2026-10-10">10 October 2026</time></p>
+  </div>
+</section>
+
+<div class="guide">
+  <article class="guide-main">
+    <p class="answer">The calculator works out how many panels fit on the area you give it, how much electricity they will generate at your postcode, and what that electricity is worth to you over 25 years, either buying the system outright or through a Power Purchase Agreement (PPA).</p>
+    <div class="prose">
+
+<h2 id="area">1. How much solar fits</h2>
+<p>You can measure your site in two ways. <span class="lead-in">On the map</span>, you search your address, let the calculator find your roof outline from satellite imagery, or draw outlines around each roof, car park or piece of land. Each area gets its own type: pitched roof, flat roof, ground mount or carport. <span class="lead-in">By dimensions</span>, you enter the length and width of each building.</p>
+<p>Not all of an area can take panels. Edges need clearance, roofs have rooflights, plant and drainage, and flat-roof panels tilted towards the sun need gaps between rows. The calculator assumes:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Area type</th><th class="num">Share usable</th></tr></thead>
+<tbody>
+<tr><td>Pitched roof</td><td class="num">80%</td></tr>
+<tr><td>Flat roof</td><td class="num">80%</td></tr>
+<tr><td>Ground mount</td><td class="num">90%</td></tr>
+<tr><td>Carport</td><td class="num">85%</td></tr>
+</tbody></table></div>
+<p>It then fills the usable area with 510W panels of about 2.57 m² each. Projects under 50 kWp (roughly 350 m² of roof) are outside the calculator's range, as smaller systems are usually better served by domestic-style quotes.</p>
+
+<h2 id="sunshine">2. How much it generates where you are</h2>
+<p>Generation comes from the sunshine data in SAP 10.3, the government's Standard Assessment Procedure, which splits the UK into 21 regions and maps every postcode district to one of them. Enter a postcode and the calculator picks your region automatically. Without one, it uses the region you choose, or the UK average.</p>
+<p>The figures below are annual generation per kWp of panels, for an east-west layout tilted at 10 degrees, after normal system losses. This is a sensible middle case for commercial roofs. A south-facing pitched roof or a ground-mounted array tilted towards the sun will usually do better, and shading will make things worse.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>SAP region</th><th>Example postcode areas</th><th class="num">kWh per kWp a year</th></tr></thead>
+<tbody>
+<tr><td>UK average</td><td>Used when no postcode is given</td><td class="num">905</td></tr>
+<tr><td>Thames</td><td>AL, CR, E, EC, EN, GU</td><td class="num">969</td></tr>
+<tr><td>South East England</td><td>BN, BR, CT, DA, ME, TN</td><td class="num">1,029</td></tr>
+<tr><td>Southern England</td><td>BH, DT, PO, SO, GU11 to GU12, GU14</td><td class="num">1,053</td></tr>
+<tr><td>South West England</td><td>EX, PL, TQ, TR</td><td class="num">1,043</td></tr>
+<tr><td>Severn Wales and Severn England</td><td>BA, BS, CF, GL, NP, SA</td><td class="num">1,003</td></tr>
+<tr><td>Midlands</td><td>B, CV, DE, DY, HR, LE</td><td class="num">931</td></tr>
+<tr><td>West Pennines</td><td>BB, BL, CH, CW, FY, L</td><td class="num">895</td></tr>
+<tr><td>North West England and South West Scotland</td><td>CA, DG, LA7 to LA23</td><td class="num">908</td></tr>
+<tr><td>Borders</td><td>NE, SR, TD, DH4 to DH5, EH43 to EH46, TD12</td><td class="num">887</td></tr>
+<tr><td>North East England</td><td>DH, DL, HG, TS, YO, BD23 to BD24</td><td class="num">902</td></tr>
+<tr><td>East Pennines</td><td>BD, DN, HD, HU, HX, LN</td><td class="num">905</td></tr>
+<tr><td>East Anglia</td><td>CB, CM, CO, IG, IP, NR</td><td class="num">990</td></tr>
+<tr><td>Wales</td><td>LD, LL23 to LL27, LL30 to LL78, NP8, SA14 to SA20, SA31 to SA48</td><td class="num">968</td></tr>
+<tr><td>West Scotland</td><td>FK, G, KA, ML, PA, PH49</td><td class="num">851</td></tr>
+<tr><td>East Scotland</td><td>DD, EH, KY, PH</td><td class="num">857</td></tr>
+<tr><td>North East Scotland</td><td>AB, IV30 to IV32, IV36, PH26</td><td class="num">832</td></tr>
+<tr><td>Highland</td><td>IV, KW, PH19 to PH25, PH30 to PH44</td><td class="num">806</td></tr>
+<tr><td>Western Isles</td><td>HS</td><td class="num">856</td></tr>
+<tr><td>Orkney</td><td>KW15 to KW17</td><td class="num">828</td></tr>
+<tr><td>Shetland</td><td>ZE</td><td class="num">780</td></tr>
+<tr><td>Northern Ireland</td><td>BT</td><td class="num">888</td></tr>
+</tbody></table></div>
+<p>Panels lose a little output as they age. The calculator takes off 1% in the first year and 0.4% a year after that, in line with typical manufacturer performance warranties.</p>
+
+<h2 id="value">3. What the electricity is worth to you</h2>
+<p>Solar is worth most when you use it yourself, because every kWh you use is a kWh you do not buy from the grid at your full unit price. Solar you cannot use is exported and earns far less.</p>
+<ul>
+<li><strong>Solar used on site</strong> is valued at the unit price you enter, rising 3% a year.</li>
+<li><strong>Solar exported</strong> is valued at a flat 5p per kWh. Export rates vary by supplier and are not guaranteed.</li>
+<li><strong>The share used on site</strong> defaults to 80%, which suits most sites busy through the working week. You can change it. Warehouses, farms and sites closed at weekends are often 40 to 70%.</li>
+</ul>
+<p>As an example, at a 25p unit price, a kWh used on site saves 25p while an exported kWh earns 5p. That five-fold gap is why the share used on site matters more than almost any other input.</p>
+<p>If you add a battery, the calculator sizes it to store the solar you would otherwise export and assumes a 10-year working life. The stored energy is valued at your unit price, less the export income it replaces.</p>
+
+<h2 id="costs">4. What it costs</h2>
+<p>Installed costs are based on current UK market benchmarks per kWp for each area type, covering panels, inverters, mounting, electrical work and commissioning. Carports cost the most because of the steelwork and foundations, and pitched roofs the least. We review these benchmarks regularly against real project pricing.</p>
+<p>The model also includes a one-off allowance in year 13 for replacing inverters, which typically carry a 10 to 12-year warranty. Routine maintenance, scaffolding, surveys and any grid reinforcement are not included, because they vary too much from site to site to estimate without a visit.</p>
+
+<h2 id="funding">5. Buying outright or a PPA</h2>
+<p><span class="lead-in">Buying outright.</span> You pay the installed cost and keep all the savings and export income. The calculator shows your payback year, return on investment and net benefit over 25 years.</p>
+<p><span class="lead-in">Power Purchase Agreement.</span> A funder pays for, owns and maintains the system, and you buy the electricity it generates at an agreed rate, usually below your grid price. The calculator uses indicative rates that depend on your region, system size and contract length (10 to 25 years), rising 2.5% a year. During the contract the funder keeps any export income. When the contract ends, the system normally transfers to you, and from then on the electricity is free.</p>
+<p>Read more about each route, including tax treatment, in our <a href="funding.html">guide to funding solar</a>.</p>
+
+<h2 id="carbon">6. Carbon</h2>
+<p>Carbon savings use a factor of 0.196 kg of CO₂ for every kWh of grid electricity your solar replaces. The grid is getting cleaner each year, so savings in later years are likely to be lower than this flat figure suggests.</p>
+
+<h2 id="term">7. Why 25 years</h2>
+<p>All figures run for 25 years to keep the view prudent and to match the longest common PPA term. A well looked-after system will keep generating well beyond 25 years, and panel performance warranties often run to 25 or 30 years, so the real lifetime value is usually higher than the calculator shows.</p>
+
+<h2 id="limits">8. What the calculator does not do</h2>
+<p>The calculator gives a fast, honest first estimate. It is not a design or a quotation. It does not model:</p>
+<ul>
+<li>shading from nearby buildings, trees or rooftop plant</li>
+<li>whether your roof structure can take the load, or how long the roof has left</li>
+<li>grid connection costs, export limits or network reinforcement (see <a href="planning-and-grid.html">planning and grid connection</a>)</li>
+<li>VAT, capital allowances or other tax effects</li>
+<li>your actual half-hourly electricity use, which decides your real self-consumption</li>
+</ul>
+<p>A site survey and a review of your half-hourly meter data turn the estimate into a firm proposal.</p>
+<h2 id="faqs">Common questions</h2>
+<div class="faq">
+<details><summary>How accurate is the calculator?</summary><div class="faq-a"><p>It is a first estimate, not a design. Generation uses published regional sunshine data for a typical layout, so a south-facing roof may do better and a shaded one worse. Savings depend most on the share of solar you use on site and your unit price, so check those two inputs carefully. A site survey and your half-hourly meter data turn it into a firm figure.</p></div></details>
+<details><summary>Where does the sunshine data come from?</summary><div class="faq-a"><p>From SAP 10.3, the Standard Assessment Procedure used across UK building regulations. It gives monthly sunshine for 21 UK regions and maps postcode districts to them.</p></div></details>
+<details><summary>Why does my postcode matter?</summary><div class="faq-a"><p>Annual generation varies by about a third across the UK, from around 780 kWh per kWp in Shetland to over 1,050 in Southern England on the same layout. Using your postcode puts you in the right SAP region.</p></div></details>
+<details><summary>Does the calculator include VAT?</summary><div class="faq-a"><p>No. All costs are shown before VAT. Commercial installations are charged VAT at the standard 20%, which VAT-registered organisations can normally recover.</p></div></details>
+<details><summary>Can I see the cost rates and PPA rates behind the results?</summary><div class="faq-a"><p>The calculator shows your total installed cost and your indicative PPA rate. The underlying benchmarks are reviewed regularly and are not published, because real prices depend on site, scale and timing. A survey gives you a firm price.</p></div></details>
+</div>
+    </div>
+    <div class="sources"><h2>Sources</h2><ol><li><a href="https://www.gov.uk/guidance/standard-assessment-procedure" rel="noopener">GOV.UK: Standard Assessment Procedure (current version SAP 10.3)</a></li>
+<li><a href="https://bregroup.com/expertise/energy/sap/sap10" rel="noopener">BRE: SAP 10.3 specification, Appendix U (solar radiation data)</a></li></ol></div>
+  </article>
+  <aside class="guide-side" aria-label="On this page">
+    <nav class="toc"><div class="toc-title">On this page</div><ol><li><a href="#area">Measuring your roof</a></li>
+<li><a href="#sunshine">Sunshine at your postcode</a></li>
+<li><a href="#value">What the electricity is worth</a></li>
+<li><a href="#costs">Costs</a></li>
+<li><a href="#funding">Buying vs PPA</a></li>
+<li><a href="#carbon">Carbon</a></li>
+<li><a href="#term">Why 25 years</a></li>
+<li><a href="#limits">What it leaves out</a></li>
+<li><a href="#faqs">Questions</a></li></ol></nav>
+    <div class="side-cta"><strong>Model your own site</strong><p>Postcode, roof size and energy price. Results in seconds, with a 25-year report.</p><a class="btn" href="calculator.html">Open the calculator</a></div>
+    
+  </aside>
+</div>
+
+<section class="cta-strip">
+  <div class="cta-strip-inner">
+    <h2 class="cta-strip-title">Ready to see the numbers for your site?</h2>
+    <div class="cta-strip-btns">
+      <a href="calculator.html" class="btn btn-gold btn-lg">Open the calculator</a>
+      <a href="contact.html" class="btn btn-outline-white btn-lg">Speak to an expert</a>
+    </div>
+    <p class="cta-strip-lead">A detailed, downloadable 25-year model in under three minutes. No sign-up.</p>
+  </div>
+</section>
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-logo"><svg viewBox="0 0 34 34" aria-hidden="true"><path d="M3 24a14 14 0 0 1 28 0z" fill="#F8C05D"/><rect x="1" y="26" width="32" height="3" rx="1.5" fill="#FFFFFF"/></svg><span class="footer-logo-name">UK Solar Calculator</span></div>
+        <p class="footer-desc">Free solar modelling for UK businesses and public sector organisations, run by Kinetic Energy Consulting.</p>
+        <div class="footer-contact-item">Email: <a href="mailto:martynsheridan621@gmail.com">martynsheridan621@gmail.com</a></div>
+        <div class="footer-contact-item">Phone: <a href="tel:+447872015769">+44 (0) 7872 015769</a></div>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Calculator</div>
+        <ul><li><a href="calculator.html">Open the calculator</a></li><li><a href="how-it-works.html">How it works</a></li><li><a href="faq.html">FAQ</a></li><li><a href="contact.html">Contact</a></li></ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Guides</div>
+        <ul><li><a href="funding.html">Funding solar</a></li><li><a href="planning-and-grid.html">Planning and grid connection</a></li><li><a href="about.html">How solar works</a></li></ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-title">Sectors</div>
+        <ul><li><a href="industrial-commercial.html">Industrial and commercial</a></li><li><a href="nhs.html">NHS and healthcare</a></li><li><a href="cities.html">Councils and cities</a></li><li><a href="data-centres.html">Data centres</a></li><li><a href="sectors.html">All sectors</a></li></ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">&copy; 2026 Kinetic Energy Consulting</div>
+      <div class="footer-disclaimer">All calculator outputs are indicative estimates, not a quotation or a guarantee of performance. Guides are general information, not financial, tax or legal advice.</div>
+    </div>
+  </div>
+</footer>
+<script>
+  document.getElementById('navToggle').addEventListener('click', function (e) {
+    var open = document.getElementById('siteNav').classList.toggle('nav-mobile-open');
+    e.currentTarget.setAttribute('aria-expanded', open ? 'true' : 'false');
+    e.currentTarget.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+</script>
+</body>
+</html>
