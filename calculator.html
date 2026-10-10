@@ -4,19 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Free Commercial Solar ROI Calculator — UK Businesses</title>
-  <meta name="description" content="Calculate your commercial solar ROI instantly. Enter your roof size and energy use to get payback period, annual savings, 30-year savings, and carbon reduction for your UK site.">
+  <meta name="description" content="Calculate your commercial solar ROI instantly. Enter your roof size and energy use to get payback period, annual savings, 25-year savings, and carbon reduction for your UK site.">
   <link rel="canonical" href="https://uksolarcalculator.co.uk/calculator.html">
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://uksolarcalculator.co.uk/calculator.html">
   <meta property="og:title" content="Free Commercial Solar ROI Calculator — UK Businesses">
-  <meta property="og:description" content="Calculate your commercial solar ROI instantly. Enter your roof size and energy use to get payback period, annual savings, 30-year savings, and carbon reduction for your UK site.">
+  <meta property="og:description" content="Calculate your commercial solar ROI instantly. Enter your roof size and energy use to get payback period, annual savings, 25-year savings, and carbon reduction for your UK site.">
   <meta property="og:image" content="https://uksolarcalculator.co.uk/images/logo_light.png">
   <meta property="og:site_name" content="UK Solar Calculator">
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Free Commercial Solar ROI Calculator — UK Businesses">
-  <meta name="twitter:description" content="Calculate your commercial solar ROI instantly. Enter your roof size and energy use to get payback period, annual savings, 30-year savings, and carbon reduction for your UK site.">
+  <meta name="twitter:description" content="Calculate your commercial solar ROI instantly. Enter your roof size and energy use to get payback period, annual savings, 25-year savings, and carbon reduction for your UK site.">
   <meta name="twitter:image" content="https://uksolarcalculator.co.uk/images/logo_light.png">
   <!-- Schema: BreadcrumbList -->
   <script type="application/ld+json">
@@ -48,7 +48,7 @@
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Web",
     "url": "https://uksolarcalculator.co.uk/calculator.html",
-    "description": "Free solar ROI calculator for UK commercial and industrial businesses. Calculates system size, installation cost, annual savings, payback period, 30-year savings, and carbon reduction based on roof area, region, and energy price.",
+    "description": "Free solar ROI calculator for UK commercial and industrial businesses. Calculates system size, installation cost, annual savings, payback period, 25-year savings, and carbon reduction based on roof area, region, and energy price.",
     "offers": {
       "@type": "Offer",
       "price": "0",
@@ -72,7 +72,7 @@
         "name": "How do I use the commercial solar calculator?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Enter your available roof area in square metres, your annual electricity usage in kWh, your current unit price in pence per kWh, and select your UK region. The calculator instantly estimates your recommended system size, installation cost, annual savings, payback period, 30-year savings, and carbon reduction."
+          "text": "Enter your available roof area in square metres, your annual electricity usage in kWh, your current unit price in pence per kWh, and select your UK region. The calculator instantly estimates your recommended system size, installation cost, annual savings, payback period, 25-year savings, and carbon reduction."
         }
       },
       {
@@ -2353,7 +2353,7 @@
     </svg>
     <div class="header-left">
       <img src="images/logo_light.png" alt="Industrial &amp; Commercial Solar Calculator" style="height:auto;max-height:90px;width:auto;max-width:100%;display:block;margin-bottom:16px;">
-      <p class="header-sub">Estimate your solar potential, installation cost, and 30-year ROI for commercial and industrial rooftops — with optional battery storage and self-funded or PPA funding comparisons.</p>
+      <p class="header-sub">Estimate your solar potential, installation cost, and 25-year ROI for commercial and industrial rooftops — with optional battery storage and self-funded or PPA funding comparisons.</p>
     </div>
     <div class="header-right">
       <button class="action-btn" id="headerNotesBtn" style="display:none" onclick="downloadSupportingNotes()">
@@ -2414,8 +2414,8 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
       </div>
       <div>
-        <div class="hero-stat-num">30 Years</div>
-        <div class="hero-stat-desc">Full system lifetime projection</div>
+        <div class="hero-stat-num">25 Years</div>
+        <div class="hero-stat-desc">Prudent projection. Well-kept systems last longer</div>
       </div>
     </div>
     <div class="hero-stat">
@@ -2578,6 +2578,11 @@
         <label for="energyPrice">Current Energy Price (p/kWh)</label>
         <input type="number" id="energyPrice" value="25" step="0.1" min="1">
       </div>
+      <div class="form-row">
+        <label for="selfConsumption">Solar Used On Site (%)</label>
+        <input type="number" id="selfConsumption" value="90" step="5" min="30" max="100" onchange="saveState(); updateBatteryPreview();">
+        <div class="oversize-hint" id="selfConsumptionHint" style="display:block">The share of solar output your site uses itself. 90% suits sites busy through the day. Warehouses, farms and sites closed at weekends are often 40-70%. The rest is exported at 5p/kWh.</div>
+      </div>
     </div>
   </div>
 
@@ -2694,7 +2699,7 @@
         <div class="metric-icon grey"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
         <div class="metric-label">Panels Fitted</div>
         <div class="metric-value" id="panelCount">—</div>
-        <div class="metric-unit">× 450W</div>
+        <div class="metric-unit">× 510W</div>
         <div class="metric-accent"></div>
       </div>
       <div class="metric">
@@ -2713,7 +2718,7 @@
       </div>
       <div class="metric">
         <div class="metric-icon amber"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
-        <div class="metric-label">30yr Generation</div>
+        <div class="metric-label">25yr Generation</div>
         <div class="metric-value" id="totalGen">—</div>
         <div class="metric-unit">kWh</div>
         <div class="metric-accent"></div>
@@ -2732,7 +2737,7 @@
       </div>
       <div class="metric big">
         <div class="metric-icon amber"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
-        <div class="metric-label">30yr Savings</div>
+        <div class="metric-label">25yr Savings</div>
         <div class="metric-value" id="totalSavings">—</div>
         <div class="metric-unit">GBP</div>
         <div class="metric-accent"></div>
@@ -2741,7 +2746,7 @@
         <div class="metric-icon sky"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
         <div class="metric-label">Return on Investment</div>
         <div class="metric-value" id="roi">—</div>
-        <div class="metric-unit">% over 30 years</div>
+        <div class="metric-unit">% over 25 years</div>
         <div class="metric-accent"></div>
       </div>
       <div class="metric sky-big">
@@ -2755,7 +2760,7 @@
         <div class="metric-icon green"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
         <div class="metric-label">CO₂ Offset</div>
         <div class="metric-value" id="carbon">—</div>
-        <div class="metric-unit">tonnes (30yr)</div>
+        <div class="metric-unit">tonnes (25yr)</div>
         <div class="metric-accent"></div>
       </div>
     </div>
@@ -2789,7 +2794,7 @@
           <div class="brc-unit">GBP</div>
         </div>
       </div>
-      <div class="brc-note">Battery savings apply to years 1–10 only, reflecting a 10-year commercial lifespan under daily cycling. The system reverts to solar-only self-consumption from year 11 onwards. Battery cost is included in the total installation cost and 30-year figures above.</div>
+      <div class="brc-note">Battery savings apply to years 1–10 only, reflecting a 10-year commercial lifespan under daily cycling. The system reverts to solar-only self-consumption from year 11 onwards. Battery cost is included in the total installation cost and 25-year figures above.</div>
     </div>
 
     <!-- EXPORT UPSIDE BANNER -->
@@ -2798,9 +2803,9 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
       </div>
       <div class="export-banner-body">
-        <div class="export-banner-title">Additional Export Upside <span class="export-not-included">not included in savings</span></div>
+        <div class="export-banner-title">Export Income <span class="export-not-included">included in savings</span></div>
         <div class="export-banner-detail" id="exportBannerDetail">
-          <span id="exportBannerPre">Based on 30% of generation exported at 5p/kWh (SEG nominal rate), your estimated 30-year export revenue is </span><strong id="exportRevenue">—</strong><span id="exportBannerPost">. This is purely additional upside and is excluded from all savings calculations above as export rates are not guaranteed and vary by DNO and tariff.</span>
+          <span id="exportBannerPre">Solar you do not use on site is exported at 5p/kWh. Your estimated 25-year export income is </span><strong id="exportRevenue">—</strong><span id="exportBannerPost">, included in the savings above. Export rates are not guaranteed and vary by supplier.</span>
         </div>
       </div>
     </div>
@@ -2813,8 +2818,8 @@
           Self-Funded
         </div>
         <div class="comparison-metric"><span class="comparison-metric-label">Upfront Cost</span><span class="comparison-metric-value highlight" id="cmpSFCost">—</span></div>
-        <div class="comparison-metric"><span class="comparison-metric-label">Total Savings (30yr)</span><span class="comparison-metric-value" id="cmpSFSavings">—</span></div>
-        <div class="comparison-metric"><span class="comparison-metric-label">Net Profit (30yr)</span><span class="comparison-metric-value" id="cmpSFProfit">—</span></div>
+        <div class="comparison-metric"><span class="comparison-metric-label">Total Savings (25yr)</span><span class="comparison-metric-value" id="cmpSFSavings">—</span></div>
+        <div class="comparison-metric"><span class="comparison-metric-label">Net Profit (25yr)</span><span class="comparison-metric-value" id="cmpSFProfit">—</span></div>
         <div class="comparison-metric"><span class="comparison-metric-label">Payback Period</span><span class="comparison-metric-value" id="cmpSFPayback">—</span></div>
         <div class="comparison-metric"><span class="comparison-metric-label">ROI</span><span class="comparison-metric-value" id="cmpSFRoi">—</span></div>
         <div class="comparison-metric"><span class="comparison-metric-label">Maintenance Responsibility</span><span class="comparison-metric-value">You</span></div>
@@ -2829,7 +2834,7 @@
         <div class="comparison-metric"><span class="comparison-metric-label">Total Savings (contract)</span><span class="comparison-metric-value" id="cmpPPASavings">—</span></div>
         <div class="comparison-metric"><span class="comparison-metric-label">Post-Contract (free energy)</span><span class="comparison-metric-value" id="cmpPPAPostContract">—</span></div>
         <div class="comparison-metric"><span class="comparison-metric-label">PPA Rate (Year 1)</span><span class="comparison-metric-value" id="cmpPPARate">—</span></div>
-        <div class="comparison-metric"><span class="comparison-metric-label">PPA Rate Escalator</span><span class="comparison-metric-value">2% / yr</span></div>
+        <div class="comparison-metric"><span class="comparison-metric-label">PPA Rate Escalator</span><span class="comparison-metric-value">2.5% / yr</span></div>
         <div class="comparison-metric"><span class="comparison-metric-label">Maintenance Responsibility</span><span class="comparison-metric-value">Funder</span></div>
       </div>
     </div>
@@ -2864,14 +2869,14 @@
         Assumptions & Limitations
       </div>
       <div class="assumptions-grid" id="assumptionsGrid">
-        <div class="assumption-item">Maintenance costs NOT included. Typically £15–£20/kWp/year.</div>
+        <div class="assumption-item">Maintenance costs NOT included. Typically £15–£20/kWp/year. A one-off inverter replacement allowance is included in year 13.</div>
         <div class="assumption-item">Roof/mount coverage: 80–90% of total area assumed usable depending on mount type, accounting for edge setbacks, obstructions, and inter-row spacing.</div>
-        <div class="assumption-item">Self-consumption: 70% of generation is assumed consumed on-site, displacing grid electricity at the import rate.</div>
-        <div class="assumption-item">Export upside: the remaining 30% exported at a nominal 5p/kWh (SEG rate) is shown separately above as additional upside only — excluded from savings as export rates are not guaranteed and vary by DNO and tariff.</div>
-        <div class="assumption-item">Panel degradation: 0.5% per year (manufacturer linear performance warranty standard).</div>
+        <div class="assumption-item">Self-consumption: 90% of generation used on site by default (you can change this). The rest is exported at 5p/kWh and included in savings.</div>
+        <div class="assumption-item">Generation: regional yields from SAP 10.3 sunshine data, east-west layout at 10° tilt, net of system losses. Degradation 1% in year 1, then 0.4% a year.</div>
         <div class="assumption-item">Electricity price inflation: 3% per year.</div>
-        <div class="assumption-item">Panel spec: 450W, 2.27m × 1.13m (2.57m²). System efficiency (performance ratio): 80%. Installation cost is all-inclusive (panels, inverters, mounting, electrical, commissioning).</div>
+        <div class="assumption-item">Panel spec: 510W, 2.27m × 1.13m (2.57m²). Installation cost is all-inclusive (panels, inverters, mounting, electrical, commissioning).</div>
         <div class="assumption-item">Carbon factor: 0.196 kg CO₂/kWh (UK grid 2026).</div>
+        <div class="assumption-item">Figures run for 25 years to keep the view prudent. A well looked-after solar system will keep generating well beyond 25 years.</div>
         <div class="assumption-item">Does not include costs for scaffolding, surveys such as structural and also any grid associated costs or upgrades.</div>
       </div>
     </div>
@@ -2939,24 +2944,50 @@
 </div><!-- /wrapper -->
 
 <script>
-  const PANEL_POWER = 450;
+  const PANEL_POWER = 510;
   const PANEL_AREA = 2.27 * 1.13;
-  const SYSTEM_EFFICIENCY = 0.80;
-  const DEGRADATION_RATE = 0.005;
+  // Degradation: 1% in year 1, then 0.4% a year (matches the rapid pricing tool)
+  const DEG_YEAR1   = 0.01;
+  const DEG_ONGOING = 0.004;
+  function degFactor(y) { return (1 - DEG_YEAR1) * Math.pow(1 - DEG_ONGOING, y - 1); }
   const PRICE_INFLATION = 0.03;
   const CARBON_FACTOR = 0.196;
-  const SYSTEM_LIFETIME = 30;
+  const SYSTEM_LIFETIME = 25;        // modelled term; well-kept systems last longer
   const ROOF_COVERAGE = 0.80;
-  const SELF_CONSUMPTION = 0.70;     // 70% of generation consumed on-site
+  const SELF_CONSUMPTION_DEFAULT = 0.90;
+  let   SELF_CONSUMPTION = SELF_CONSUMPTION_DEFAULT; // set from the input at each calculation
+  const EXPORT_RATE = 0.05;          // 5p/kWh, flat (not indexed)
+  // Inverter replacement: one-off allowance in year 13 (first year after a 12-year warranty).
+  // 1 inverter per 100 kWp, £3,500 each, 40% of inverters allowed for. Not inflated.
+  const INVERTER_YEAR = 13;
+  const INVERTER_KWP_PER_UNIT = 100;
+  const INVERTER_UNIT_COST = 3500;
+  const INVERTER_SHARE = 0.40;
+  function inverterAllowance(kwp) {
+    return Math.max(1, Math.ceil(kwp / INVERTER_KWP_PER_UNIT)) * INVERTER_UNIT_COST * INVERTER_SHARE;
+  }
+  function readSelfConsumption() {
+    const el = document.getElementById('selfConsumption');
+    let v = el ? parseFloat(el.value) : NaN;
+    if (!isFinite(v)) v = SELF_CONSUMPTION_DEFAULT * 100;
+    v = Math.min(100, Math.max(30, v));
+    if (el && String(el.value) !== String(v)) el.value = v;
+    return v / 100;
+  }
   const BATTERY_COST_PER_KWH = 1000; // £1,000/kWh fully installed
   const BATTERY_LIFETIME_YRS = 10;   // commercial lifespan under daily cycling
 
-  const REGIONAL_YIELD = { scotland:850, north:950, midlands:1000, southwest:1150, southeast:1200, national:1000 };
+  // Net specific yield, kWh/kWp/yr. SAP 10.3 Appendix U sunshine data, east-west at 10° tilt,
+  // converted with SAP equations U1-U4 and scaled to a PV*SOL anchor of 905 kWh/kWp
+  // (East Pennines). Each value averages the SAP regions it covers:
+  // scotland 14-16, north 7/8/10/11, midlands 6/13 (Wales), southwest 4/5,
+  // southeast 1/2/3/12, national = SAP UK average. Already net of losses.
+  const REGIONAL_YIELD = { scotland:845, north:900, midlands:950, southwest:1025, southeast:1010, national:905 };
   const INSTALL_COST   = { pitched:900, flat:1000, ground:1050, carport:1500 }; // all-in £/kWp (hardware + installation)
   const GROUND_COVERAGE = { pitched:0.80, flat:0.80, ground:0.90, carport:0.85 };
   const MIN_ROOF_AREA = 350;
   const MIN_SYSTEM_KWP = 50;
-  const PPA_RATE_ESCALATOR = 0.02;   // 2% per year
+  const PPA_RATE_ESCALATOR = 0.025;  // 2.5% per year
   const PPA_FREE_ENERGY_RATE = 0.03; // assume grid price still inflates 3%/yr post-contract
 
   // PPA rates (p/kWh) keyed by region → size band → contract length
@@ -3056,7 +3087,8 @@
     const usable = totalArea * coverage;
     const panels = Math.floor(usable / PANEL_AREA);
     const kwp = (panels * PANEL_POWER) / 1000 * oversizeFactor;
-    const yearOneGen = kwp * REGIONAL_YIELD[region] * SYSTEM_EFFICIENCY;
+    SELF_CONSUMPTION = readSelfConsumption();
+    const yearOneGen = kwp * REGIONAL_YIELD[region] * degFactor(1);
 
     const bKwh = getBatteryKwh(yearOneGen);
     const bCost = bKwh * BATTERY_COST_PER_KWH;
@@ -3165,6 +3197,7 @@
         buildings,
         region:        document.getElementById('region')?.value,
         energyPrice:   document.getElementById('energyPrice')?.value,
+        selfConsumption: document.getElementById('selfConsumption')?.value,
         roofType:      document.getElementById('roofType')?.value,
         oversizeFactor,
         batteryOn:     document.getElementById('batteryToggle')?.checked || false,
@@ -3187,6 +3220,7 @@
         renderBuildingRows();
         document.getElementById('region').value = s.region || 'national';
         if (s.energyPrice) document.getElementById('energyPrice').value = s.energyPrice;
+        if (s.selfConsumption) document.getElementById('selfConsumption').value = s.selfConsumption;
         if (s.roofType)    document.getElementById('roofType').value     = s.roofType;
 
         // Restore oversize selection
@@ -3376,8 +3410,8 @@
         + 'Funding: ' + _funding + '\n'
         + 'Install cost: GBP ' + Math.round(_r.totalCost||0).toLocaleString('en-GB') + '\n'
         + 'Year 1 savings: GBP ' + _yr1sav.toLocaleString('en-GB') + '\n'
-        + '30yr savings: GBP ' + Math.round(_r.totalSavings||0).toLocaleString('en-GB') + '\n'
-        + 'Payback: ' + (_r.paybackYear ? (+_r.paybackYear).toFixed(1) + ' years' : 'beyond 30 years') + '\n'
+        + SYSTEM_LIFETIME + 'yr savings: GBP ' + Math.round(_r.totalSavings||0).toLocaleString('en-GB') + '\n'
+        + 'Payback: ' + (_r.paybackYear ? (+_r.paybackYear).toFixed(1) + ' years' : 'beyond ' + SYSTEM_LIFETIME + ' years') + '\n'
         + 'ROI: ' + (+(_r.roi||0)).toFixed(1) + '%\n\n'
         + 'BATTERY\n'
         + _battery + '\n\n'
@@ -3454,28 +3488,11 @@
       const r   = calculationData.results;
       const inp = calculationData.inputs;
       document.getElementById('breakdownTitle').textContent = inp.batteryOn
-        ? 'Year-by-Year Savings — 30-Year Lifetime (Battery Yrs 1–10)'
+        ? 'Year-by-Year Savings — 25-Year Term (Battery Yrs 1–10)'
         : 'Year-by-Year Savings — First 10 Years';
       document.getElementById('sfBarRows').style.display    = 'block';
       document.getElementById('ppaMilestoneRows').style.display = 'none';
-      const oversizeNote = inp.oversize > 1.0
-        ? `<div class="assumption-item">System oversized by ${Math.round((inp.oversize-1)*100)}% above roof-area baseline to increase winter generation and export available for storage.</div>`
-        : '';
-      const batteryNote = inp.batteryOn
-        ? `<div class="assumption-item">Battery storage: ${fmt(r.batteryKwh)} kWh system installed at £1,000/kWh (£${fmt(r.batteryCost)}). Savings apply to years 1–10 only, reflecting a 10-year commercial lifespan under daily cycling. From year 11 the system reverts to solar-only self-consumption. Battery capacity degradation not modelled.</div>`
-        : '';
-      document.getElementById('assumptionsGrid').innerHTML = `
-        <div class="assumption-item">Maintenance costs NOT included. Typically £15–£20/kWp/year.</div>
-        <div class="assumption-item">Roof coverage: ${Math.round((GROUND_COVERAGE[inp.roofType]||ROOF_COVERAGE)*100)}% of total area assumed usable, accounting for edge setbacks, obstructions, vents, and inter-row spacing.</div>
-        ${oversizeNote}
-        <div class="assumption-item">Self-consumption: 70% of generation is assumed consumed on-site, displacing grid electricity at the import rate.</div>
-        <div class="assumption-item">Export upside: ${inp.batteryOn ? 'battery captures the 30% export in years 1–10; residual export and all export from year 11 onwards' : 'the remaining 30%'} exported at a nominal 5p/kWh (SEG rate) is shown separately above as additional upside only — excluded from savings as export rates are not guaranteed and vary by DNO and tariff.</div>
-        ${batteryNote}
-        <div class="assumption-item">Panel degradation: 0.5% per year (manufacturer linear performance warranty standard).</div>
-        <div class="assumption-item">Electricity price inflation: 3% per year.</div>
-        <div class="assumption-item">Panel spec: 450W, 2.27m × 1.13m (2.57m²). System efficiency (performance ratio): 80%. Installation cost is all-inclusive (panels, inverters, mounting, electrical, commissioning).</div>
-        <div class="assumption-item">Carbon factor: 0.196 kg CO₂/kWh (UK grid 2026).</div>
-        <div class="assumption-item">Does not include costs for scaffolding, surveys such as structural and also any grid associated costs or upgrades.</div>`;
+      document.getElementById('assumptionsGrid').innerHTML = sfAssumptionsHTML(inp, r);
       buildChart('selffunded', r.totalCost, r.yearlySavings, r.paybackYear, null, null);
       document.getElementById('chartTitle').textContent = 'Break-Even Analysis';
       document.getElementById('chartLegend').innerHTML = `
@@ -3514,6 +3531,48 @@
     renderPPAComparison(ppaData);
   }
 
+  function scPct() { return Math.round(SELF_CONSUMPTION * 100); }
+
+  function sfAssumptionsHTML(inp, r) {
+    const sc = Math.round((inp.selfConsumption || SELF_CONSUMPTION) * 100);
+    const items = [
+      'Maintenance costs NOT included. Typically £15–£20/kWp/year.',
+      `Inverter replacement: a one-off allowance of £${fmt(r.inverterCost)} in year ${INVERTER_YEAR}, after the standard 12-year inverter warranty.`,
+      `Roof coverage: ${Math.round((GROUND_COVERAGE[inp.roofType]||ROOF_COVERAGE)*100)}% of total area assumed usable, accounting for edge setbacks, obstructions, vents, and inter-row spacing.`,
+      inp.oversize > 1.0 ? `System oversized by ${Math.round((inp.oversize-1)*100)}% above roof-area baseline to increase winter generation and export available for storage.` : null,
+      `Self-consumption: ${sc}% of generation used on site, displacing grid electricity at the import rate. If your site uses less in the day (for example a warehouse or a site closed at weekends), lower this figure.`,
+      `Export: ${inp.batteryOn ? 'the battery captures exported solar in years 1–10; what it does not capture, and all export from year 11,' : `the remaining ${100 - sc}% of generation`} is valued at 5p/kWh and included in savings. Export rates are not guaranteed.`,
+      inp.batteryOn ? `Battery storage: ${fmt(r.batteryKwh)} kWh system installed at £1,000/kWh (£${fmt(r.batteryCost)}). Savings apply to years 1–10 only, reflecting a 10-year commercial lifespan under daily cycling. From year 11 the system reverts to solar-only self-consumption. Battery capacity degradation not modelled.` : null,
+      `Generation: ${fmt(REGIONAL_YIELD[inp.region])} kWh/kWp a year for this region (SAP 10.3 sunshine data, east-west layout at 10° tilt, net of losses). South-facing or ground-mounted arrays often do better. Degradation 1% in year 1, then 0.4% a year.`,
+      'Electricity price inflation: 3% per year.',
+      'Panel spec: 510W, 2.27m × 1.13m (2.57m²). Installation cost is all-inclusive (panels, inverters, mounting, electrical, commissioning).',
+      'Carbon factor: 0.196 kg CO₂/kWh (UK grid 2026).',
+      'Figures run for 25 years to keep the view prudent. A well looked-after solar system will keep generating well beyond 25 years.',
+      'Does not include costs for scaffolding, surveys such as structural and also any grid associated costs or upgrades.',
+    ].filter(Boolean);
+    return items.map(t => `<div class="assumption-item">${t}</div>`).join('\n');
+  }
+
+  function ppaAssumptionsHTML(inp, r, ppa) {
+    const sc = Math.round((inp.selfConsumption || SELF_CONSUMPTION) * 100);
+    const invNote = ppa.contractYears < INVERTER_YEAR
+      ? `The system transfers to you after year ${ppa.contractYears}, so the year-${INVERTER_YEAR} inverter replacement allowance (£${fmt(r.inverterCost)}) is yours.`
+      : `The year-${INVERTER_YEAR} inverter replacement falls within the contract and is the funder's cost.`;
+    const items = [
+      'Maintenance, operation and insurance costs are included in the PPA rate — no additional cost to you during the contract.',
+      `Roof coverage: ${Math.round((GROUND_COVERAGE[inp.roofType]||ROOF_COVERAGE)*100)}% of total area assumed usable, accounting for edge setbacks, obstructions, vents, and inter-row spacing.`,
+      `Savings are modelled on the ${sc}% of generation used on site (the same basis as the self-funded comparison): during the contract you pay the PPA rate instead of the grid rate for that energy, and the funder keeps any export income. After the contract the system transfers to you, that energy is free and export income (5p/kWh) is yours.`,
+      invNote,
+      `Generation: ${fmt(REGIONAL_YIELD[inp.region])} kWh/kWp a year for this region (SAP 10.3 sunshine data, east-west at 10° tilt, net of losses). Degradation 1% in year 1, then 0.4% a year.`,
+      'Electricity price inflation: 3% per year. PPA rate escalator: 2.5% per year.',
+      'Panel spec: 510W, 2.27m × 1.13m (2.57m²).',
+      'Carbon factor: 0.196 kg CO₂/kWh (UK grid 2026).',
+      'Figures run for 25 years to keep the view prudent. A well looked-after solar system will keep generating well beyond 25 years.',
+      'PPA rates for flat roof, ground mount and carport installations include a +0.2p/kWh surcharge. Does not include costs for scaffolding, structural surveys, or grid connection upgrades.',
+    ];
+    return items.map(t => `<div class="assumption-item">${t}</div>`).join('\n');
+  }
+
   function computePPA(ppaRatePence, contractYears) {
     const r = calculationData.results;
     const inp = calculationData.inputs;
@@ -3525,9 +3584,10 @@
     let totalSavings    = 0;
     let contractSavings = 0;
 
-    // Savings are computed on the same self-consumption basis as the
-    // self-funded model (70% of generation displaces grid import; export is
-    // excluded), so the two funding routes compare like-for-like.
+    // Savings use the same self-consumption share as the self-funded model.
+    // During the contract the funder keeps export income; after it, the
+    // customer owns the system, keeps export income and pays the year-13
+    // inverter allowance if it falls after the contract.
     for (let y = 1; y <= SYSTEM_LIFETIME; y++) {
       const gen       = r.yearlyGeneration[y-1];
       const selfUsed  = gen * SELF_CONSUMPTION;
@@ -3551,8 +3611,10 @@
         contractSavings += sav;
       } else {
         // Post-contract: the system transfers to the customer — self-consumed
-        // energy is free, displacing grid import at full price
-        sav = selfUsed * gridPrice;
+        // energy is free, displacing grid import at full price, and export
+        // income now goes to the customer
+        sav = selfUsed * gridPrice + gen * (1 - SELF_CONSUMPTION) * EXPORT_RATE;
+        if (y === INVERTER_YEAR) sav -= r.inverterCost;
       }
       yearlySavings.push(sav);
       totalSavings += sav;
@@ -3560,8 +3622,8 @@
 
     const postContractSavings = totalSavings - contractSavings;
 
-    // Milestone cumulative savings: Year 1, 5, 10, 15, 20, 25, 30
-    const milestones = [1, 5, 10, 15, 20, 25, 30];
+    // Milestone cumulative savings: Year 1, 5, 10, 15, 20, 25
+    const milestones = [1, 5, 10, 15, 20, 25].filter(y => y <= SYSTEM_LIFETIME);
     let runningTotal = 0;
     const cumulativeByYear = yearlySavings.map(s => { runningTotal += s; return runningTotal; });
     const milestoneSavings = milestones.map(yr => ({
@@ -3589,14 +3651,14 @@
     document.getElementById('cmpSFCost').textContent    = '£' + fmt(sf.totalCost);
     document.getElementById('cmpSFSavings').textContent = '£' + fmt(sf.totalSavings);
     document.getElementById('cmpSFProfit').textContent  = '£' + fmt(sf.totalSavings - sf.totalCost);
-    document.getElementById('cmpSFPayback').textContent = sf.paybackYear ? sf.paybackYear.toFixed(1) + ' yrs' : '30+ yrs';
+    document.getElementById('cmpSFPayback').textContent = sf.paybackYear ? sf.paybackYear.toFixed(1) + ' yrs' : SYSTEM_LIFETIME + '+ yrs';
     document.getElementById('cmpSFRoi').textContent     = sf.roi.toFixed(1) + '%';
 
     // PPA comparison column
     document.getElementById('cmpPPACost').textContent         = '£0';
     document.getElementById('cmpPPASavings').textContent      = '£' + fmt(ppa.contractSavings);
-    document.getElementById('cmpPPAPostContract').textContent = ppa.contractYears < 30
-      ? '£' + fmt(ppa.postContractSavings) + ' (yrs ' + (ppa.contractYears+1) + '–30)'
+    document.getElementById('cmpPPAPostContract').textContent = ppa.contractYears < SYSTEM_LIFETIME
+      ? '£' + fmt(ppa.postContractSavings) + ' (yrs ' + (ppa.contractYears+1) + '–' + SYSTEM_LIFETIME + ')'
       : 'N/A';
     document.getElementById('cmpPPARate').textContent = ppa.ppaRate.toFixed(1) + 'p/kWh';
 
@@ -3642,18 +3704,10 @@
       </table>`;
 
     // ── SWITCH ASSUMPTIONS to PPA version ──
-    document.getElementById('assumptionsGrid').innerHTML = `
-      <div class="assumption-item">Maintenance, operation and insurance costs are included in the PPA rate — no additional cost to you.</div>
-      <div class="assumption-item">Roof coverage: 80% of total roof area assumed usable, accounting for edge setbacks, obstructions, vents, and inter-row spacing.</div>
-      <div class="assumption-item">Savings are modelled on the 70% of generation consumed on-site (the same basis as the self-funded comparison): during the contract you pay the PPA rate instead of the grid rate for that energy; after the contract the system transfers to you and that energy is free.</div>
-      <div class="assumption-item">Panel degradation: 0.5% per year (manufacturer linear performance warranty standard).</div>
-      <div class="assumption-item">Electricity price inflation: 3% per year. PPA rate escalator: 2% per year.</div>
-      <div class="assumption-item">Panel spec: 450W, 2.27m × 1.13m (2.57m²). System efficiency (performance ratio): 80%.</div>
-      <div class="assumption-item">Carbon factor: 0.196 kg CO₂/kWh (UK grid 2026).</div>
-      <div class="assumption-item">PPA rates for flat roof, ground mount and carport installations include a +0.2p/kWh surcharge. Does not include costs for scaffolding, structural surveys, or grid connection upgrades.</div>`;
+    document.getElementById('assumptionsGrid').innerHTML = ppaAssumptionsHTML(calculationData.inputs, r, ppa);
 
     // Chart
-    document.getElementById('chartTitle').textContent = '30-Year Cumulative Savings Comparison';
+    document.getElementById('chartTitle').textContent = '25-Year Cumulative Savings Comparison';
     document.getElementById('chartLegend').innerHTML = `
       <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Self-Funded</div>
       <div class="legend-item"><div class="legend-dot" style="background:var(--sky)"></div>PPA</div>
@@ -4113,6 +4167,7 @@
     const roofType   = document.getElementById('roofType').value;
     const region     = document.getElementById('region').value;
     const energyPrice = parseFloat(document.getElementById('energyPrice').value) / 100;
+    SELF_CONSUMPTION = readSelfConsumption();
 
     let filled, totalRoofArea;
 
@@ -4206,7 +4261,8 @@
     const systemSizeKw    = (basePanels * PANEL_POWER) / 1000 * oversize;
     const displayPanels   = Math.round(systemSizeKw * 1000 / PANEL_POWER);
     const installationCost = systemSizeKw * (opts.blendedInstallCostPerKwp || INSTALL_COST[roofType]); // all-in cost
-    const yearOneGeneration = systemSizeKw * REGIONAL_YIELD[region] * SYSTEM_EFFICIENCY;
+    const yearOneGeneration = systemSizeKw * REGIONAL_YIELD[region] * degFactor(1); // year 1, after first-year degradation
+    const inverterCost = inverterAllowance(systemSizeKw);
 
     // ── Battery sizing ─────────────────────────────────────
     const batteryKwh  = batteryOn ? getBatteryKwh(yearOneGeneration) : 0;
@@ -4216,25 +4272,27 @@
     let yearlyGeneration = [], yearlySavings = [], yearlyBatterySavings = [];
     let totalGeneration = 0, cumulativeSavings = 0, paybackYear = null;
     let totalExportRevenue = 0, batteryTotalSaving = 0;
-    const EXPORT_RATE = 0.05; // 5p/kWh nominal SEG rate
 
     for (let y = 1; y <= SYSTEM_LIFETIME; y++) {
-      const gen   = yearOneGeneration * Math.pow(1 - DEGRADATION_RATE, y - 1);
+      const gen   = yearOneGeneration * degFactor(y) / degFactor(1);
       const price = energyPrice * Math.pow(1 + PRICE_INFLATION, y - 1);
       const exportKwh = gen * (1 - SELF_CONSUMPTION);
 
-      // Battery saves by capturing export in years 1–10 only
+      // Battery saves by capturing export in years 1–10 only. Its benefit is
+      // the grid price avoided less the 5p export income given up.
       let batterySavY = 0;
       let residualExportKwh = exportKwh;
       if (batteryOn && y <= BATTERY_LIFETIME_YRS) {
         const captured = Math.min(batteryKwh * 365, exportKwh);
-        batterySavY = captured * price;
+        batterySavY = captured * (price - EXPORT_RATE);
         residualExportKwh = exportKwh - captured;
         batteryTotalSaving += batterySavY;
       }
 
-      const sav = gen * SELF_CONSUMPTION * price + batterySavY;
-      totalExportRevenue += residualExportKwh * EXPORT_RATE;
+      const exportIncome = residualExportKwh * EXPORT_RATE;
+      totalExportRevenue += exportIncome;
+      let sav = gen * SELF_CONSUMPTION * price + batterySavY + exportIncome;
+      if (y === INVERTER_YEAR) sav -= inverterCost;
 
       yearlyGeneration.push(gen);
       yearlySavings.push(sav);
@@ -4257,14 +4315,14 @@
     const yearOneExportRevenue = (exportKwh1 - captured1) * EXPORT_RATE;
 
     calculationData = {
-      inputs:{ roofType, region, energyPrice: energyPrice*100,
+      inputs:{ roofType, region, energyPrice: energyPrice*100, selfConsumption: SELF_CONSUMPTION,
                buildingCount: buildings ? buildings.length : 1,
                oversize, batteryOn },
       results:{ roofArea: totalRoofArea, maxPanels: displayPanels, systemSizeKw, totalCost,
                 yearOneGeneration, totalGeneration, totalSavings, roi,
                 paybackYear: paybackYear, // null = never breaks even within SYSTEM_LIFETIME
                 carbonOffset, yearlySavings, yearlyGeneration, yearlyBatterySavings,
-                totalExportRevenue, yearOneExportRevenue,
+                totalExportRevenue, yearOneExportRevenue, inverterCost,
                 batteryKwh, batteryCost, batteryTotalSaving, batteryNetPosition },
       date: new Date().toLocaleDateString('en-GB')
     };
@@ -4295,7 +4353,7 @@
     if (r.paybackYear) {
       animateCount(document.getElementById('payback'), 0, r.paybackYear, '', '', 1);
     } else {
-      document.getElementById('payback').textContent = '30+';
+      document.getElementById('payback').textContent = SYSTEM_LIFETIME + '+';
     }
     animateCount(document.getElementById('carbon'), 0, r.carbonOffset, '', '', 1);
 
@@ -4317,27 +4375,27 @@
     document.getElementById('exportRevenue').textContent = '£' + fmt(r.totalExportRevenue);
     if (inp.batteryOn) {
       document.getElementById('exportBannerPre').textContent  =
-        `Battery captures the solar export in years 1–10 (yr 1 residual ≈ £${fmt(Math.round(r.yearOneExportRevenue))}). The 30-year figure (`;
+        `The battery captures most exported solar in years 1–10 (yr 1 export income ≈ £${fmt(Math.round(r.yearOneExportRevenue))}). The 25-year export income (`;
       document.getElementById('exportBannerPost').textContent =
-        ') represents residual uncaptured export in yrs 1–10 plus the full export from yr 11 onwards, at 5p/kWh (SEG nominal). Excluded from savings — export rates are not guaranteed and vary by DNO and tariff.';
+        ') covers what the battery does not capture in yrs 1–10 plus all export from yr 11, at 5p/kWh. It is included in the savings above. Export rates are not guaranteed and vary by supplier.';
     } else {
       document.getElementById('exportBannerPre').textContent  =
-        `Based on 30% of generation exported at 5p/kWh (SEG nominal rate) — £${fmt(Math.round(r.yearOneExportRevenue))} in year 1 — your estimated 30-year export revenue is `;
+        `Based on ${100 - scPct()}% of generation exported at 5p/kWh (£${fmt(Math.round(r.yearOneExportRevenue))} in year 1), your estimated 25-year export income is `;
       document.getElementById('exportBannerPost').textContent =
-        '. This is purely additional upside and is excluded from all savings calculations above as export rates are not guaranteed and vary by DNO and tariff.';
+        ', included in the savings above. Export rates are not guaranteed and vary by supplier.';
     }
     document.getElementById('exportBanner').style.display = 'flex';
 
     // ── Bar chart — year-by-year ─────────────────────────
-    // Battery ON: show all 30 years; yrs 1-10 have solar+battery segments,
-    // yrs 11-30 are solar-only (muted) to show battery lifespan clearly.
+    // Battery ON: show all 25 years; yrs 1-10 have solar+battery segments,
+    // yrs 11-25 are solar-only (muted) to show battery lifespan clearly.
     // Battery OFF: show first 10 years only (original behaviour).
     const yearsToShow   = inp.batteryOn ? r.yearlySavings : r.yearlySavings.slice(0, 10);
     const maxSav        = Math.max(...yearsToShow);
     const barRows       = document.getElementById('barRows');
     barRows.innerHTML   = '';
     document.getElementById('breakdownTitle').textContent = inp.batteryOn
-      ? 'Year-by-Year Savings — 30-Year Lifetime (Battery Yrs 1–10)'
+      ? 'Year-by-Year Savings — 25-Year Term (Battery Yrs 1–10)'
       : 'Year-by-Year Savings — First 10 Years';
     yearsToShow.forEach((sav, i) => {
       const isBatteryYear = inp.batteryOn && i < 10;
@@ -4384,25 +4442,8 @@
       <div class="legend-item"><div class="legend-dot" style="background:var(--amber)"></div>Cumulative Savings</div>
       <div class="legend-item"><div class="legend-dot" style="background:var(--sky);opacity:0.6"></div>Initial Investment</div>`;
 
-    // Assumptions (call switchMode logic inline so they show on first calc too)
-    const oversizeNote = inp.oversize > 1.0
-      ? `<div class="assumption-item">System oversized by ${Math.round((inp.oversize-1)*100)}% above roof-area baseline to increase winter generation and export available for storage.</div>`
-      : '';
-    const batteryNote = inp.batteryOn
-      ? `<div class="assumption-item">Battery storage: ${fmt(r.batteryKwh)} kWh system at £1,000/kWh (£${fmt(r.batteryCost)}). Savings apply to years 1–10 only, reflecting a 10-year commercial lifespan under daily cycling. Solar reverts to standard self-consumption from year 11. Capacity degradation not modelled.</div>`
-      : '';
-    document.getElementById('assumptionsGrid').innerHTML = `
-      <div class="assumption-item">Maintenance costs NOT included. Typically £15–£20/kWp/year.</div>
-      <div class="assumption-item">Roof coverage: ${Math.round((GROUND_COVERAGE[inp.roofType]||ROOF_COVERAGE)*100)}% of total area assumed usable, accounting for edge setbacks, obstructions, vents, and inter-row spacing.</div>
-      ${oversizeNote}
-      <div class="assumption-item">Self-consumption: 70% of generation is assumed consumed on-site, displacing grid electricity at the import rate.</div>
-      <div class="assumption-item">Export upside: ${inp.batteryOn ? 'battery captures the 30% export in years 1–10; residual export and all export from year 11 onwards' : 'the remaining 30%'} exported at a nominal 5p/kWh (SEG rate) is shown separately above as additional upside only — excluded from savings as export rates are not guaranteed and vary by DNO and tariff.</div>
-      ${batteryNote}
-      <div class="assumption-item">Panel degradation: 0.5% per year (manufacturer linear performance warranty standard).</div>
-      <div class="assumption-item">Electricity price inflation: 3% per year.</div>
-      <div class="assumption-item">Panel spec: 450W, 2.27m × 1.13m (2.57m²). System efficiency (performance ratio): 80%.</div>
-      <div class="assumption-item">Carbon factor: 0.196 kg CO₂/kWh (UK grid 2026).</div>
-      <div class="assumption-item">Does not include costs for scaffolding, surveys such as structural and also any grid associated costs or upgrades.</div>`;
+    // Assumptions
+    document.getElementById('assumptionsGrid').innerHTML = sfAssumptionsHTML(inp, r);
 
     // Render project timeline
     renderTimeline();
@@ -4412,7 +4453,7 @@
     const canvasCtx = document.getElementById('savingsChart').getContext('2d');
     if (currentChart) currentChart.destroy();
 
-    const labels = Array.from({length:30}, (_,i) => `Y${i+1}`);
+    const labels = Array.from({length:SYSTEM_LIFETIME}, (_,i) => `Y${i+1}`);
 
     // Build SF cumulative
     let cum = 0;
@@ -4509,7 +4550,7 @@
         }
 
         // Contract-end line (PPA mode)
-        if (mode === 'ppa' && contractYears && contractYears < 30) {
+        if (mode === 'ppa' && contractYears && contractYears < SYSTEM_LIFETIME) {
           const xPos = x.getPixelForValue(contractYears - 1);
           c.save();
           c.setLineDash([4, 3]);
@@ -5117,9 +5158,9 @@
     ly = sectionHead('Proposed System', BLUE, [235, 244, 255], C1L, ly, COL_W);
     const oversizeSuffix = inp.oversize > 1.0 ? ` (+${Math.round((inp.oversize-1)*100)}% oversized)` : '';
     ly = dataRow('System Size:', r.systemSizeKw.toFixed(2) + ' kWp' + oversizeSuffix, C1L, ly, COL_W);
-    ly = dataRow('No. of Panels:', fmt(r.maxPanels) + ' x 450W', C1L, ly, COL_W);
+    ly = dataRow('No. of Panels:', fmt(r.maxPanels) + ' x 510W', C1L, ly, COL_W);
     ly = dataRow('Year 1 Generation:', fmt(r.yearOneGeneration) + ' kWh', C1L, ly, COL_W);
-    ly = dataRow('30-Year Generation:', fmt(r.totalGeneration) + ' kWh', C1L, ly, COL_W);
+    ly = dataRow('25-Year Generation:', fmt(r.totalGeneration) + ' kWh', C1L, ly, COL_W);
 
     // LEFT: Battery Storage (if enabled)
     if (inp.batteryOn) {
@@ -5135,18 +5176,18 @@
     let ry = sectionHead('Financial Summary', AMBER, [255, 251, 235], C2L, startY, COL_W);
     ry = dataRow('Total Install Cost:', '£' + fmt(r.totalCost), C2L, ry, COL_W);
     if (inp.batteryOn) ry = dataRow('  of which battery:', '£' + fmt(r.batteryCost), C2L, ry, COL_W);
-    ry = dataRow('30-Year Savings:', '£' + fmt(r.totalSavings), C2L, ry, COL_W);
-    ry = dataRow('Net Profit (30yr):', '£' + fmt(r.totalSavings - r.totalCost), C2L, ry, COL_W);
+    ry = dataRow('25-Year Savings:', '£' + fmt(r.totalSavings), C2L, ry, COL_W);
+    ry = dataRow('Net Profit (25yr):', '£' + fmt(r.totalSavings - r.totalCost), C2L, ry, COL_W);
     ry = dataRow('Return on Investment:', r.roi.toFixed(1) + '%', C2L, ry, COL_W);
-    ry = dataRow('Payback Period:', r.paybackYear ? r.paybackYear.toFixed(1) + ' years' : 'Beyond 30 years', C2L, ry, COL_W);
-    ry = dataRow('Export Upside (30yr)*:', '£' + fmt(r.totalExportRevenue), C2L, ry, COL_W);
+    ry = dataRow('Payback Period:', r.paybackYear ? r.paybackYear.toFixed(1) + ' years' : 'Beyond ' + SYSTEM_LIFETIME + ' years', C2L, ry, COL_W);
+    ry = dataRow('Export Income (25yr)*:', '£' + fmt(r.totalExportRevenue), C2L, ry, COL_W);
 
     ry += 5;
 
     // RIGHT: Environmental & Key Inputs
     ry = sectionHead('Environmental & Key Inputs', GREEN, [236, 253, 245], C2L, ry, COL_W);
-    ry = dataRow('CO2 Offset (30yr):', r.carbonOffset.toFixed(1) + ' tonnes', C2L, ry, COL_W);
-    ry = dataRow('Self-Consumption Rate:', Math.round(SELF_CONSUMPTION * 100) + '%', C2L, ry, COL_W);
+    ry = dataRow('CO2 Offset (25yr):', r.carbonOffset.toFixed(1) + ' tonnes', C2L, ry, COL_W);
+    ry = dataRow('Self-Consumption Rate:', Math.round((inp.selfConsumption || SELF_CONSUMPTION) * 100) + '%', C2L, ry, COL_W);
     ry = dataRow('Energy Price (yr 1):', inp.energyPrice + 'p / kWh', C2L, ry, COL_W);
     ry = dataRow('Cost Basis:', costLabels[inp.roofType] || '—', C2L, ry, COL_W);
 
@@ -5158,7 +5199,7 @@
     chartY += 5;
 
     T('bold', 9, BLUE);
-    doc.text('30-Year Cumulative Savings: Self-Funded vs PPA', PW / 2, chartY, { align: 'center' });
+    doc.text('25-Year Cumulative Savings: Self-Funded vs PPA', PW / 2, chartY, { align: 'center' });
     chartY += 4;
 
     // Build comparison chart — await onComplete so canvas is fully painted before capture
@@ -5185,15 +5226,15 @@
 
     T('normal', 6.5, DGREY);
     const assumptions = [
-      'Maintenance costs are NOT included. Annual maintenance typically costs £15-20 per kWp per year.',
+      'Maintenance costs are NOT included (typically £15-20 per kWp per year). A one-off inverter replacement allowance of £' + fmt(r.inverterCost) + ' is included in year ' + INVERTER_YEAR + '.',
       'Roof/mount coverage: 80-90% of total area assumed usable depending on mount type, accounting for edge setbacks, obstructions, and inter-row spacing.',
       inp.oversize > 1.0 ? `System oversized by ${Math.round((inp.oversize-1)*100)}% above the roof-area baseline to increase winter generation and export available for battery storage.` : null,
-      'Self-consumption: 70% of generation is assumed consumed on-site, displacing grid electricity at the import rate.',
-      '*Export upside: ' + (inp.batteryOn ? 'battery captures the 30% export in years 1-10; residual export and all export from year 11' : 'the remaining 30% of generation exported') + ' is valued at a nominal 5p/kWh (SEG rate) — £' + fmt(r.totalExportRevenue) + ' over 30 years. Excluded from main savings as rates are not guaranteed.',
+      'Self-consumption: ' + Math.round((inp.selfConsumption || SELF_CONSUMPTION) * 100) + '% of generation used on site, displacing grid electricity at the import rate.',
+      '*Export: ' + (inp.batteryOn ? 'what the battery does not capture in years 1-10, and all export from year 11,' : 'the remaining ' + (100 - Math.round((inp.selfConsumption || SELF_CONSUMPTION) * 100)) + '% of generation') + ' is valued at 5p/kWh (£' + fmt(r.totalExportRevenue) + ' over 25 years) and included in savings. Export rates are not guaranteed.',
       inp.batteryOn ? `Battery storage: ${fmt(r.batteryKwh)} kWh system installed at £1,000/kWh (£${fmt(r.batteryCost)}). Savings apply to years 1-10 only, reflecting a 10-year commercial lifespan under daily cycling. Solar reverts to standard self-consumption from year 11. Capacity degradation not modelled.` : null,
-      'Panel degradation: 0.5% per year. Electricity price inflation: 3% per year.',
-      'Panel specification: 450W, 2.27m x 1.13m. Overall system efficiency: 80%.',
-      'Carbon factor: 0.196 kg CO2 per kWh (UK grid 2026).',
+      'Generation: ' + fmt(REGIONAL_YIELD[inp.region]) + ' kWh/kWp a year (SAP 10.3 regional sunshine data, east-west at 10 degrees, net of losses). Degradation 1% in year 1, then 0.4% a year. Electricity price inflation: 3% per year.',
+      'Panel specification: 510W, 2.27m x 1.13m. Carbon factor: 0.196 kg CO2 per kWh (UK grid 2026).',
+      'Figures run for 25 years to keep the view prudent. A well looked-after solar system will keep generating well beyond 25 years.',
       'Does not include costs for scaffolding, structural surveys, or any grid connection costs or upgrades.',
     ].filter(Boolean);
     assumptions.forEach(function(a, i) {
@@ -5308,15 +5349,15 @@
     // LEFT COLUMN: System + PPA Config
     let ly = sectionBar('Proposed System', BLUE, [235,244,255], C1L, startY, COL_W);
     ly = dataRow('System Size:', r.systemSizeKw.toFixed(2) + ' kWp', C1L, ly, COL_W);
-    ly = dataRow('No. of Panels:', fmt(r.maxPanels) + ' x 450W', C1L, ly, COL_W);
+    ly = dataRow('No. of Panels:', fmt(r.maxPanels) + ' x 510W', C1L, ly, COL_W);
     ly = dataRow('Roof Area:', r.roofArea.toFixed(0) + ' m2 (' + (r.roofArea*0.8).toFixed(0) + ' usable)', C1L, ly, COL_W);
     ly = dataRow('Region:', inp.region.charAt(0).toUpperCase() + inp.region.slice(1), C1L, ly, COL_W);
     ly = dataRow('Year 1 Generation:', fmt(r.yearOneGeneration) + ' kWh', C1L, ly, COL_W);
-    ly = dataRow('30-Year Generation:', fmt(r.totalGeneration) + ' kWh', C1L, ly, COL_W);
+    ly = dataRow('25-Year Generation:', fmt(r.totalGeneration) + ' kWh', C1L, ly, COL_W);
     ly += 5;
     ly = sectionBar('PPA Configuration', SKY, [230,248,255], C1L, ly, COL_W);
     ly = dataRow('PPA Rate (Year 1):', ppa.ppaRate.toFixed(1) + 'p / kWh', C1L, ly, COL_W);
-    ly = dataRow('PPA Escalator:', '2% per year', C1L, ly, COL_W);
+    ly = dataRow('PPA Escalator:', '2.5% per year', C1L, ly, COL_W);
     ly = dataRow('Contract Length:', ppa.contractYears + ' years', C1L, ly, COL_W);
     ly = dataRow('Grid Price (Year 1):', inp.energyPrice + 'p / kWh', C1L, ly, COL_W);
     ly = dataRow('Grid Escalator:', '3% per year', C1L, ly, COL_W);
@@ -5326,15 +5367,15 @@
     let ry = sectionBar('PPA Financial Summary', AMBER, [255,251,235], C2L, startY, COL_W);
     ry = dataRow('Savings (contract term):', '£' + fmt(ppa.contractSavings), C2L, ry, COL_W);
     ry = dataRow('Free energy (post-contract):', '£' + fmt(ppa.postContractSavings), C2L, ry, COL_W);
-    ry = dataRow('Total 30-Year Benefit:', '£' + fmt(ppa.totalSavings), C2L, ry, COL_W);
+    ry = dataRow('Total 25-Year Benefit:', '£' + fmt(ppa.totalSavings), C2L, ry, COL_W);
     ry = dataRow('Maintenance Cost to You:', '£0 (funder responsible)', C2L, ry, COL_W);
     ry += 5;
     ry = sectionBar('vs Self-Funded Route', GREEN, [236,253,245], C2L, ry, COL_W);
     ry = dataRow('SF Upfront Cost:', '£' + fmt(r.totalCost), C2L, ry, COL_W);
-    ry = dataRow('SF 30-Year Savings:', '£' + fmt(r.totalSavings), C2L, ry, COL_W);
+    ry = dataRow('SF 25-Year Savings:', '£' + fmt(r.totalSavings), C2L, ry, COL_W);
     ry = dataRow('SF Net Profit:', '£' + fmt(r.totalSavings - r.totalCost), C2L, ry, COL_W);
-    ry = dataRow('SF Payback Period:', r.paybackYear ? r.paybackYear.toFixed(1) + ' years' : 'Beyond 30 years', C2L, ry, COL_W);
-    ry = dataRow('CO2 Offset (30yr):', r.carbonOffset.toFixed(1) + ' tonnes', C2L, ry, COL_W);
+    ry = dataRow('SF Payback Period:', r.paybackYear ? r.paybackYear.toFixed(1) + ' years' : 'Beyond ' + SYSTEM_LIFETIME + ' years', C2L, ry, COL_W);
+    ry = dataRow('CO2 Offset (25yr):', r.carbonOffset.toFixed(1) + ' tonnes', C2L, ry, COL_W);
 
     // CHART
     let chartY = Math.max(ly, ry) + 6;
@@ -5357,14 +5398,14 @@
     T('normal', 7.2, DGREY);
     const assumptions = [
       'PPA rates sourced from regional rate card based on system size and contract length.',
-      'PPA escalator: 2% per year. Grid price escalator: 3% per year.',
-      'Post-contract (after year ' + ppa.contractYears + '): system transfers to the customer — self-consumed energy (70% of generation) valued at full grid price.',
-      'Savings modelled on the 70% of generation consumed on-site — the same basis as the self-funded comparison. Surplus exported if available.',
-      'Roof mount coverage: 80-90% of total area assumed usable depending on mount type.',
-      'Carbon factor: 0.196 kg CO2/kWh (UK grid 2026). System efficiency: 80%.',
+      'PPA escalator: 2.5% per year. Grid price escalator: 3% per year.',
+      'Savings use the ' + Math.round((inp.selfConsumption || SELF_CONSUMPTION) * 100) + '% of generation used on site (as self-funded). The funder keeps export income in contract.',
+      ppa.contractYears < SYSTEM_LIFETIME ? 'Post-contract (after year ' + ppa.contractYears + '): system transfers to the customer. Self-consumed energy is valued at the full grid price and export at 5p/kWh' + (ppa.contractYears < INVERTER_YEAR ? '; the customer pays the year-' + INVERTER_YEAR + ' inverter allowance (£' + fmt(r.inverterCost) + ').' : '.') : null,
+      'Generation: ' + fmt(REGIONAL_YIELD[inp.region]) + ' kWh/kWp a year (SAP 10.3, net of losses). Degradation 1% in year 1, then 0.4% a year. Carbon factor: 0.196 kg CO2/kWh.',
+      'Figures run for 25 years to stay prudent. A well looked-after system will keep generating well beyond that.',
       'PPA: no upfront cost, no maintenance liability. Funder owns, operates and maintains the system.',
       'Does not include costs for scaffolding, structural surveys, or any grid connection upgrades.',
-    ];
+    ].filter(Boolean);
     assumptions.forEach(function(a, i) {
       const lines = doc.splitTextToSize((i+1) + '.  ' + a, CW - 4);
       doc.text(lines, ML, chartY); chartY += lines.length * 3.6 + 2;
@@ -5522,8 +5563,8 @@
 
     // How the Calculator Works
     y = sectionHead('How the Calculator Works', y);
-    y = para('You provide basic information about your site — roof area, roof type, location, and current energy price — and the calculator estimates the maximum system size, annual generation based on regional solar irradiance data, and models the financial picture over 30 years under two funding routes.', y);
-    y = para('Core assumptions: panels are 450W modules (~2.57 m² each); the system operates at 80% efficiency (performance ratio); generation degrades at 0.5% per year; energy prices rise at 3% per year; and 70% of generation is consumed on-site. These figures are deliberately conservative — in practice, many sites perform better.', y);
+    y = para('You provide basic information about your site — roof area, roof type, location, and current energy price — and the calculator estimates the maximum system size, annual generation based on regional solar irradiance data, and models the financial picture over 25 years under two funding routes. A well looked-after system will keep generating well beyond 25 years; the model stops there to stay prudent.', y);
+    y = para('Core assumptions: panels are 510W modules (about 2.57 m2 each); generation uses regional yields from SAP 10.3 sunshine data (east-west layout at 10 degrees, net of system losses); generation degrades by 1% in year 1 and 0.4% a year after; energy prices rise at 3% per year; 90% of generation is used on site by default (you can change this) and the rest is exported at 5p/kWh; and a one-off inverter replacement allowance is included in year 13.', y);
     y += 3;
 
     // Limitations
@@ -5533,7 +5574,7 @@
     y = labelPara('Energy prices are an estimate.', 'Most commercial businesses pay 18p–28p per kWh depending on contract type and tariff structure. Use a figure from your most recent bill. Savings modelled are directly sensitive to this input.', y);
     y = labelPara('Grid connection varies.', 'Every site requires a DNO application. Time and cost depend on local network capacity, system size, and the current application queue. For systems over 5MWp, the process escalates to NESO, adding significant time.', y);
     y = labelPara('Planning permission.', 'Most rooftop installations fall within permitted development rights. Ground-mounted systems and carports typically require planning permission. Permitted development rights can be removed by Article 4 directions — always check with your local planning authority early.', y);
-    y = labelPara('Export tariffs not included.', 'The calculator models self-consumed energy only. Electricity exported to the grid via a Smart Export Guarantee (SEG) arrangement is not included and represents additional upside a detailed proposal would capture.', y);
+    y = labelPara('Self-consumption drives the result.', 'Solar used on site is worth your full grid price; exported solar earns only around 5p/kWh. The calculator assumes 90% on-site use unless you change it. Sites with low daytime demand, such as warehouses or sites closed at weekends, should use a lower figure. A detailed proposal uses your half-hourly meter data.', y);
 
     // ════════════════════════════════
     // PAGE 2
