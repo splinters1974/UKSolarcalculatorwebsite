@@ -33,13 +33,9 @@
       "contactPoint": {
         "@type": "ContactPoint",
         "contactType": "Sales",
-        "telephone": "+447872015769",
-        "email": "martynsheridan621@gmail.com",
+        "email": "pjohnston663@gmail.com",
         "areaServed": "GB"
-      },
-      "sameAs": [
-        "https://www.linkedin.com/in/martynsheridan"
-      ]
+      }
     },
     {
       "@type": "BreadcrumbList",
@@ -735,8 +731,8 @@
         <div class="contact-card">
           <div class="contact-label">This is an indicative estimate</div>
           <div class="contact-text">It is based on the details you entered and typical assumptions. For a site design with firm costs and savings, speak to Kinetic Energy Consulting.</div>
-          <div class="contact-person">Martyn Sheridan</div>
-          <div class="contact-details"><a href="mailto:martynsheridan621@gmail.com">martynsheridan621@gmail.com</a><span aria-hidden="true">·</span><a href="tel:+447872015769">+44 (0) 7872 015769</a></div>
+          <div class="contact-person">Paul Johnston</div>
+          <div class="contact-details"><a href="mailto:pjohnston663@gmail.com">pjohnston663@gmail.com</a></div>
         </div>
       </div>
     </div>
@@ -1323,7 +1319,7 @@
         report_date: reportDate,
         system_size: systemSize,
         region:      region,
-        message:     'Many thanks for requesting a report from the UK Solar Calculator. Your report has downloaded to your device.\n\nIf you wish to discuss this further, free of charge, then we can slot in 30 minutes into the diary to understand your requirement in more detail.\n\nKind regards,\nMartyn Sheridan\nSales Director\n07872015769',
+        message:     'Many thanks for requesting a report from the UK Solar Calculator. Your report has downloaded to your device.\n\nIf you wish to discuss this further, free of charge, then we can slot in 30 minutes into the diary to understand your requirement in more detail.\n\nKind regards,\nPaul Johnston\nKinetic Energy Consulting',
       });
 
       // Clear safety timer, we got a response
@@ -1361,8 +1357,8 @@
         + 'Annual CO2 saving: ' + (+(_r.carbonOffset||0)).toFixed(1) + ' t/yr';
 
       emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-        to_email:    'martynsheridan621@gmail.com',
-        to_name:     'Martyn',
+        to_email:    'pjohnston663@gmail.com',
+        to_name:     'Paul',
         report_date: reportDate,
         system_size: systemSize,
         region:      region,
@@ -1374,7 +1370,7 @@
 
       // Update UI
       txt.textContent = 'Sent!';
-      showModalMsg('Done! PDF downloading now. Martyn will be in touch shortly.', 'success');
+      showModalMsg('Done! PDF downloading now. Paul will be in touch shortly.', 'success');
       // Auto-close after 2s, direct DOM manipulation to avoid any event-guard issues
       setTimeout(() => {
         const m = document.getElementById('emailModal');
@@ -2962,7 +2958,7 @@
     doc.setFontSize(6);
     doc.setTextColor(...MGREY);
     doc.text(
-      'Kinetic Energy Consulting  |  martynsheridan621@gmail.com  |  07872 015769  |  Timeline is indicative, actual durations subject to site, council, and DNO variables.',
+      'Kinetic Energy Consulting  |  pjohnston663@gmail.com  |  Timeline is indicative, actual durations subject to site, council, and DNO variables.',
       ML, PH - 6
     );
   }
@@ -3179,7 +3175,7 @@
 
     // Pre-calculate all text to size the box correctly before drawing it
     const discText    = 'This is a rough, hypothetical calculation based on very basic input information. For a more detailed design and accurate costings and savings please contact:';
-    const contactLine = 'Martyn Sheridan  |  martynsheridan621@gmail.com  |  +44 (0) 787 2015769';
+    const contactLine = 'Paul Johnston  |  pjohnston663@gmail.com';
     const maxTextW    = CW - 12;
     T('normal', 7.2, [100, 60, 0]);
     const discLines    = doc.splitTextToSize(discText, maxTextW);
@@ -3343,7 +3339,7 @@
     // IMPORTANT NOTICE BOX
     doc.setDrawColor(...LGREY); doc.setLineWidth(0.4); doc.line(ML, chartY, PW - MR, chartY); chartY += 4;
     const discText = 'This is a rough, hypothetical calculation based on very basic input information. For a more detailed design and accurate costings and savings please contact:';
-    const contactLine = 'Martyn Sheridan  |  martynsheridan621@gmail.com  |  +44 (0) 787 2015769';
+    const contactLine = 'Paul Johnston  |  pjohnston663@gmail.com';
     T('normal', 7.2, [100,60,0]);
     const dL = doc.splitTextToSize(discText, CW - 10);
     T('bold', 7.5, [130,80,0]);
@@ -3475,7 +3471,7 @@
       doc.setFillColor(...AMBER);
       doc.rect(0, PH - 3, PW, 3, 'F');
       T('normal', 6, MGREY);
-      doc.text('Kinetic Energy Consulting  |  martynsheridan621@gmail.com  |  07872 015769  |  For information purposes only, not a formal quotation or guarantee of performance.', ML, PH - 6);
+      doc.text('Kinetic Energy Consulting  |  pjohnston663@gmail.com  |  For information purposes only, not a formal quotation or guarantee of performance.', ML, PH - 6);
     }
 
     // ════════════════════════════════
@@ -3618,10 +3614,9 @@
     doc.text(nextText, ML + 7, y + 16);
     const contactY = y + 16 + nextText.length * 3.5 + 4;
     T('bold', 9, BLACK);
-    doc.text('Martyn Sheridan  |  Kinetic Energy Consulting', ML + 7, contactY);
+    doc.text('Paul Johnston  |  Kinetic Energy Consulting', ML + 7, contactY);
     T('normal', 8, [0, 90, 160]);
-    doc.text('martynsheridan621@gmail.com', ML + 7, contactY + 6);
-    doc.text('+44 (0) 7872 015769', ML + 7, contactY + 12);
+    doc.text('pjohnston663@gmail.com', ML + 7, contactY + 6);
     y += 63;
 
     y += 6;
@@ -3737,8 +3732,7 @@
       <div class="footer-brand">
         <div class="footer-logo"><svg viewBox="0 0 34 34" aria-hidden="true"><path d="M3 24a14 14 0 0 1 28 0z" fill="#F8C05D"/><rect x="1" y="26" width="32" height="3" rx="1.5" fill="#FFFFFF"/></svg><span class="footer-logo-name">UK Solar Calculator</span></div>
         <p class="footer-desc">Free solar modelling for UK businesses and public sector organisations, run by Kinetic Energy Consulting.</p>
-        <div class="footer-contact-item">Email: <a href="mailto:martynsheridan621@gmail.com">martynsheridan621@gmail.com</a></div>
-        <div class="footer-contact-item">Phone: <a href="tel:+447872015769">+44 (0) 7872 015769</a></div>
+        <div class="footer-contact-item">Email: <a href="mailto:pjohnston663@gmail.com">pjohnston663@gmail.com</a></div>
       </div>
       <div class="footer-col">
         <div class="footer-col-title">Calculator</div>
