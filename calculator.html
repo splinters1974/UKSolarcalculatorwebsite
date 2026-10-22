@@ -175,6 +175,9 @@
 .map-action-row { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .map-action-row .btn svg { width: 18px; height: 18px; }
 #googleMap { margin-top: 14px; width: 100%; height: 460px; border-radius: 8px; overflow: hidden; background: var(--mist); border: 1px solid var(--rule); }
+.map-placeholder { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 10px; padding: 24px; }
+.map-placeholder-title { font-size: 17px; font-weight: 700; color: var(--ink); }
+.map-placeholder-sub { font-size: 14px; color: var(--grey); max-width: 330px; line-height: 1.45; }
 .map-instructions { margin-top: 10px; }
 .solar-detect-status { margin-top: 10px; font-size: 15px; padding: 10px 14px; border-radius: 6px; background: var(--mist); color: var(--ink); }
 .solar-detect-status.success, .solar-detect-status.ok { background: rgba(0,133,63,0.1); }
@@ -447,7 +450,7 @@
     <div class="roof-head">
       <h2 id="roofHeading">1. Your roof or site</h2>
       <div class="seg-group" id="modeSelector" role="group" aria-label="How to measure your roof">
-        <button class="mode-card" id="modeCardMap" onclick="selectMode(true)" type="button">Draw on a map</button>
+        <button class="mode-card" id="modeCardMap" onclick="selectMode(true, true)" type="button">Draw on a map</button>
         <button class="mode-card" id="modeCardManual" onclick="selectMode(false)" type="button">Enter dimensions</button>
       </div>
     </div>
@@ -946,6 +949,8 @@
   let drawingManager     = null;
   let geocoder           = null;
   let mapInitialised     = false;
+  let mapsLoadRequested  = false;  // true once the Maps bundle has been requested
+  let mapsReadyQueue     = [];     // actions waiting for the map to come up
   let mapPolygons        = [];   // [{id, polygon, area}]
   let isMapMode          = false;
   let ppaData = null;
@@ -1721,7 +1726,7 @@
   //  MAP MODE FUNCTIONS
   // ══════════════════════════════════════════════════════════════════
 
-  function selectMode(isMap) {
+  function selectMode(isMap, userInitiated) {
     isMapMode = isMap;
     document.getElementById('buildingSpecsCard').style.display = isMap ? 'none' : 'block';
     document.getElementById('mapModePanel').style.display      = isMap ? 'block' : 'none';
@@ -1736,15 +1741,44 @@
       badge.textContent = isMap ? 'Pro' : 'Standard';
       badge.classList.toggle('pro', isMap);
     }
-    // Lazy-load Google Maps API only when first activated
-    if (isMap && !mapInitialised) {
-      loadGoogleMapsAPI();
+    // Loading the Maps bundle is a billable request, so it waits for intent:
+    // picking Map Mode yourself loads it, landing on it by default does not.
+    if (isMap) {
+      if (userInitiated) whenMapsReady();
+      else if (!mapInitialised && !mapsLoadRequested) showMapPlaceholder();
     }
     // If switching back to manual and no buildings, reset
     if (!isMap && buildings.length === 0) {
       initBuildings();
     }
     saveState();
+  }
+
+  // Single entry point for anything that needs a live map. Loads the bundle
+  // on first call, and runs queued actions once the map is up.
+  function whenMapsReady(fn) {
+    if (mapInitialised) { if (fn) fn(); return; }
+    if (fn) mapsReadyQueue.push(fn);
+    if (mapsLoadRequested) return;
+    mapsLoadRequested = true;
+    const el = document.getElementById('googleMap');
+    if (el) el.innerHTML = '<div class="map-placeholder"><span class="map-placeholder-sub">Loading map\u2026</span></div>';
+    loadGoogleMapsAPI();
+  }
+
+  // Shown in place of the map until someone actually wants it
+  function showMapPlaceholder() {
+    const el = document.getElementById('googleMap');
+    if (!el || mapInitialised || mapsLoadRequested) return;
+    el.innerHTML =
+      '<div class="map-placeholder">' +
+        '<svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' +
+          '<polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/>' +
+        '</svg>' +
+        '<span class="map-placeholder-title">Satellite map</span>' +
+        '<span class="map-placeholder-sub">Loads when you need it, so this page opens quickly. Searching an address or drawing an outline will load it too.</span>' +
+        '<button class="btn btn-navy" type="button" onclick="whenMapsReady()">Load map</button>' +
+      '</div>';
   }
 
   function loadGoogleMapsAPI() {
@@ -1817,6 +1851,10 @@
       if (drawingManager.getDrawingMode() !== null) return; // ignore during draw
       detectRoof(e.latLng.lat(), e.latLng.lng());
     });
+    // Run whatever was waiting on the map
+    const queued = mapsReadyQueue;
+    mapsReadyQueue = [];
+    queued.forEach(fn => { try { fn(); } catch (err) { console.error(err); } });
   }
 
   function onPolygonComplete(polygon) {
@@ -1868,7 +1906,7 @@
     buildings   = [];
     renderMapBuildingList();
     updatePortfolioTotal();
-    drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
+    if (drawingManager) drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
   }
 
   function renderMapBuildingList() {
@@ -1958,6 +1996,7 @@
   }
 
   function activateDrawMode() {
+    if (!mapInitialised) { whenMapsReady(activateDrawMode); return; }
     if (drawingManager) {
       drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
       document.getElementById('googleMap').scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -1967,6 +2006,7 @@
   }
 
   function toggleDrawMode() {
+    if (!mapInitialised) { whenMapsReady(toggleDrawMode); return; }
     if (!drawingManager) return;
     const btn = document.getElementById('drawManuallyBtn');
     const isDrawing = drawingManager.getDrawingMode() !== null;
@@ -1984,6 +2024,7 @@
   function searchMapAddress() {
     const input = document.getElementById('mapSearchInput');
     if (!input || !input.value.trim()) return;
+    if (!mapInitialised) { whenMapsReady(searchMapAddress); return; }
     if (!geocoder) { geocoder = new google.maps.Geocoder(); }
     geocoder.geocode({ address: input.value + ', UK', componentRestrictions: { country: 'GB' } }, (results, status) => {
       if (status === 'OK' && results[0]) {
@@ -2029,6 +2070,7 @@
   }
 
   async function detectRoof(clickLat, clickLng) {
+    if (!mapInitialised) { whenMapsReady(() => detectRoof(clickLat, clickLng)); return; }
     if (!mapInstance) return;
     const btn = document.getElementById('detectRoofBtn');
     const center = mapInstance.getCenter();
