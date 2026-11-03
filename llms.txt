@@ -1,0 +1,41 @@
+# UK Solar Calculator
+
+> A free tool for estimating commercial and industrial solar PV projects in the UK. Enter a postcode and roof size, or draw a roof on satellite imagery, to get an indicative system size, annual generation, electricity savings, payback period, carbon savings and a 25-year financial model, with outright purchase and Power Purchase Agreement (PPA) compared side by side.
+
+Operated by Kinetic Energy Consulting. Free to use, no sign-up required.
+
+Scope: commercial, industrial and public sector solar in the United Kingdom. The site does not cover domestic or residential solar.
+
+Important: the figures are indicative estimates produced by a documented model. They are not a surveyed, designed and priced proposal. A real project requires a site survey, a structural check on the roof, a distribution network operator (DNO) connection application and a priced quotation. The full method, assumptions and limitations are set out on the How it works page.
+
+## What the calculator models
+
+- Pitched roof, flat roof, ground-mounted and carport installations
+- Several buildings on one site, totalled together
+- Generation based on the site's UK region
+- Optional battery storage, sized from surplus generation
+- Buying outright compared against a PPA
+- A 25-year projection of savings, payback and carbon
+- A downloadable report
+
+## Core pages
+
+- [UK Solar Calculator: home](https://uksolarcalculator.co.uk/): What the calculator does, a worked example for a 500 kWp warehouse roof, and the route into the tool.
+- [Commercial solar calculator](https://uksolarcalculator.co.uk/calculator.html): The tool itself. Enter roof dimensions or draw an outline on satellite imagery, set region, electricity price and mount type, and get system size, savings, payback and carbon.
+- [How the calculator works](https://uksolarcalculator.co.uk/how-it-works.html): The method in full — how usable roof area, generation, the value of electricity, installation cost, PPA rates and carbon are each derived, why the model runs to 25 years, and what the calculator deliberately does not do.
+- [How to fund commercial solar](https://uksolarcalculator.co.uk/funding.html): Buying outright, asset finance, leasing and PPAs, with capital allowances, VAT, business rates and public sector funding.
+- [Planning permission and grid connection](https://uksolarcalculator.co.uk/planning-and-grid.html): DNO connection under G98 and G99, export limits, permitted development and planning, roof condition, leases and insurance.
+- [Commercial solar FAQ](https://uksolarcalculator.co.uk/faq.html): Around thirty questions on cost, payback, generation, batteries, PPAs, tax, business rates, planning and grid connection.
+- [How commercial solar PV works](https://uksolarcalculator.co.uk/about.html): Background on commercial solar PV, installation types, battery storage and the UK funding landscape.
+
+## Sectors
+
+- [Solar by sector](https://uksolarcalculator.co.uk/sectors.html): Overview across industry, healthcare, local government and data centres, with typical system sizes and how much generation each sector uses on site.
+- [Industrial and commercial solar](https://uksolarcalculator.co.uk/industrial-commercial.html): Factories, warehouses, distribution centres and retail sites.
+- [Solar for NHS trusts and hospitals](https://uksolarcalculator.co.uk/nhs.html): Why round-the-clock demand suits solar, the NHS net zero targets, and funding routes.
+- [Solar for councils and cities](https://uksolarcalculator.co.uk/cities.html): Schools, leisure centres, depots, offices, car parks and land, and funding after the PSDS.
+- [Solar for data centres](https://uksolarcalculator.co.uk/data-centres.html): An honest assessment of why rooftop solar meets only a small share of data centre demand, and where private wire, batteries and PPAs are relevant.
+
+## Contact
+
+- [Contact Kinetic Energy Consulting](https://uksolarcalculator.co.uk/contact.html): For questions about calculator results, site surveys, funding and next steps.
