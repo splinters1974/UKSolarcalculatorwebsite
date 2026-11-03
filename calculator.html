@@ -705,8 +705,7 @@
         </div>
 
         <div class="actions">
-          <button class="btn btn-gold" onclick="downloadPDF()" type="button">Download PDF report</button>
-          <button class="btn btn-outline" onclick="openEmailModal()" type="button">Email me the report</button>
+          <button class="btn btn-gold" onclick="openEmailModal()" type="button">Get your PDF report</button>
           <button class="btn-text" onclick="downloadSupportingNotes()" type="button">Supporting notes (PDF)</button>
         </div>
 
@@ -764,13 +763,13 @@
 
 <div class="modal-overlay" id="emailModal" style="display:none" onclick="closeEmailModal(event)">
   <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="emailModalTitle">
-    <h2 class="modal-title" id="emailModalTitle">Email me this report</h2>
-    <p class="modal-sub">Enter your email address. The PDF downloads straight away and we will send you a short follow-up so we can talk through your results.</p>
+    <h2 class="modal-title" id="emailModalTitle">Get your PDF report</h2>
+    <p class="modal-sub">Enter your email address. Your report downloads straight away, and we will email you a summary of the headline figures so you have them on record.</p>
     <label for="recipientEmail">Your email address</label>
     <input type="email" id="recipientEmail" placeholder="name@company.co.uk" autocomplete="email">
     <div class="modal-actions">
       <button class="modal-cancel" onclick="closeEmailModal()" type="button">Cancel</button>
-      <button class="modal-send" onclick="sendEmailReport()" type="button"><span id="sendBtnText">Send report</span></button>
+      <button class="modal-send" onclick="sendEmailReport()" type="button"><span id="sendBtnText">Get my report</span></button>
     </div>
     <div class="modal-msg" id="modalMsg" style="display:none"></div>
   </div>
@@ -1032,6 +1031,12 @@
   const EMAILJS_PUBLIC_KEY  = 'W-UuC4rxMLukeKUJJ';
   const EMAILJS_SERVICE_ID  = 'default_service'; // whichever service is set as default in EmailJS
   const EMAILJS_TEMPLATE_ID = 'template_qvzha1q';
+  // Everyone who should receive the lead and its project detail.
+  // Each entry costs one EmailJS request; a CC on the template would use fewer.
+  const LEAD_RECIPIENTS = [
+    { email: 'pjohnston663@gmail.com',   name: 'Paul' },
+    { email: 'martynsheridan@gmail.com', name: 'Martyn' },
+  ];
 
   // Initialise EmailJS v4 once at page load (v4 requires object syntax).
   // Guarded: ad-blockers commonly block the EmailJS CDN, and an unguarded
@@ -1315,6 +1320,34 @@
     const reportDate = calculationData.date;
     const region     = calculationData.inputs.region;
 
+    // Figures used in both the customer summary and the lead notification
+    const _r   = calculationData ? calculationData.results : {};
+    const _inp = calculationData ? calculationData.inputs  : {};
+    const _funding = (typeof currentMode !== 'undefined' && currentMode === 'ppa') ? 'PPA (Power Purchase Agreement)' : 'Self-Funded';
+    const _battery = _inp.batteryOn
+      ? 'Yes: ' + (+(_r.batteryKwh||0)).toFixed(0) + ' kWh | Cost: GBP ' + Math.round(_r.batteryCost||0).toLocaleString('en-GB') + ' | 10yr saving: GBP ' + Math.round(_r.batteryTotalSaving||0).toLocaleString('en-GB')
+      : 'No';
+    const _roofMap = { pitched:'Pitched Roof', flat:'Flat Roof', ground:'Ground-Mounted', carport:'Solar Carport' };
+    const _roofLabel = _roofMap[_inp.roofType] || (_inp.roofType || 'Unknown');
+    const _yr1sav = Array.isArray(_r.yearlySavings) && _r.yearlySavings.length > 0 ? Math.round(_r.yearlySavings[0]) : 0;
+    const _gbp = n => 'GBP ' + Math.round(n || 0).toLocaleString('en-GB');
+    const _payback = _r.paybackYear ? (+_r.paybackYear).toFixed(1) + ' years' : 'beyond ' + SYSTEM_LIFETIME + ' years';
+
+    // Customer summary: the figures themselves, so the email is worth having
+    const customerMsg = 'Thank you for using the UK Solar Calculator. Your PDF report has downloaded to your device. Here are the headline figures for your records.\n\n'
+      + 'YOUR ESTIMATE (' + _roofLabel + ', ' + region + ')\n'
+      + 'Roof area: ' + Math.round(_r.roofArea||0).toLocaleString('en-GB') + ' m2\n'
+      + 'System size: ' + parseFloat(systemSize).toFixed(2) + ' kWp\n'
+      + 'Annual generation: ' + Math.round(_r.yearOneGeneration||0).toLocaleString('en-GB') + ' kWh\n'
+      + 'Installation cost: ' + _gbp(_r.totalCost) + '\n'
+      + 'Year 1 savings: ' + _gbp(_yr1sav) + '\n'
+      + SYSTEM_LIFETIME + '-year savings: ' + _gbp(_r.totalSavings) + '\n'
+      + 'Payback: ' + _payback + '\n'
+      + 'Carbon avoided over ' + SYSTEM_LIFETIME + ' years: ' + (+(_r.carbonOffset||0)).toFixed(1) + ' tonnes CO2\n\n'
+      + 'These are indicative estimates from our model, not a surveyed, designed and priced proposal. The assumptions behind them are set out in full at https://uksolarcalculator.co.uk/how-it-works.html\n\n'
+      + 'If you would like to talk the numbers through, we can put 30 minutes in the diary, free of charge, to understand your site in more detail.\n\n'
+      + 'Kind regards,\nPaul Johnston\nKinetic Energy Consulting';
+
     // Safety timeout, if EmailJS takes more than 8s, unblock the UI anyway
     const safetyTimer = setTimeout(() => {
       downloadPDF();
@@ -1331,22 +1364,13 @@
         report_date: reportDate,
         system_size: systemSize,
         region:      region,
-        message:     'Many thanks for requesting a report from the UK Solar Calculator. Your report has downloaded to your device.\n\nIf you wish to discuss this further, free of charge, then we can slot in 30 minutes into the diary to understand your requirement in more detail.\n\nKind regards,\nPaul Johnston\nKinetic Energy Consulting',
+        message:     customerMsg,
       });
 
       // Clear safety timer, we got a response
       clearTimeout(safetyTimer);
 
       // Lead notification, fire and forget, never blocks UI
-      const _r   = calculationData ? calculationData.results : {};
-      const _inp = calculationData ? calculationData.inputs  : {};
-      const _funding = (typeof currentMode !== 'undefined' && currentMode === 'ppa') ? 'PPA (Power Purchase Agreement)' : 'Self-Funded';
-      const _battery = _inp.batteryOn
-        ? 'Yes: ' + (+(_r.batteryKwh||0)).toFixed(0) + ' kWh | Cost: £' + Math.round(_r.batteryCost||0).toLocaleString('en-GB') + ' | 10yr saving: £' + Math.round(_r.batteryTotalSaving||0).toLocaleString('en-GB')
-        : 'No';
-      const _roofMap = { pitched:'Pitched Roof', flat:'Flat Roof', ground:'Ground-Mounted', carport:'Solar Carport' };
-      const _roofLabel = _roofMap[_inp.roofType] || (_inp.roofType || 'Unknown');
-      const _yr1sav = Array.isArray(_r.yearlySavings) && _r.yearlySavings.length > 0 ? Math.round(_r.yearlySavings[0]) : 0;
       const leadMsg = 'NEW LEAD\n\n'
         + 'Email: ' + email + '\n'
         + 'Date: ' + reportDate + '\n\n'
@@ -1366,23 +1390,25 @@
         + 'BATTERY\n'
         + _battery + '\n\n'
         + 'CARBON\n'
-        + 'Annual CO2 saving: ' + (+(_r.carbonOffset||0)).toFixed(1) + ' t/yr';
+        + 'Carbon avoided over ' + SYSTEM_LIFETIME + ' years: ' + (+(_r.carbonOffset||0)).toFixed(1) + ' t CO2';
 
-      emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-        to_email:    'pjohnston663@gmail.com',
-        to_name:     'Paul',
-        report_date: reportDate,
-        system_size: systemSize,
-        region:      region,
-        message:     leadMsg,
-      }).catch(e => console.warn('Lead notification non-critical error:', e));
+      LEAD_RECIPIENTS.forEach(function (rec) {
+        emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+          to_email:    rec.email,
+          to_name:     rec.name,
+          report_date: reportDate,
+          system_size: systemSize,
+          region:      region,
+          message:     leadMsg,
+        }).catch(e => console.warn('Lead notification to ' + rec.email + ' non-critical error:', e));
+      });
 
       // Download PDF
       downloadPDF();
 
       // Update UI
       txt.textContent = 'Sent!';
-      showModalMsg('Done! PDF downloading now. Paul will be in touch shortly.', 'success');
+      showModalMsg('Done. Your PDF is downloading and your summary is on its way to ' + email + '.', 'success');
       // Auto-close after 2s, direct DOM manipulation to avoid any event-guard issues
       setTimeout(() => {
         const m = document.getElementById('emailModal');
