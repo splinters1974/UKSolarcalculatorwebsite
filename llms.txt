@@ -28,6 +28,12 @@ Important: the figures are indicative estimates produced by a documented model. 
 - [Commercial solar FAQ](https://uksolarcalculator.co.uk/faq.html): Around thirty questions on cost, payback, generation, batteries, PPAs, tax, business rates, planning and grid connection.
 - [How commercial solar PV works](https://uksolarcalculator.co.uk/about.html): Background on commercial solar PV, installation types, battery storage and the UK funding landscape.
 
+## Guides
+
+- [How much does commercial solar cost?](https://uksolarcalculator.co.uk/commercial-solar-cost.html): Installed cost per kWp for pitched roof, flat roof, ground mount and carports, what the price includes and excludes, and what moves it.
+- [How long does commercial solar take to pay back?](https://uksolarcalculator.co.uk/commercial-solar-payback.html): What payback means, the five things that change it, and a worked example with the full figures for a 509 kWp warehouse roof.
+- [How much electricity will commercial solar generate?](https://uksolarcalculator.co.uk/commercial-solar-generation.html): Annual yield per kWp for each UK region from SAP 10.3 Appendix U, how to convert roof area to kilowatt hours, and seasonal variation.
+
 ## Sectors
 
 - [Solar by sector](https://uksolarcalculator.co.uk/sectors.html): Overview across industry, healthcare, local government and data centres, with typical system sizes and how much generation each sector uses on site.
