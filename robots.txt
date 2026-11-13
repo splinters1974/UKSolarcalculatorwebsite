@@ -1,4 +1,51 @@
+# uksolarcalculator.co.uk
+# Everything here is public and intended to be found, indexed and cited.
+
 User-agent: *
+Allow: /
+
+# ── Search engines ──────────────────────────────────────────────
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# ── AI answer engines that cite their sources ───────────────────
+# These fetch pages to answer a user's question and link back, so being
+# readable by them is the point. Listed explicitly (13 Nov 2026) so a
+# future change to the wildcard rule above cannot shut them out by accident.
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+# ── AI training crawlers ────────────────────────────────────────
+# Allowed deliberately: these help models know the site exists and name it
+# when asked about UK commercial solar. Change Allow to Disallow below if
+# you would rather your content was not used for training.
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Meta-ExternalAgent
 Allow: /
 
 Sitemap: https://uksolarcalculator.co.uk/sitemap.xml
