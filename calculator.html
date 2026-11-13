@@ -472,7 +472,7 @@
       <h2 id="roofHeading">1. Your roof or site</h2>
       <div class="seg-group" id="modeSelector" role="group" aria-label="How to measure your roof">
         <button class="mode-card" id="modeCardMap" onclick="selectMode(true, true)" type="button">Draw on a map</button>
-        <button class="mode-card" id="modeCardManual" onclick="selectMode(false)" type="button">Enter dimensions</button>
+        <button class="mode-card" id="modeCardManual" onclick="selectMode(false, true)" type="button">Enter dimensions</button>
       </div>
     </div>
 
@@ -790,6 +790,36 @@
 </div>
 
 <script>
+  // ── ANALYTICS ─────────────────────────────────────────────────
+  // Provider-agnostic: fires nothing until an analytics script is loaded
+  // in the head (see the commented block there). Sends event names and
+  // coarse, non-identifying properties only. It must never send a
+  // visitor's email address, and must never break the calculator.
+  let _trackedCalc = false;
+  function track(event, props) {
+    try {
+      if (typeof window.plausible === 'function') {
+        window.plausible(event, props ? { props: props } : undefined);
+      }
+      if (window.fathom && typeof window.fathom.trackEvent === 'function') {
+        window.fathom.trackEvent(event);
+      }
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', event, props || {});
+      }
+    } catch (e) { /* analytics is never allowed to break the page */ }
+  }
+  // Coarse size band rather than an exact kWp, so the data aggregates
+  // usefully and cannot help identify an individual site.
+  function sizeBand(kwp) {
+    if (!(kwp > 0)) return 'unknown';
+    if (kwp < 100)  return 'under 100 kWp';
+    if (kwp < 250)  return '100-250 kWp';
+    if (kwp < 500)  return '250-500 kWp';
+    if (kwp < 1000) return '500-1000 kWp';
+    return 'over 1 MWp';
+  }
+
   const PANEL_POWER = 510;
   const PANEL_AREA = 2.27 * 1.13;
   // Degradation: 1% in year 1, then 0.4% a year (matches the rapid pricing tool)
@@ -1279,9 +1309,10 @@
     document.getElementById('emailModal').style.display = 'flex';
     document.getElementById('modalMsg').style.display = 'none';
     document.getElementById('recipientEmail').value = '';
-    document.getElementById('sendBtnText').textContent = 'Send report';
+    document.getElementById('sendBtnText').textContent = 'Get my report';
     document.getElementById('emailModal').querySelector('.modal-send').disabled = false;
     document.getElementById('recipientEmail').focus();
+    track('report_gate_opened');
   }
 
   // Escape closes the email modal from anywhere
@@ -1298,7 +1329,7 @@
     const btn   = modal.querySelector('.modal-send');
     modal.style.display = 'none';
     document.getElementById('modalMsg').style.display = 'none';
-    document.getElementById('sendBtnText').textContent = 'Send report';
+    document.getElementById('sendBtnText').textContent = 'Get my report';
     btn.disabled = false;
   }
 
@@ -1324,7 +1355,7 @@
     // EmailJS unavailable (CDN blocked), fall back to a direct PDF download
     if (!ensureEmailJs()) {
       downloadPDF();
-      txt.textContent = 'Send report';
+      txt.textContent = 'Get my report';
       btn.disabled = false;
       showModalMsg('Email service unavailable, your PDF is downloading instead.', 'error');
       return;
@@ -1365,7 +1396,7 @@
     // Safety timeout, if EmailJS takes more than 8s, unblock the UI anyway
     const safetyTimer = setTimeout(() => {
       downloadPDF();
-      txt.textContent = 'Send report';
+      txt.textContent = 'Get my report';
       btn.disabled = false;
       showModalMsg('Email timed out, but your PDF has downloaded.', 'error');
     }, 8000);
@@ -1423,12 +1454,13 @@
       // Update UI
       txt.textContent = 'Sent!';
       showModalMsg('Done. Your PDF is downloading and your summary is on its way to ' + email + '.', 'success');
+      track('report_requested', { size: sizeBand(_r.systemSizeKw), funding: _funding });
       // Auto-close after 2s, direct DOM manipulation to avoid any event-guard issues
       setTimeout(() => {
         const m = document.getElementById('emailModal');
         if (m) m.style.display = 'none';
         document.getElementById('modalMsg').style.display = 'none';
-        document.getElementById('sendBtnText').textContent = 'Send report';
+        document.getElementById('sendBtnText').textContent = 'Get my report';
         btn.disabled = false;
       }, 2000);
 
@@ -1774,6 +1806,7 @@
   // ══════════════════════════════════════════════════════════════════
 
   function selectMode(isMap, userInitiated) {
+    if (userInitiated) track('mode_selected', { mode: isMap ? 'map' : 'manual' });
     isMapMode = isMap;
     document.getElementById('buildingSpecsCard').style.display = isMap ? 'none' : 'block';
     document.getElementById('mapModePanel').style.display      = isMap ? 'block' : 'none';
@@ -2329,6 +2362,14 @@
     document.getElementById('resultsEmpty').style.display = 'none';
     document.getElementById('results').style.display = 'block';
     renderResults(data);
+    if (!_trackedCalc) {
+      _trackedCalc = true;
+      track('calculation_completed', {
+        mode:  isMapMode ? 'map' : 'manual',
+        mount: roofType,
+        size:  sizeBand(data && data.results ? data.results.systemSizeKw : 0),
+      });
+    }
     if (!LIVE_MODE) document.getElementById('resultsCol').scrollIntoView({ behavior: REDUCED_MOTION ? 'auto' : 'smooth', block: 'start' });
   }
 
@@ -3475,6 +3516,7 @@
 
   // ── SUPPORTING NOTES PDF ─────────────────────────────────────────────
   function downloadSupportingNotes() {
+    track('supporting_notes_downloaded');
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ unit: 'mm', format: 'a4' });
     const PW = 210, PH = 297;
