@@ -173,6 +173,12 @@
   color: var(--ink); font: 500 17px var(--font); font-variant-numeric: lining-nums; }
 .calc-page input:focus, .calc-page select:focus { outline: 3px solid rgba(0,101,164,0.25); border-color: var(--blue); }
 .help, .oversize-hint { font-size: 14px; color: var(--grey); line-height: 1.45; margin-top: 6px; }
+.hhi-banner { display: flex; align-items: center; gap: 18px; margin-top: 18px; padding: 16px 20px; background: #fff; border: 1px solid var(--rule); border-left: 5px solid #F8C05D; border-radius: 10px; box-shadow: 0 6px 20px rgba(6, 60, 85, 0.08); }
+.hhi-banner[hidden] { display: none; }
+.hhi-banner img { height: 52px; width: auto; flex: none; }
+.hhi-banner p { margin: 0; font-size: 15px; line-height: 1.5; color: var(--text-2, #3E4A51); }
+.hhi-banner .hhi-banner-title { font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+@media (max-width: 640px) { .hhi-banner { flex-direction: column; align-items: flex-start; gap: 10px; } }
 .field + .field { margin-top: 20px; }
 .btn-text { background: none; border: 0; color: var(--blue); font: 600 16px var(--font); min-height: 44px; padding: 0 8px; cursor: pointer; }
 .btn-text:hover { text-decoration: underline; }
@@ -463,6 +469,13 @@
     <nav class="breadcrumb" aria-label="Breadcrumb"><a href="index.html">Home</a> <span aria-hidden="true">/</span> <span>Calculator</span></nav>
     <h1>Commercial solar calculator</h1>
     <p>Outline your roof, add your postcode and unit price. Results update as you go, for buying outright or a Power Purchase Agreement.</p>
+    <div class="hhi-banner" id="hhiBanner" role="status" hidden>
+      <img src="images/brand/hhi-logo.png" width="370" height="132" alt="Half Hourly Insights">
+      <div>
+        <p class="hhi-banner-title">Your figures from Half Hourly Insights have arrived</p>
+        <p id="hhiBannerText"></p>
+      </div>
+    </div>
   </div>
 
   <div class="legacy" aria-hidden="true">
@@ -577,7 +590,7 @@
           <input type="range" id="selfConsumption" value="80" step="5" min="30" max="100" onchange="saveState(); updateBatteryPreview();">
           <div class="help" id="selfConsumptionHint">80% suits most sites busy through the working week. Warehouses, farms and sites closed at weekends are often 40 to 70%. The rest is exported at 5p/kWh.</div>
           <div class="help hhi-link" id="hhiAsk">Not sure? <a href="https://hhinsights.co.uk/analyser/" target="_blank" rel="noopener">Measure it from your half-hourly meter data</a> with our free analyser. It runs in your browser and sends the figure back here. <a href="your-energy-data.html">Why it matters</a>.</div>
-          <div class="help hhi-note" id="hhiNote" hidden>Using your half-hourly readings from Half-Hourly Insights. Only your annual use and the share used on site at each size came across, after the # in the address, which is never sent to a server.</div>
+          <div class="help hhi-note" id="hhiNote" hidden>Using your half-hourly readings from Half Hourly Insights. Only your annual use and the share used on site at each size came across, after the # in the address, which is never sent to a server.</div>
         </div>
       </fieldset>
 
@@ -857,7 +870,7 @@
   }
 
   // Share used on site measured from the site's own half-hourly readings, passed by the
-  // Half-Hourly Insights analyser after the # in the address (browsers never send that part
+  // Half Hourly Insights analyser after the # in the address (browsers never send that part
   // to a server): #hhi=1&y=<kWh/kWp>&use=<kWh a year>&sc=<kWp>:<percent>,...
   // When present, the slider follows the system size until the user moves it.
   const HHI = (function () {
@@ -868,7 +881,8 @@
         .filter(function (x) { return x.length === 2 && x[0] > 0 && x[0] < 1e6 && x[1] >= 0 && x[1] <= 100; })
         .sort(function (a, b) { return a[0] - b[0]; });
       if (pts.length < 2) return null;
-      return { pts: pts, use: Math.max(0, +h.get('use') || 0), manual: false, last: null };
+      const y = +h.get('y');
+      return { pts: pts, use: Math.max(0, +h.get('use') || 0), y: y > 300 && y < 1500 ? y : 0, manual: false, last: null };
     } catch (e) { return null; }
   })();
   const SC_HINT_DEFAULT = '80% suits most sites busy through the working week. Warehouses, farms and sites closed at weekends are often 40 to 70%. The rest is exported at 5p/kWh.';
@@ -890,7 +904,7 @@
     if (out) out.textContent = v + '%';
     HHI.last = { v: v, kwp: kwp };
     const hint = document.getElementById('selfConsumptionHint');
-    if (hint) hint.textContent = v + '% for a ' + (Math.round(kwp * 10) / 10) + ' kWp system, estimated from your half-hourly readings in Half-Hourly Insights. It follows the system size; move the slider to use your own figure.';
+    if (hint) hint.textContent = v + '% for a ' + (Math.round(kwp * 10) / 10) + ' kWp system, estimated from your half-hourly readings in Half Hourly Insights. It follows the system size; move the slider to use your own figure.';
     const changed = SELF_CONSUMPTION !== v / 100;
     SELF_CONSUMPTION = v / 100;
     return changed;
@@ -3877,6 +3891,23 @@
       if (note) note.hidden = false;
       const ask = document.getElementById('hhiAsk');
       if (ask) ask.hidden = true;
+      // Show at once what came across, and start the slider from the data
+      // (for a system generating about half the site's use) rather than 80%.
+      const fmtKwp = function (k) { return (Math.round(k * 10) / 10).toLocaleString('en-GB'); };
+      const picks = HHI.pts.length >= 10 ? [HHI.pts[3], HHI.pts[6], HHI.pts[9]] : [HHI.pts[0], HHI.pts[Math.floor(HHI.pts.length / 2)], HHI.pts[HHI.pts.length - 1]];
+      const examples = picks.map(function (p) { return 'about ' + Math.round(p[1]) + '% for ' + fmtKwp(p[0]) + ' kWp'; });
+      const bt = document.getElementById('hhiBannerText');
+      if (bt) bt.textContent = (HHI.use ? 'Your site uses about ' + Math.round(HHI.use).toLocaleString('en-GB') + ' kWh of electricity a year. ' : '')
+        + 'The share of solar it would use on site comes from your data: ' + examples.slice(0, 2).join(', ') + ' and ' + examples[2] + '. '
+        + 'Draw or enter your roof below and "Solar used on site" is set for the system that fits.';
+      const banner = document.getElementById('hhiBanner');
+      if (banner) banner.hidden = false;
+      const startKwp = HHI.use && HHI.y ? HHI.use * 0.5 / HHI.y : HHI.pts[Math.floor(HHI.pts.length / 2)][0];
+      const startV = Math.max(10, Math.min(100, Math.round(hhiShareAt(startKwp))));
+      sc.value = String(startV);
+      SELF_CONSUMPTION = startV / 100;
+      const hintEl = document.getElementById('selfConsumptionHint');
+      if (hintEl) hintEl.textContent = 'Starting at ' + startV + '%, your data\'s figure for a system of about ' + fmtKwp(startKwp) + ' kWp. Once you draw or enter your roof, it is set for the system that fits.';
       // Tag enquiries from here so we know they came with half-hourly data.
       document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('a[href^="contact.html"]').forEach(function (a) {
@@ -3927,6 +3958,7 @@
     window.afterReset = function () {
       if (HHI) { HHI.manual = true; sc.min = '30'; sc.step = '5'; const n = document.getElementById('hhiNote'); if (n) n.hidden = true; const k = document.getElementById('hhiAsk'); if (k) k.hidden = false; }
       const h = document.getElementById('selfConsumptionHint'); if (h) h.textContent = SC_HINT_DEFAULT;
+      const hb = document.getElementById('hhiBanner'); if (hb) hb.hidden = true;
       showSc(); syncMount(); window.scheduleLive();
     };
     showSc();
