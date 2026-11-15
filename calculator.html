@@ -572,6 +572,8 @@
           <div class="range-head"><label class="lbl" for="selfConsumption">Solar used on site</label><output id="scOut" for="selfConsumption">80%</output></div>
           <input type="range" id="selfConsumption" value="80" step="5" min="30" max="100" onchange="saveState(); updateBatteryPreview();">
           <div class="help" id="selfConsumptionHint">80% suits most sites busy through the working week. Warehouses, farms and sites closed at weekends are often 40 to 70%. The rest is exported at 5p/kWh.</div>
+          <div class="help hhi-link" id="hhiAsk">Not sure? <a href="https://halfhourlyinsights.netlify.app/analyser/" target="_blank" rel="noopener">Measure it from your half-hourly meter data</a> with our free analyser. It runs in your browser and sends the figure back here.</div>
+          <div class="help hhi-note" id="hhiNote" hidden>Using your half-hourly readings from Half-Hourly Insights. Only your annual use and the share used on site at each size came across, after the # in the address, which is never sent to a server.</div>
         </div>
       </fieldset>
 
@@ -845,9 +847,55 @@
     const el = document.getElementById('selfConsumption');
     let v = el ? parseFloat(el.value) : NaN;
     if (!isFinite(v)) v = SELF_CONSUMPTION_DEFAULT * 100;
-    v = Math.min(100, Math.max(30, v));
+    v = Math.min(100, Math.max(el ? parseFloat(el.min) || 30 : 30, v));
     if (el && String(el.value) !== String(v)) el.value = v;
     return v / 100;
+  }
+
+  // Share used on site measured from the site's own half-hourly readings, passed by the
+  // Half-Hourly Insights analyser after the # in the address (browsers never send that part
+  // to a server): #hhi=1&y=<kWh/kWp>&use=<kWh a year>&sc=<kWp>:<percent>,...
+  // When present, the slider follows the system size until the user moves it.
+  const HHI = (function () {
+    try {
+      const h = new URLSearchParams(location.hash.slice(1));
+      if (h.get('hhi') !== '1') return null;
+      const pts = (h.get('sc') || '').split(',').slice(0, 40).map(function (x) { return x.split(':').map(Number); })
+        .filter(function (x) { return x.length === 2 && x[0] > 0 && x[0] < 1e6 && x[1] >= 0 && x[1] <= 100; })
+        .sort(function (a, b) { return a[0] - b[0]; });
+      if (pts.length < 2) return null;
+      return { pts: pts, use: Math.max(0, +h.get('use') || 0), manual: false, last: null };
+    } catch (e) { return null; }
+  })();
+  const SC_HINT_DEFAULT = '80% suits most sites busy through the working week. Warehouses, farms and sites closed at weekends are often 40 to 70%. The rest is exported at 5p/kWh.';
+  function hhiShareAt(kwp) {
+    const p = HHI.pts, n = p.length;
+    if (kwp <= p[0][0]) return p[0][1];
+    for (let i = 1; i < n; i++) {
+      if (kwp <= p[i][0]) { const t = (kwp - p[i - 1][0]) / (p[i][0] - p[i - 1][0]); return p[i - 1][1] + t * (p[i][1] - p[i - 1][1]); }
+    }
+    // Beyond the largest size: assume the energy used on site stops growing, so the share falls.
+    return p[n - 1][1] * p[n - 1][0] / kwp;
+  }
+  function applyHhi(kwp) {
+    if (!HHI || HHI.manual || !(kwp > 0)) return false;
+    const v = Math.max(10, Math.min(100, Math.round(hhiShareAt(kwp))));
+    const el = document.getElementById('selfConsumption');
+    if (el) el.value = String(v);
+    const out = document.getElementById('scOut');
+    if (out) out.textContent = v + '%';
+    HHI.last = { v: v, kwp: kwp };
+    const hint = document.getElementById('selfConsumptionHint');
+    if (hint) hint.textContent = v + '% for a ' + (Math.round(kwp * 10) / 10) + ' kWp system, estimated from your half-hourly readings in Half-Hourly Insights. It follows the system size; move the slider to use your own figure.';
+    const changed = SELF_CONSUMPTION !== v / 100;
+    SELF_CONSUMPTION = v / 100;
+    return changed;
+  }
+  function hhiManual() {
+    if (!HHI || HHI.manual) return;
+    HHI.manual = true;
+    const hint = document.getElementById('selfConsumptionHint');
+    if (hint) hint.textContent = 'Your own figure.' + (HHI.last ? ' Your half-hourly readings suggested ' + HHI.last.v + '% at ' + (Math.round(HHI.last.kwp * 10) / 10) + ' kWp.' : '');
   }
   const BATTERY_COST_PER_KWH = 1000;
   const BATTERY_LIFETIME_YRS = 10;   // commercial lifespan under daily cycling
@@ -1062,6 +1110,7 @@
     const panels = Math.floor(usable / PANEL_AREA);
     const kwp = (panels * PANEL_POWER) / 1000 * oversizeFactor;
     SELF_CONSUMPTION = readSelfConsumption();
+    applyHhi(kwp);
     const yearOneGen = kwp * currentYield(region) * degFactor(1);
 
     const bKwh = getBatteryKwh(yearOneGen);
@@ -2356,8 +2405,12 @@
     document.getElementById('step3').className = 'step active';
 
     const batteryEnabled = document.getElementById('batteryToggle').checked;
-    const data = compute(totalRoofArea, roofType, region, energyPrice, filled, oversizeFactor, batteryEnabled,
-      isMapMode ? { usableAreaOverride: totalUsableArea, blendedInstallCostPerKwp } : {});
+    const computeOpts = isMapMode ? { usableAreaOverride: totalUsableArea, blendedInstallCostPerKwp } : {};
+    let data = compute(totalRoofArea, roofType, region, energyPrice, filled, oversizeFactor, batteryEnabled, computeOpts);
+    // With half-hourly data, set the share used on site for this system size and recalculate.
+    if (data && data.results && applyHhi(data.results.systemSizeKw)) {
+      data = compute(totalRoofArea, roofType, region, energyPrice, filled, oversizeFactor, batteryEnabled, computeOpts);
+    }
     document.getElementById('loading').style.display = 'none';
     document.getElementById('resultsEmpty').style.display = 'none';
     document.getElementById('results').style.display = 'block';
@@ -3810,7 +3863,21 @@
     const sc = document.getElementById('selfConsumption');
     const scOut = document.getElementById('scOut');
     function showSc() { scOut.textContent = sc.value + '%'; }
-    sc.addEventListener('input', function () { showSc(); saveState(); window.scheduleLive(); });
+    sc.addEventListener('input', function () { hhiManual(); showSc(); saveState(); window.scheduleLive(); });
+    if (HHI) {
+      // Allow the full range the half-hourly estimate can give, to the nearest 1%.
+      sc.min = '10'; sc.step = '1';
+      const note = document.getElementById('hhiNote');
+      if (note) note.hidden = false;
+      const ask = document.getElementById('hhiAsk');
+      if (ask) ask.hidden = true;
+      // Tag enquiries from here so we know they came with half-hourly data.
+      document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('a[href^="contact.html"]').forEach(function (a) {
+          if (a.getAttribute('href').indexOf('?') < 0) a.setAttribute('href', a.getAttribute('href').replace('contact.html', 'contact.html?src=hhi'));
+        });
+      });
+    }
     ['energyPrice', 'region', 'roofType', 'sitePostcode'].forEach(function (id) {
       const el = document.getElementById(id);
       el.addEventListener('input', window.scheduleLive);
@@ -3851,7 +3918,11 @@
     if (q.get('postcode')) { document.getElementById('sitePostcode').value = q.get('postcode'); onPostcodeInput(); }
     if ([...q.keys()].length) { saveState(); history.replaceState(null, '', location.pathname); }
 
-    window.afterReset = function () { showSc(); syncMount(); window.scheduleLive(); };
+    window.afterReset = function () {
+      if (HHI) { HHI.manual = true; sc.min = '30'; sc.step = '5'; const n = document.getElementById('hhiNote'); if (n) n.hidden = true; const k = document.getElementById('hhiAsk'); if (k) k.hidden = false; }
+      const h = document.getElementById('selfConsumptionHint'); if (h) h.textContent = SC_HINT_DEFAULT;
+      showSc(); syncMount(); window.scheduleLive();
+    };
     showSc();
     syncMount();
     document.addEventListener('DOMContentLoaded', function () { ready = true; liveRecalc(); });
