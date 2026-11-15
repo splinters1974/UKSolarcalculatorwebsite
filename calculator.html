@@ -175,6 +175,17 @@
 .help, .oversize-hint { font-size: 14px; color: var(--grey); line-height: 1.45; margin-top: 6px; }
 .hhi-banner { display: flex; align-items: center; gap: 18px; margin-top: 18px; padding: 16px 20px; background: #fff; border: 1px solid var(--rule); border-left: 5px solid #F8C05D; border-radius: 10px; box-shadow: 0 6px 20px rgba(6, 60, 85, 0.08); }
 .hhi-banner[hidden] { display: none; }
+.size-to-use { margin: 4px 0 24px; padding: 18px 20px; background: #fff; border: 1px solid var(--rule); border-left: 5px solid #F8C05D; border-radius: 10px; }
+.size-to-use[hidden] { display: none; }
+.size-to-use p { margin: 0 0 10px; font-size: 15px; line-height: 1.55; color: var(--text-2, #3E4A51); }
+.size-to-use .stu-title { font-size: 17px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+.size-to-use table { width: 100%; border-collapse: collapse; margin: 6px 0 14px; font-size: 15px; }
+.size-to-use th, .size-to-use td { padding: 7px 8px; border-bottom: 1px solid var(--rule); text-align: right; }
+.size-to-use th:first-child, .size-to-use td:first-child { text-align: left; color: var(--grey); font-weight: 500; }
+.size-to-use thead th { font-size: 13px; color: var(--grey); font-weight: 600; }
+.size-to-use .stu-best { font-weight: 700; color: var(--ink); }
+.size-to-use .stu-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 4px 0 10px; }
+.size-to-use .stu-note { font-size: 14px; color: var(--grey); margin: 0; }
 .hhi-banner img { height: 52px; width: auto; flex: none; }
 .hhi-banner p { margin: 0; font-size: 15px; line-height: 1.5; color: var(--text-2, #3E4A51); }
 .hhi-banner .hhi-banner-title { font-weight: 700; color: var(--ink); margin-bottom: 2px; }
@@ -667,6 +678,7 @@
           <div class="side"><span id="hlCLabel">Net benefit over 25 years</span><strong id="hlC">–</strong></div>
         </div>
         <p class="verdict" id="hlVerdict"></p>
+        <div class="size-to-use" id="sizeToUse" hidden></div>
 
         <div class="comparison-grid" id="comparisonGrid" style="display:none">
           <div class="comparison-panel">
@@ -917,6 +929,73 @@
     HHI.manual = true;
     const hint = document.getElementById('selfConsumptionHint');
     if (hint) hint.textContent = 'Your own figure.' + (HHI.last ? ' Your half-hourly readings suggested ' + HHI.last.v + '% at ' + (Math.round(HHI.last.kwp * 10) / 10) + ' kWp.' : '');
+  }
+  // ── Sized to your use ──────────────────────────────────────────────
+  // When the system that fills the roof would use less than 80% of its own
+  // output, offer the alternative a designer would start from: the largest
+  // system this site would still use 80% of. With half-hourly data the figures
+  // are worked out in full; without it, the message alone is shown.
+  const SIZE_TO_USE_SHARE = 80;
+  let sizeToUseData = null;
+  function sizeToUseAlternative(main, a) {
+    const pct = Math.round(main.inputs.selfConsumption * 100);
+    if (pct >= SIZE_TO_USE_SHARE) return null;
+    const mainKw = main.results.systemSizeKw;
+    if (!HHI) return { kind: 'manual', pct: pct };
+    if (hhiShareAt(mainKw) >= SIZE_TO_USE_SHARE) return null;
+    let lo = 0, hi = mainKw;
+    for (let i = 0; i < 40; i++) { const mid = (lo + hi) / 2; if (hhiShareAt(mid) >= SIZE_TO_USE_SHARE) lo = mid; else hi = mid; }
+    const panels = Math.floor(lo * 1000 / PANEL_POWER / a.oversize);
+    const target = panels * PANEL_POWER / 1000 * a.oversize;
+    if (target < MIN_SYSTEM_KWP) return { kind: 'small', pct: pct, mainKw: mainKw, target: lo };
+    // compute() stores its result as the current calculation, so keep and restore it.
+    const keepData = calculationData, keepSc = SELF_CONSUMPTION;
+    let alt;
+    try {
+      SELF_CONSUMPTION = Math.max(0.1, Math.min(1, Math.round(hhiShareAt(target)) / 100));
+      alt = compute(a.totalRoofArea, a.roofType, a.region, a.energyPrice, a.filled, a.oversize, a.batteryOn,
+        Object.assign({}, a.opts, { usableAreaOverride: panels * PANEL_AREA + 0.01 }));
+    } finally { calculationData = keepData; SELF_CONSUMPTION = keepSc; }
+    return { kind: 'figures', pct: pct, own: HHI.manual, main: main.results, alt: alt.results, altPct: Math.round(alt.inputs.selfConsumption * 100) };
+  }
+  function renderSizeToUse() {
+    const el = document.getElementById('sizeToUse');
+    if (!el) return;
+    const d = sizeToUseData;
+    if (!d) { el.hidden = true; el.innerHTML = ''; return; }
+    const kwpT = function (v) { return (Math.round(v * 10) / 10).toLocaleString('en-GB') + ' kWp'; };
+    const yrs = function (r) { return r.paybackYear ? r.paybackYear.toFixed(1) + ' years' : 'over ' + SYSTEM_LIFETIME + ' years'; };
+    const gbp = function (v) { return (v < 0 ? '-£' : '£') + fmt(Math.abs(Math.round(v))); };
+    const contact = 'contact.html?src=' + (d.kind === 'manual' ? 'size-to-use' : 'hhi-size-to-use');
+    let html = '<p class="stu-title">Your roof has room for more solar than this site can use</p>';
+    if (d.kind === 'figures') {
+      const m = d.main, a = d.alt;
+      const sooner = a.paybackYear && (!m.paybackYear || a.paybackYear < m.paybackYear - 0.05);
+      html += '<p>Filling the roof gives a ' + kwpT(m.systemSizeKw) + ' system'
+        + (d.own ? ', and you have set ' + d.pct + '% of what it makes to be used on site' : ', but your half-hourly data shows the site would use only about ' + d.pct + '% of what it makes')
+        + '. The rest is exported for 5p/kWh. A system sized to your use, from your half-hourly data, '
+        + (sooner ? 'costs less and pays back sooner' : 'costs less and uses more of what it makes') + ':</p>';
+      const row = function (label, x, y, bestY) { return '<tr><td>' + label + '</td><td>' + x + '</td><td' + (bestY ? ' class="stu-best"' : '') + '>' + y + '</td></tr>'; };
+      html += '<table><thead><tr><th></th><th>Fill the roof</th><th>Sized to your use</th></tr></thead><tbody>'
+        + row('System', kwpT(m.systemSizeKw), kwpT(a.systemSizeKw))
+        + row('Used on site', d.pct + '%', d.altPct + '%', true)
+        + row('Cost', gbp(m.totalCost), gbp(a.totalCost), true)
+        + row('Saving in year 1', gbp(m.yearlySavings[0]), gbp(a.yearlySavings[0]))
+        + row('Payback', yrs(m), yrs(a), sooner)
+        + row('Net benefit over 25 years', gbp(m.totalSavings - m.totalCost), gbp(a.totalSavings - a.totalCost), (a.totalSavings - a.totalCost) > (m.totalSavings - m.totalCost))
+        + '</tbody></table>';
+    } else if (d.kind === 'small') {
+      html += '<p>Filling the roof gives a ' + kwpT(d.mainKw) + ' system, but your half-hourly data shows the site would use only about ' + d.pct
+        + '% of what it makes. A system of about ' + kwpT(d.target) + ' would suit its use better, which is smaller than this calculator models (50 kWp and up).</p>';
+    } else {
+      html += '<p>You have set solar used on site to ' + d.pct + '%. A system sized to your consumption, rather than to your roof, usually costs less and uses more of what it makes. '
+        + 'If you have half-hourly meter data, <a href="https://hhinsights.co.uk/analyser/" target="_blank" rel="noopener">measure your use in Half Hourly Insights</a> and this calculator will work out the comparison for you.</p>';
+    }
+    html += '<div class="stu-cta"><span>We can design the array around your consumption, not the size of your roof.</span>'
+      + '<a class="btn btn-navy" href="' + contact + '">Ask us to design it</a></div>'
+      + '<p class="stu-note">Planning heat pumps or EV charging, or funding through a PPA? A larger system may still make sense, so talk to us.</p>';
+    el.innerHTML = html;
+    el.hidden = false;
   }
   const BATTERY_COST_PER_KWH = 1000;
   const BATTERY_LIFETIME_YRS = 10;   // commercial lifespan under daily cycling
@@ -2434,10 +2513,13 @@
     if (data && data.results && applyHhi(data.results.systemSizeKw)) {
       data = compute(totalRoofArea, roofType, region, energyPrice, filled, oversizeFactor, batteryEnabled, computeOpts);
     }
+    sizeToUseData = data && data.results ? sizeToUseAlternative(data, { totalRoofArea: totalRoofArea, roofType: roofType, region: region,
+      energyPrice: energyPrice, filled: filled, oversize: oversizeFactor, batteryOn: batteryEnabled, opts: computeOpts }) : null;
     document.getElementById('loading').style.display = 'none';
     document.getElementById('resultsEmpty').style.display = 'none';
     document.getElementById('results').style.display = 'block';
     renderResults(data);
+    renderSizeToUse();
     if (!_trackedCalc) {
       _trackedCalc = true;
       track('calculation_completed', {
@@ -3350,6 +3432,33 @@
     doc.line(ML, chartY, PW - MR, chartY);
     chartY += 4;
 
+    // Sized to your use: the same message as on screen, so it survives being forwarded.
+    if (sizeToUseData) {
+      const d = sizeToUseData;
+      const kwpT = function (v) { return (Math.round(v * 10) / 10).toLocaleString('en-GB') + ' kWp'; };
+      const yrsT = function (rr) { return rr.paybackYear ? rr.paybackYear.toFixed(1) + ' years' : 'over ' + SYSTEM_LIFETIME + ' years'; };
+      let msg;
+      if (d.kind === 'figures') {
+        msg = 'Filling the roof gives ' + kwpT(d.main.systemSizeKw) + ', but the half-hourly data shows the site would use only about ' + d.pct
+          + '% of what it makes. A system sized to its use, ' + kwpT(d.alt.systemSizeKw) + ' (about ' + d.altPct + '% used on site), would cost £'
+          + fmt(Math.round(d.alt.totalCost)) + ' instead of £' + fmt(Math.round(d.main.totalCost)) + ', pay back in ' + yrsT(d.alt) + ' instead of '
+          + yrsT(d.main) + ', and give a net benefit of £' + fmt(Math.round(d.alt.totalSavings - d.alt.totalCost)) + ' over 25 years.';
+      } else if (d.kind === 'small') {
+        msg = 'Filling the roof gives ' + kwpT(d.mainKw) + ', but the half-hourly data shows the site would use only about ' + d.pct
+          + '% of what it makes. A system of about ' + kwpT(d.target) + ' would suit its use better, smaller than this calculator models.';
+      } else {
+        msg = 'Solar used on site is set to ' + d.pct + '%. A system sized to the site\'s consumption, rather than its roof, usually costs less and uses more of what it makes.';
+      }
+      msg += ' We can design the array around your consumption rather than the size of your roof: contact Paul Johnston, pjohnston663@gmail.com.';
+      T('bold', 8.5, SLATE);
+      doc.text('Sized to your use', ML, chartY);
+      chartY += 4.5;
+      T('normal', 7, DGREY);
+      const stuLines = doc.splitTextToSize(msg, CW - 4);
+      doc.text(stuLines, ML, chartY);
+      chartY += stuLines.length * 3.4 + 3;
+    }
+
     T('bold', 8.5, SLATE);
     doc.text('Key Assumptions & Limitations', ML, chartY);
     chartY += 5;
@@ -3967,6 +4076,7 @@
     if ([...q.keys()].length) { saveState(); history.replaceState(null, '', location.pathname); }
 
     window.afterReset = function () {
+      sizeToUseData = null; renderSizeToUse();
       if (HHI) { HHI.manual = true; sc.min = '30'; sc.step = '5'; const n = document.getElementById('hhiNote'); if (n) n.hidden = true; const k = document.getElementById('hhiAsk'); if (k) k.hidden = false; }
       const h = document.getElementById('selfConsumptionHint'); if (h) h.textContent = SC_HINT_DEFAULT;
       const hb = document.getElementById('hhiBanner'); if (hb) hb.hidden = true;
@@ -4011,6 +4121,6 @@
     e.currentTarget.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
   });
 </script>
-<img id="pdfLogoImg" src="images/brand/ukscalc-pdf-logo.png" style="display:none" alt="">
+<img id="pdfLogoImg" src="images/brand/ukscalc-pdf-logo-v2.png" style="display:none" alt="">
 </body>
 </html>
