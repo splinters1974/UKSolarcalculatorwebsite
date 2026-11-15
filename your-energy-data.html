@@ -28,7 +28,7 @@
       "@id": "https://uksolarcalculator.co.uk/#organization",
       "name": "Kinetic Energy Consulting",
       "url": "https://www.kinetic-energy.co.uk",
-      "logo": "https://uksolarcalculator.co.uk/images/og-image.png",
+      "logo": "https://uksolarcalculator.co.uk/kec-logo.svg",
       "description": "Commercial and industrial solar consultancy helping UK organisations assess, fund and deliver solar PV.",
       "email": "pjohnston663@gmail.com",
       "knowsAbout": [
@@ -158,6 +158,10 @@
   -->
   <link rel="icon" type="image/png" sizes="16x16" href="/images/brand/favicon-16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/brand/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="/images/brand/favicon-48.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/images/brand/favicon-192.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#063C55">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/brand/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -195,7 +199,7 @@
     <h1 class="page-hero-title">Know how much of your solar you would really use</h1>
     <p class="page-hero-lead">The biggest guess in any solar estimate is how much of the output you'll use yourself. If your site has a half-hourly meter, you already have the data to answer it. Our sister website, Half Hourly Insights, turns it into a measured figure.</p>
     <p class="byline">By <strong>Kinetic Energy Consulting</strong> · Updated <time datetime="2026-11-15">15 November 2026</time></p>
-    <a class="sister-card" href="https://halfhourlyinsights.netlify.app/" target="_blank" rel="noopener">
+    <a class="sister-card" href="https://hhinsights.co.uk/" target="_blank" rel="noopener">
       <span class="sister-label">Our sister website</span>
       <span class="sister-brand"><picture><source type="image/webp" srcset="images/brand/hhi-logo.webp"><img src="images/brand/hhi-logo.png" width="370" height="132" alt="Half Hourly Insights"></picture></span>
       <span class="sister-text">A separate, free website for reading your half-hourly electricity data. It measures how much solar you'd use and sends the figure back here.</span>
@@ -206,7 +210,7 @@
 
 <div class="guide">
   <article class="guide-main">
-    <p class="answer">Solar you use on site saves your full unit price; solar you export earns about 5p a unit. So the share you use yourself drives your savings more than almost anything else. This calculator starts at 80%, which can be well out for larger systems. Your half-hourly meter data shows when your site actually uses electricity, and our free sister website, <a href="https://halfhourlyinsights.netlify.app/"><strong>Half Hourly Insights</strong></a>, turns it into a measured figure and sends it back here.</p>
+    <p class="answer">Solar you use on site saves your full unit price; solar you export earns about 5p a unit. So the share you use yourself drives your savings more than almost anything else. This calculator starts at 80%, which can be well out for larger systems. Your half-hourly meter data shows when your site actually uses electricity, and our free sister website, <a href="https://hhinsights.co.uk/"><strong>Half Hourly Insights</strong></a>, turns it into a measured figure and sends it back here.</p>
     <div class="prose">
 
 <h2 id="why">Why the share you use matters so much</h2>
@@ -226,24 +230,24 @@
 
 <h2 id="have">Do you have half-hourly data?</h2>
 <p>Probably, if you're a business with a sizeable electricity bill. Look at the supply number (MPAN) on your bill. If the top line starts with <strong>00</strong>, the supply is settled half-hourly and your meter records every half hour.<sup><a href="#sources">1</a></sup> Many smaller sites with a smart or AMR meter record half-hourly readings too, even when the bill shows monthly totals. Industry-wide half-hourly settlement is being rolled out to all meters, with migration due to finish in 2027.<sup><a href="#sources">2</a></sup></p>
-<p>Half Hourly Insights has a guide to <a href="https://halfhourlyinsights.netlify.app/mpan-profile-class.html">reading your MPAN</a> if you want to check.</p>
+<p>Half Hourly Insights has a guide to <a href="https://hhinsights.co.uk/mpan-profile-class">reading your MPAN</a> if you want to check.</p>
 
 <h2 id="get">How to get it</h2>
 <figure class="figure"><img src="images/photos/data-team-switchroom-800.jpg" srcset="images/photos/data-team-switchroom-800.jpg 800w, images/photos/data-team-switchroom-1400.jpg 1400w" sizes="(max-width: 800px) 100vw, 760px" width="1400" height="1050" alt="Three engineers in a switch room reviewing data on a tablet" loading="lazy" decoding="async"><figcaption>Your supplier, or the company that collects your meter readings, holds a year or more of half-hourly data for your site.</figcaption></figure>
 <ul>
 <li><strong>Ask your supplier.</strong> Since 1 December 2022, business customers with a smart or AMR meter can ask for up to 12 months of historic data free of charge, in a machine-readable format. The supplier must reply within 10 working days.<sup><a href="#sources">3</a></sup></li>
-<li><strong>Download it from your supplier's portal.</strong> Most large business suppliers offer one. Half Hourly Insights has step-by-step guides for British Gas Business, EDF, E.ON Next, npower Business Solutions and TotalEnergies, and a <a href="https://halfhourlyinsights.netlify.app/get-your-data.html">letter you can send</a> to ask for the file.</li>
+<li><strong>Download it from your supplier's portal.</strong> Most large business suppliers offer one. Half Hourly Insights has step-by-step guides for British Gas Business, EDF, E.ON Next, npower Business Solutions and TotalEnergies, and a <a href="https://hhinsights.co.uk/get-your-data">letter you can send</a> to ask for the file.</li>
 <li><strong>Ask for a year.</strong> Twelve months covers summer and winter, weekdays and weekends, which is what a solar estimate needs. A CSV or Excel file is fine.</li>
 </ul>
 
 <h2 id="analyser">What Half Hourly Insights does with it</h2>
-<p><a href="https://halfhourlyinsights.netlify.app/">Half Hourly Insights</a> is a separate website, run by the same team, built for reading half-hourly electricity data. Its free analyser takes one file per meter and runs entirely in your web browser: your data isn't uploaded.</p>
+<p><a href="https://hhinsights.co.uk/">Half Hourly Insights</a> is a separate website, run by the same team, built for reading half-hourly electricity data. Its free analyser takes one file per meter and runs entirely in your web browser: your data isn't uploaded.</p>
 <figure class="figure figure-shot"><img src="images/photos/hhi-overview-800.jpg" srcset="images/photos/hhi-overview-800.jpg 800w, images/photos/hhi-overview-1360.jpg 1360w" sizes="(max-width: 800px) 100vw, 760px" width="1360" height="900" alt="The Half Hourly Insights analyser showing an office site: annual use, cost, peak demand, base load and use while closed" loading="lazy" decoding="async"><figcaption>The overview for one site: annual use and cost, peak demand, base load, and how much is used while the building is closed.</figcaption></figure>
 <figure class="figure figure-shot"><img src="images/photos/hhi-heatmap-office-800.jpg" srcset="images/photos/hhi-heatmap-office-800.jpg 800w, images/photos/hhi-heatmap-office-1400.jpg 1400w" sizes="(max-width: 800px) 100vw, 760px" width="1400" height="509" alt="A heatmap of a year of half-hourly readings, one column per day, with weekday working hours in dark blue and quiet weekends as pale gaps" loading="lazy" decoding="async"><figcaption>A year at a glance: each column is a day, each row a half hour. The dark weekday blocks are when solar would be used; the pale weekend gaps are when most of it would be exported.</figcaption></figure>
 <p>For solar, the useful part is on the Capacity tab:</p>
 <figure class="figure figure-shot"><img src="images/photos/hhi-solar-card-800.jpg" srcset="images/photos/hhi-solar-card-800.jpg 800w, images/photos/hhi-solar-card-1400.jpg 1400w" sizes="(max-width: 800px) 100vw, 760px" width="1400" height="632" alt="The analyser panel headed Solar: how much would you use?, with a region selector, a table of three system sizes and a button to size solar in the UK Solar Calculator" loading="lazy" decoding="async"><figcaption>The analyser estimates how much of a system's output you would use at each size, then sends the figures here with one button.</figcaption></figure>
 <ol>
-<li><strong>Load a year of data</strong> into the <a href="https://halfhourlyinsights.netlify.app/analyser/">analyser</a>.</li>
+<li><strong>Load a year of data</strong> into the <a href="https://hhinsights.co.uk/analyser/">analyser</a>.</li>
 <li><strong>Open the Capacity tab.</strong> "Solar: how much would you use?" shows the output, the share used on site and the share of your electricity solar would supply, at several sizes. Choose your region.</li>
 <li><strong>Choose "Size solar for this site".</strong> This calculator opens with your figures. Draw or enter your roof, and the "Solar used on site" slider is set from your data for the system that fits.</li>
 </ol>
@@ -274,7 +278,7 @@
 <li><a href="#analyser">What Half Hourly Insights does</a></li>
 <li><a href="#more">What else it tells you</a></li>
 <li><a href="#faqs">Questions</a></li></ol></nav>
-    <div class="side-cta"><strong>Measure it on Half Hourly Insights</strong><p>Our free sister website. No sign-up, and your file stays on your computer.</p><a class="btn" href="https://halfhourlyinsights.netlify.app/analyser/">Open the analyser</a></div>
+    <div class="side-cta"><strong>Measure it on Half Hourly Insights</strong><p>Our free sister website. No sign-up, and your file stays on your computer.</p><a class="btn" href="https://hhinsights.co.uk/analyser/">Open the analyser</a></div>
     <div class="side-cta"><strong>Model your own site</strong><p>Postcode, roof size and energy price. Results in seconds, with a 25-year report.</p><a class="btn" href="calculator.html">Open the calculator</a></div>
   </aside>
 </div>
@@ -283,7 +287,7 @@
   <div class="cta-strip-inner">
     <h2 class="cta-strip-title">Measure first, then size your solar</h2>
     <div class="cta-strip-btns">
-      <a href="https://halfhourlyinsights.netlify.app/analyser/" class="btn btn-gold btn-lg">Open the Half Hourly Insights analyser</a>
+      <a href="https://hhinsights.co.uk/analyser/" class="btn btn-gold btn-lg">Open the Half Hourly Insights analyser</a>
       <a href="calculator.html" class="btn btn-outline-white btn-lg">Open the calculator</a>
     </div>
     <p class="cta-strip-lead">Both are free, with no sign-up. Want help with your data or your roof? <a href="contact.html" style="color:inherit;text-decoration:underline">Speak to an expert</a>.</p>

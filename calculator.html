@@ -28,7 +28,7 @@
       "@id": "https://uksolarcalculator.co.uk/#organization",
       "name": "Kinetic Energy Consulting",
       "url": "https://www.kinetic-energy.co.uk",
-      "logo": "https://uksolarcalculator.co.uk/images/og-image.png",
+      "logo": "https://uksolarcalculator.co.uk/kec-logo.svg",
       "description": "Commercial and industrial solar consultancy helping UK organisations assess, fund and deliver solar PV.",
       "email": "pjohnston663@gmail.com",
       "knowsAbout": [
@@ -150,6 +150,10 @@
   </script>
   <link rel="icon" type="image/png" sizes="16x16" href="/images/brand/favicon-16.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/brand/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="/images/brand/favicon-48.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/images/brand/favicon-192.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#063C55">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/brand/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -572,7 +576,7 @@
           <div class="range-head"><label class="lbl" for="selfConsumption">Solar used on site</label><output id="scOut" for="selfConsumption">80%</output></div>
           <input type="range" id="selfConsumption" value="80" step="5" min="30" max="100" onchange="saveState(); updateBatteryPreview();">
           <div class="help" id="selfConsumptionHint">80% suits most sites busy through the working week. Warehouses, farms and sites closed at weekends are often 40 to 70%. The rest is exported at 5p/kWh.</div>
-          <div class="help hhi-link" id="hhiAsk">Not sure? <a href="https://halfhourlyinsights.netlify.app/analyser/" target="_blank" rel="noopener">Measure it from your half-hourly meter data</a> with our free analyser. It runs in your browser and sends the figure back here. <a href="your-energy-data.html">Why it matters</a>.</div>
+          <div class="help hhi-link" id="hhiAsk">Not sure? <a href="https://hhinsights.co.uk/analyser/" target="_blank" rel="noopener">Measure it from your half-hourly meter data</a> with our free analyser. It runs in your browser and sends the figure back here. <a href="your-energy-data.html">Why it matters</a>.</div>
           <div class="help hhi-note" id="hhiNote" hidden>Using your half-hourly readings from Half-Hourly Insights. Only your annual use and the share used on site at each size came across, after the # in the address, which is never sent to a server.</div>
         </div>
       </fieldset>
