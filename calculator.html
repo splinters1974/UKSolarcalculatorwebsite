@@ -882,7 +882,10 @@
         .sort(function (a, b) { return a[0] - b[0]; });
       if (pts.length < 2) return null;
       const y = +h.get('y');
-      return { pts: pts, use: Math.max(0, +h.get('use') || 0), y: y > 300 && y < 1500 ? y : 0, manual: false, last: null };
+      // Optional site postcode: letters, digits and one space only, at most 8 characters.
+      const pcRaw = (h.get('pc') || '').toUpperCase().replace(/[^A-Z0-9 ]/g, '').trim();
+      const pc = /^[A-Z]{1,2}\d[A-Z\d]?( ?\d[A-Z]{2})?$/.test(pcRaw) && pcRaw.length <= 8 ? pcRaw : '';
+      return { pts: pts, use: Math.max(0, +h.get('use') || 0), y: y > 300 && y < 1500 ? y : 0, pc: pc, manual: false, last: null };
     } catch (e) { return null; }
   })();
   const SC_HINT_DEFAULT = '80% suits most sites busy through the working week. Warehouses, farms and sites closed at weekends are often 40 to 70%. The rest is exported at 5p/kWh.';
@@ -3899,7 +3902,15 @@
       const bt = document.getElementById('hhiBannerText');
       if (bt) bt.textContent = (HHI.use ? 'Your site uses about ' + Math.round(HHI.use).toLocaleString('en-GB') + ' kWh of electricity a year. ' : '')
         + 'The share of solar it would use on site comes from your data: ' + examples.slice(0, 2).join(', ') + ' and ' + examples[2] + '. '
+        + (HHI.pc ? 'Your postcode, ' + HHI.pc + ', is filled in: choose "Find site" to see your roof on the map. ' : '')
         + 'Draw or enter your roof below and "Solar used on site" is set for the system that fits.';
+      if (HHI.pc) {
+        // Postcode sets the sunshine region (a lookup in this page, nothing sent) and fills the map search box.
+        const pcEl = document.getElementById('sitePostcode');
+        if (pcEl) { pcEl.value = HHI.pc; onPostcodeInput(); }
+        const ms = document.getElementById('mapSearchInput');
+        if (ms) ms.value = HHI.pc;
+      }
       const banner = document.getElementById('hhiBanner');
       if (banner) banner.hidden = false;
       const startKwp = HHI.use && HHI.y ? HHI.use * 0.5 / HHI.y : HHI.pts[Math.floor(HHI.pts.length / 2)][0];
