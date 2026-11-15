@@ -25,6 +25,7 @@ Important: the figures are indicative estimates produced by a documented model. 
 - [How the calculator works](https://uksolarcalculator.co.uk/how-it-works.html): The method in full — how usable roof area, generation, the value of electricity, installation cost, PPA rates and carbon are each derived, why the model runs to 25 years, and what the calculator deliberately does not do.
 - [How to fund commercial solar](https://uksolarcalculator.co.uk/funding.html): Buying outright, asset finance, leasing and PPAs, with capital allowances, VAT, business rates and public sector funding.
 - [Planning permission and grid connection](https://uksolarcalculator.co.uk/planning-and-grid.html): DNO connection under G98 and G99, export limits, permitted development and planning, roof condition, leases and insurance.
+- [Sizing solar from your energy data](https://uksolarcalculator.co.uk/your-energy-data.html): why the share of solar used on site matters, how to get half-hourly meter data, and how the free Half Hourly Insights analyser measures it and pre-fills the calculator.
 - [Commercial solar FAQ](https://uksolarcalculator.co.uk/faq.html): Around thirty questions on cost, payback, generation, batteries, PPAs, tax, business rates, planning and grid connection.
 - [How commercial solar PV works](https://uksolarcalculator.co.uk/about.html): Background on commercial solar PV, installation types, battery storage and the UK funding landscape.
 
