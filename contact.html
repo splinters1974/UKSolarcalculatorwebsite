@@ -412,6 +412,11 @@
       <div class="form-subtitle">Fill in the form and we'll be in touch within one working day.</div>
 
       <form id="contactForm" novalidate>
+        <input type="hidden" name="source" id="enquirySource" value="">
+        <script>
+          // Records where the enquiry came from: "hhi" when sent from the calculator with half-hourly data.
+          (function () { var v = new URLSearchParams(location.search).get('src'); if (v && /^[a-z0-9-]{1,20}$/.test(v)) document.getElementById('enquirySource').value = v; })();
+        </script>
         <div class="form-row">
           <div class="form-group">
             <label for="firstName">First name <span class="req">*</span></label>
