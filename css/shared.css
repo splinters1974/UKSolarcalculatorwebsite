@@ -93,7 +93,7 @@ button, input, select, textarea { font-family: inherit; }
   border-bottom: 1px solid var(--rule);
 }
 .nav-inner {
-  max-width: 1240px;
+  max-width: 1320px;
   margin: 0 auto;
   padding: 14px 24px;
   display: flex;
@@ -121,8 +121,8 @@ button, input, select, textarea { font-family: inherit; }
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  padding: 0 14px;
-  font-size: 16px;
+  padding: 0 10px;
+  font-size: 15px;
   font-weight: 500;
   color: var(--ink);
   border-radius: 6px;
@@ -134,7 +134,7 @@ button, input, select, textarea { font-family: inherit; }
   background: var(--blue);
   color: #fff;
   font-weight: 600;
-  padding: 0 20px;
+  padding: 0 16px;
   margin-left: 8px;
   border-radius: 6px;
   box-shadow: none;
@@ -348,7 +348,7 @@ button, input, select, textarea { font-family: inherit; }
   .stat-row { flex-wrap: wrap; }
   .stat-item { flex: 1 1 50%; border-right: none; border-bottom: 1px solid var(--rule); }
 }
-@media (max-width: 1120px) {
+@media (max-width: 1240px) {
   .nav-links { display: none; }
   .nav-toggle { display: flex; flex-shrink: 0; }
   .nav-mobile-open .nav-links {
@@ -458,6 +458,7 @@ button, input, select, textarea { font-family: inherit; }
 .figure { margin: 28px 0 32px; }
 .figure img { display: block; width: 100%; height: auto; border-radius: 10px; background: var(--mist); }
 .figure figcaption { margin-top: 10px; font-size: 14px; line-height: 1.5; color: var(--grey); }
+.figure-shot img { border: 1px solid var(--rule); background: #fff; }
 .figure-render img { border-radius: 0; background: none; mix-blend-mode: multiply; }
 .figure-wide { max-width: 960px; margin: 0 auto 40px; }
 .photo-cards { margin-top: 36px; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
