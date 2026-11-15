@@ -1455,6 +1455,7 @@
       await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
         to_email:    email,
         to_name:     email.split('@')[0],
+        reply_to:    LEAD_RECIPIENTS[0].email,
         report_date: reportDate,
         system_size: systemSize,
         region:      region,
@@ -1490,6 +1491,7 @@
         emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
           to_email:    rec.email,
           to_name:     rec.name,
+          reply_to:    email,
           report_date: reportDate,
           system_size: systemSize,
           region:      region,
