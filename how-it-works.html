@@ -81,7 +81,7 @@
       "description": "How the UK Solar Calculator estimates system size, generation, savings and payback: postcode sunshine data from SAP 10.3, degradation, self-consumption, export value and the 25-year model.",
       "mainEntityOfPage": "https://uksolarcalculator.co.uk/how-it-works.html",
       "datePublished": "2026-10-10",
-      "dateModified": "2026-10-10",
+      "dateModified": "2026-11-17",
       "author": {
         "@id": "https://uksolarcalculator.co.uk/#organization"
       },
@@ -198,7 +198,7 @@
     <span class="page-hero-kicker">Method and assumptions</span>
     <h1 class="page-hero-title">How the calculator works</h1>
     <p class="page-hero-lead">What goes into the numbers, where the data comes from, and what the calculator deliberately leaves out.</p>
-    <p class="byline">By <strong>Kinetic Energy Consulting</strong> · Updated <time datetime="2026-10-10">10 October 2026</time></p>
+    <p class="byline">By <strong>Kinetic Energy Consulting</strong> · Updated <time datetime="2026-11-17">17 November 2026</time></p>
   </div>
 </section>
 
@@ -223,6 +223,7 @@
 <h2 id="sunshine">2. How much it generates where you are</h2>
 <p>Generation comes from the sunshine data in SAP 10.3, the government's Standard Assessment Procedure, which splits the UK into 21 regions and maps every postcode district to one of them. Enter a postcode and the calculator picks your region automatically. Without one, it uses the region you choose, or the UK average.</p>
 <p>The figures below are annual generation per kWp of panels, for an east-west layout tilted at 10 degrees, after normal system losses. This is a sensible middle case for commercial roofs. A south-facing pitched roof or a ground-mounted array tilted towards the sun will usually do better, and shading will make things worse.</p>
+<p>When you click a building in map mode, the calculator reads the direction and pitch of each face of a pitched roof and adjusts the yield using the same SAP 10.3 equations. A south-facing 30-degree roof yields about 14% more than the figures below, and an east- or west-facing one about 4% less. North-facing faces are left out, as an installer would leave them, so a gable roof facing north and south is modelled with panels on its south side only. Flat roofs, ground mounts, carports and outlines you draw yourself use the figures below.</p>
 <div class="table-wrap"><table>
 <thead><tr><th>SAP region</th><th>Example postcode areas</th><th class="num">kWh per kWp a year</th></tr></thead>
 <tbody>
@@ -264,7 +265,8 @@
 <h2 id="costs">4. What it costs</h2>
 <figure class="figure"><img src="images/photos/inverter-check-860.jpg" width="860" height="480" alt="An engineer checks an inverter on a solar array with a thermal imaging camera" loading="lazy" decoding="async"><figcaption>Inverters are the part most likely to need replacing during a system's life, so the calculator allows for it.</figcaption></figure>
 <p>Installed costs are based on current UK market benchmarks per kWp for each area type, covering panels, inverters, mounting, electrical work and commissioning. Carports cost the most because of the steelwork and foundations, and pitched roofs the least. We review these benchmarks regularly against real project pricing.</p>
-<p>The model also includes a one-off allowance in year 13 for replacing inverters, which typically carry a 10 to 12-year warranty. Routine maintenance, scaffolding, surveys and any grid reinforcement are not included, because they vary too much from site to site to estimate without a visit.</p>
+<p>The model also includes a one-off allowance in year 13 for replacing inverters, which typically carry a 10 to 12-year warranty.</p>
+<p>If you buy the system, you also pay to run it, so running costs come off your savings every year: maintenance at about &pound;10 per kWp, &pound;850 for monitoring and an annual inspection, and insurance at 0.2% of the installed cost, all rising 3% a year. On a PPA the funder pays these during the contract, and they pass to you if the system transfers to you at the end. Scaffolding, surveys and any grid reinforcement are not included, because they vary too much from site to site to estimate without a visit.</p>
 
 <h2 id="funding">5. Buying outright or a PPA</h2>
 <p><span class="lead-in">Buying outright.</span> You pay the installed cost and keep all the savings and export income. The calculator shows your payback year, return on investment and net benefit over 25 years.</p>
