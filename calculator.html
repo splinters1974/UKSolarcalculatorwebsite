@@ -177,6 +177,8 @@
 .hhi-banner[hidden] { display: none; }
 .size-to-use { margin: 4px 0 24px; padding: 18px 20px; background: #fff; border: 1px solid var(--rule); border-left: 5px solid #F8C05D; border-radius: 10px; }
 .size-to-use[hidden] { display: none; }
+.next-steps { margin: 14px 0 4px; display: grid; gap: 8px; }
+.next-steps p { margin: 0; font-size: 15px; line-height: 1.5; color: var(--text-2, #3E4A51); }
 .size-to-use p { margin: 0 0 10px; font-size: 15px; line-height: 1.55; color: var(--text-2, #3E4A51); }
 .size-to-use .stu-title { font-size: 17px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
 .size-to-use table { width: 100%; border-collapse: collapse; margin: 6px 0 14px; font-size: 15px; }
@@ -723,7 +725,8 @@
           <div>
             <h2>Buying outright</h2>
             <div class="row"><span class="k">System cost</span><span class="leader"></span><span class="v" id="totalCost">–</span></div>
-            <div class="row"><span class="k">Savings over 25 years</span><span class="leader"></span><span class="v money" id="totalSavings">–</span></div>
+            <div class="row"><span class="k">Running costs over 25 years</span><span class="leader"></span><span class="v" id="runningCosts">–</span></div>
+            <div class="row"><span class="k">Savings after running costs</span><span class="leader"></span><span class="v money" id="totalSavings">–</span></div>
             <div class="row"><span class="k">Net benefit</span><span class="leader"></span><span class="v money" id="netBenefit">–</span></div>
             <div class="row"><span class="k">Return on investment</span><span class="leader"></span><span class="v"><span id="roi">–</span>%</span></div>
             <div class="row"><span class="k">Payback</span><span class="leader"></span><span class="v"><span id="payback">–</span> years</span></div>
@@ -752,6 +755,10 @@
         <div class="actions">
           <button class="btn btn-gold" onclick="openEmailModal()" type="button">Get your PDF report</button>
           <button class="btn-text" onclick="downloadSupportingNotes()" type="button">Supporting notes (PDF)</button>
+        </div>
+        <div class="next-steps">
+          <p><strong>Buying through your company?</strong> Capital allowances could shorten this payback. <a href="contact.html" onclick="track('tax_prompt_clicked')">Ask us to model your tax position</a>.</p>
+          <p><strong>Have half-hourly meter data?</strong> <a href="contact.html" onclick="track('hh_prompt_clicked')">Send it to us</a> for a full appraisal based on how your site really uses power.</p>
         </div>
 
         <details class="calc-details">
@@ -869,6 +876,19 @@
   const INVERTER_KWP_PER_UNIT = 100;
   const INVERTER_UNIT_COST = 3500;
   const INVERTER_SHARE = 0.40;
+  // Running costs for a system the customer owns: maintenance, monitoring and
+  // insurance, rising each year. Typical commercial figures, not a quotation.
+  const OM_PER_KWP     = 10;     // £/kWp a year: inspection, cleaning, repairs
+  const OM_FIXED       = 850;    // £ a year per site: monitoring platform and annual visit
+  const INSURANCE_RATE = 0.002;  // a year, as a share of the installed cost
+  const RUNNING_COST_INFLATION = 0.03;
+  function runningCostYear1(kwp, installCost) {
+    return OM_PER_KWP * kwp + OM_FIXED + INSURANCE_RATE * installCost;
+  }
+  function runningCostIn(year, year1) {
+    return year1 * Math.pow(1 + RUNNING_COST_INFLATION, year - 1);
+  }
+
   function inverterAllowance(kwp) {
     return Math.max(1, Math.ceil(kwp / INVERTER_KWP_PER_UNIT)) * INVERTER_UNIT_COST * INVERTER_SHARE;
   }
@@ -1058,6 +1078,81 @@
     });
     if (hit !== null) return hit;
     return SAP_POSTCODES[area] !== undefined ? SAP_POSTCODES[area] : null;
+  }
+
+  // Direction and pitch of a roof face (SAP 10.3 Appendix U, equations U1 to U4).
+  // Latitude (Table U4) and monthly horizontal sunshine in kWh/m² a day
+  // (Table U3) for each SAP region, in the same order as SAP_REGIONS.
+  const SAP_SUN = [
+    { lat:53.5, h:[26,54,96,150,192,200,189,157,115,66,33,21] },
+    { lat:51.6, h:[30,56,98,157,195,217,203,173,127,73,39,24] },
+    { lat:51.1, h:[32,59,104,170,208,231,216,182,133,77,41,25] },
+    { lat:50.9, h:[35,62,109,172,209,235,217,185,138,80,44,27] },
+    { lat:50.5, h:[36,63,111,174,210,233,204,182,136,78,44,28] },
+    { lat:51.5, h:[32,59,105,167,201,226,206,175,130,74,40,25] },
+    { lat:52.6, h:[28,55,97,153,191,208,194,163,121,69,35,23] },
+    { lat:53.5, h:[24,51,95,152,191,203,186,152,115,65,31,20] },
+    { lat:54.6, h:[23,51,95,157,200,203,194,156,113,62,30,19] },
+    { lat:55.2, h:[23,50,92,151,200,196,187,153,111,61,30,18] },
+    { lat:54.4, h:[25,51,95,152,196,198,190,156,115,64,32,20] },
+    { lat:53.5, h:[26,54,96,150,192,200,189,157,115,66,33,21] },
+    { lat:52.1, h:[30,58,101,165,203,220,206,173,128,74,39,24] },
+    { lat:52.6, h:[29,57,104,164,205,220,199,167,120,68,35,22] },
+    { lat:55.9, h:[19,46,88,148,196,193,185,150,101,55,25,15] },
+    { lat:56.2, h:[21,46,89,146,198,191,183,150,106,57,27,15] },
+    { lat:57.3, h:[19,45,89,143,194,188,177,144,101,54,25,14] },
+    { lat:57.5, h:[17,43,85,145,189,185,170,139,98,51,22,12] },
+    { lat:57.7, h:[16,41,87,155,205,206,185,148,101,51,21,11] },
+    { lat:59.0, h:[14,39,84,143,205,201,178,145,100,50,19,9] },
+    { lat:60.1, h:[12,34,79,135,196,190,168,144,90,46,16,7] },
+    { lat:54.6, h:[24,52,96,155,201,198,183,150,107,61,30,18] }
+  ];
+  // Table U5 constants. West faces use the east set, and so on round the
+  // compass, because the equations are symmetrical about north-south.
+  const SAP_K = {
+    N:  [26.3, -38.5, 14.8, -16.5, 27.3, -11.9, -1.06, 0.0872, -0.191],
+    NE: [0.165, -3.68, 3.0, 6.38, -4.53, -0.405, -4.38, 4.89, -1.99],
+    E:  [1.44, -2.36, 1.07, -0.514, 1.89, -1.64, -0.542, -0.757, 0.604],
+    SE: [-2.95, 2.89, 1.17, 5.67, -3.54, -4.28, -2.72, -0.25, 3.07],
+    S:  [-0.66, -0.106, 2.93, 3.63, -0.374, -7.4, -2.71, -0.991, 4.59],
+  };
+  const SAP_DECL = [-20.7, -12.8, -1.8, 9.8, 18.8, 23.1, 21.2, 13.7, 2.9, -8.7, -18.4, -23.0];
+  const SAP_DAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  // Annual sunshine on a plane, kWh/m² (equation U4)
+  function sapPlane(rid, orient, tiltDeg) {
+    const r = SAP_SUN[rid] || SAP_SUN[0], k = SAP_K[orient], sn = Math.sin((tiltDeg || 0) * Math.PI / 360);
+    const A = k[0]*sn*sn*sn + k[1]*sn*sn + k[2]*sn;
+    const B = k[3]*sn*sn*sn + k[4]*sn*sn + k[5]*sn;
+    const C = k[6]*sn*sn*sn + k[7]*sn*sn + k[8]*sn + 1;
+    let tot = 0;
+    for (let m = 0; m < 12; m++) {
+      const c = Math.cos((r.lat - SAP_DECL[m]) * Math.PI / 180);
+      tot += SAP_DAYS[m] * r.h[m] * (A*c*c + B*c + C);
+    }
+    return 0.024 * tot;
+  }
+  // Compass bearing (0 = north, as the Solar API gives it) to the nearest SAP sector
+  function sapSector(azimuth) {
+    const off = Math.abs(((((azimuth || 0) - 180) % 360) + 540) % 360 - 180); // 0 = due south
+    return off <= 22.5 ? 'S' : off <= 67.5 ? 'SE' : off <= 112.5 ? 'E' : off <= 157.5 ? 'NE' : 'N';
+  }
+  // For a detected pitched roof: the share of its area an installer would use
+  // (north-facing faces are left out) and the yield of those faces relative to
+  // the east-west, 10 degree layout the regional yields are based on.
+  function roofFaceYield(mp, rid) {
+    if (mp.roofType !== 'pitched' || !mp.faces || !mp.faces.length) return { share: 1, factor: 1 };
+    const base = sapPlane(rid, 'E', 10);
+    let total = 0, usedArea = 0, weighted = 0, allArea = 0, allWeighted = 0;
+    for (const f of mp.faces) {
+      const sector = sapSector(f.az), plane = sapPlane(rid, sector, f.p);
+      total += f.a; allArea += f.a; allWeighted += f.a * plane;
+      if (sector === 'N' || sector === 'NE') continue;
+      usedArea += f.a; weighted += f.a * plane;
+    }
+    if (!(total > 0)) return { share: 1, factor: 1 };
+    // A roof with only north-facing faces is modelled as it is, not skipped
+    if (!(usedArea > 0)) return { share: 1, factor: allWeighted / allArea / base };
+    return { share: usedArea / total, factor: weighted / usedArea / base };
   }
 
   function currentYield(region) {
@@ -1713,7 +1808,7 @@
   function sfAssumptionsHTML(inp, r) {
     const sc = Math.round((inp.selfConsumption || SELF_CONSUMPTION) * 100);
     const items = [
-      'Maintenance costs NOT included. Typically £15–£20/kWp/year.',
+      `Running costs: maintenance at £${OM_PER_KWP}/kWp a year, £${OM_FIXED} a year for monitoring and an annual visit, and insurance at ${INSURANCE_RATE*100}% of the system cost, all rising ${RUNNING_COST_INFLATION*100}% a year. Year 1: £${fmt(r.runningCostYear1)}.`,
       `Inverter replacement: a one-off allowance in year ${INVERTER_YEAR}, after the standard 12-year inverter warranty.`,
       `Roof coverage: ${Math.round((GROUND_COVERAGE[inp.roofType]||ROOF_COVERAGE)*100)}% of total area assumed usable, accounting for edge setbacks, obstructions, vents, and inter-row spacing.`,
       inp.oversize > 1.0 ? `System oversized by ${Math.round((inp.oversize-1)*100)}% above roof-area baseline to increase winter generation and export available for storage.` : null,
@@ -1763,8 +1858,8 @@
 
     // Savings use the same self-consumption share as the self-funded model.
     // During the contract the funder keeps export income; after it, the
-    // customer owns the system, keeps export income and pays the year-13
-    // inverter allowance if it falls after the contract.
+    // customer owns the system, keeps export income, pays its running costs
+    // and the year-13 inverter allowance if it falls after the contract.
     for (let y = 1; y <= SYSTEM_LIFETIME; y++) {
       const gen       = r.yearlyGeneration[y-1];
       const selfUsed  = gen * SELF_CONSUMPTION;
@@ -1792,6 +1887,7 @@
         // income now goes to the customer
         sav = selfUsed * gridPrice + gen * (1 - SELF_CONSUMPTION) * EXPORT_RATE;
         if (y === INVERTER_YEAR) sav -= r.inverterCost;
+        sav -= runningCostIn(y, r.runningCostYear1);
       }
       yearlySavings.push(sav);
       totalSavings += sav;
@@ -2172,6 +2268,7 @@
         <div class="seg-badges">
           <span class="seg-badge">${mp.pitch}° pitch</span>
           <span class="seg-badge ${azimuthClass(mp.azimuth)}">${azimuthLabel(mp.azimuth)}</span>
+          ${(mp.roofType === 'pitched' && roofFaceYield(mp, 0).share < 0.995) ? `<span class="seg-badge">North faces left out</span>` : ''}
         </div>` : ''}
         <div class="map-building-row-bottom">
           <span class="map-area-roof-label">Area type:</span>
@@ -2326,7 +2423,7 @@
       ]);
 
       // Extract dominant roof segment metadata from Solar API
-      let pitch = undefined, azimuth = undefined, solarTotalArea = null;
+      let pitch = undefined, azimuth = undefined, solarTotalArea = null, faces = undefined;
       if (solarData && !solarData.error && solarData.solarPotential) {
         const segs = solarData.solarPotential.roofSegmentStats || [];
         const dominant = segs.reduce(function(best, seg) {
@@ -2339,6 +2436,9 @@
           azimuth = Math.round(dominant.azimuthDegrees || 0);
         }
         solarTotalArea = segs.reduce(function(s, sg) { return s + ((sg.stats && sg.stats.areaMeters2) || 0); }, 0) || null;
+        // Every face, so a gable's south and north sides are each modelled as they face
+        faces = segs.filter(function(sg) { return sg.stats && sg.stats.areaMeters2 > 0; })
+                    .map(function(sg) { return { a: sg.stats.areaMeters2, az: sg.azimuthDegrees || 0, p: sg.pitchDegrees || 0 }; });
         if (solarTotalArea) solarTotalArea = parseFloat(solarTotalArea.toFixed(2));
       }
 
@@ -2374,7 +2474,7 @@
         const areaM2    = (solarTotalArea && Math.abs(solarTotalArea - osmArea) / osmArea < 0.5) ? solarTotalArea : osmArea;
         const roofType  = (pitch !== undefined && pitch < 5) ? 'flat' : 'pitched';
         const id        = Date.now();
-        mapPolygons.push({ id, polygon, area: areaM2, roofType, pitch, azimuth });
+        mapPolygons.push({ id, polygon, area: areaM2, roofType, pitch, azimuth, faces });
         buildings.push({ id, length: Math.sqrt(areaM2), width: Math.sqrt(areaM2), mapArea: areaM2 });
         google.maps.event.addListener(polygon.getPath(), 'set_at',    function() { updatePolygonArea(id, polygon); });
         google.maps.event.addListener(polygon.getPath(), 'insert_at', function() { updatePolygonArea(id, polygon); });
@@ -2409,7 +2509,7 @@
         const areaM2   = solarTotalArea || parseFloat(google.maps.geometry.spherical.computeArea(polygon.getPath()).toFixed(2));
         const roofType = (pitch !== undefined && pitch < 5) ? 'flat' : 'pitched';
         const id       = Date.now();
-        mapPolygons.push({ id, polygon, area: areaM2, roofType, pitch, azimuth });
+        mapPolygons.push({ id, polygon, area: areaM2, roofType, pitch, azimuth, faces });
         buildings.push({ id, length: Math.sqrt(areaM2), width: Math.sqrt(areaM2), mapArea: areaM2 });
         google.maps.event.addListener(polygon.getPath(), 'set_at',    function() { updatePolygonArea(id, polygon); });
         google.maps.event.addListener(polygon.getPath(), 'insert_at', function() { updatePolygonArea(id, polygon); });
@@ -2438,7 +2538,7 @@
 
     let filled, totalRoofArea;
 
-    let blendedInstallCostPerKwp, totalUsableArea;
+    let blendedInstallCostPerKwp, totalUsableArea, mapYieldFactor = 1;
     if (isMapMode) {
       // Map mode: use polygon areas with per-area roof types
       if (mapPolygons.length === 0) {
@@ -2448,13 +2548,18 @@
       totalRoofArea = mapPolygons.reduce((s, mp) => s + mp.area, 0);
       // Per-area coverage and weighted install cost
       totalUsableArea = 0;
-      let totalWeightedCost = 0;
+      let totalWeightedCost = 0, weightedYieldFactor = 0;
+      const rid = postcodeRegionId !== null ? postcodeRegionId : 0;
       for (const mp of mapPolygons) {
         const cov = GROUND_COVERAGE[mp.roofType] || ROOF_COVERAGE;
-        totalUsableArea += mp.area * cov;
-        totalWeightedCost += mp.area * cov * INSTALL_COST[mp.roofType];
+        const face = roofFaceYield(mp, rid);
+        const usable = mp.area * cov * face.share;
+        totalUsableArea += usable;
+        totalWeightedCost += usable * INSTALL_COST[mp.roofType];
+        weightedYieldFactor += usable * face.factor;
       }
       blendedInstallCostPerKwp = totalUsableArea > 0 ? totalWeightedCost / totalUsableArea : INSTALL_COST['pitched'];
+      mapYieldFactor = totalUsableArea > 0 ? weightedYieldFactor / totalUsableArea : 1;
       // Build filled array with per-area roof type
       filled = mapPolygons.map(mp => ({
         id: mp.id,
@@ -2507,7 +2612,7 @@
     document.getElementById('step3').className = 'step active';
 
     const batteryEnabled = document.getElementById('batteryToggle').checked;
-    const computeOpts = isMapMode ? { usableAreaOverride: totalUsableArea, blendedInstallCostPerKwp } : {};
+    const computeOpts = isMapMode ? { usableAreaOverride: totalUsableArea, blendedInstallCostPerKwp, yieldFactor: mapYieldFactor } : {};
     let data = compute(totalRoofArea, roofType, region, energyPrice, filled, oversizeFactor, batteryEnabled, computeOpts);
     // With half-hourly data, set the share used on site for this system size and recalculate.
     if (data && data.results && applyHhi(data.results.systemSizeKw)) {
@@ -2539,9 +2644,11 @@
     const systemSizeKw    = (basePanels * PANEL_POWER) / 1000 * oversize;
     const displayPanels   = Math.round(systemSizeKw * 1000 / PANEL_POWER);
     const installationCost = systemSizeKw * (opts.blendedInstallCostPerKwp || INSTALL_COST[roofType]); // all-in cost
-    const yieldKwp = currentYield(region);
+    // Map mode passes a factor for the direction and pitch of detected roofs
+    const yieldKwp = currentYield(region) * (opts.yieldFactor || 1);
     const yearOneGeneration = systemSizeKw * yieldKwp * degFactor(1); // year 1, after first-year degradation
     const inverterCost = inverterAllowance(systemSizeKw);
+    const runningCost1 = runningCostYear1(systemSizeKw, installationCost);
 
     // ── Battery sizing ─────────────────────────────────────
     const batteryKwh  = batteryOn ? getBatteryKwh(yearOneGeneration) : 0;
@@ -2550,7 +2657,7 @@
 
     let yearlyGeneration = [], yearlySavings = [], yearlyBatterySavings = [];
     let totalGeneration = 0, cumulativeSavings = 0, paybackYear = null;
-    let totalExportRevenue = 0, batteryTotalSaving = 0;
+    let totalExportRevenue = 0, batteryTotalSaving = 0, totalRunningCost = 0;
 
     for (let y = 1; y <= SYSTEM_LIFETIME; y++) {
       const gen   = yearOneGeneration * degFactor(y) / degFactor(1);
@@ -2572,6 +2679,9 @@
       totalExportRevenue += exportIncome;
       let sav = gen * SELF_CONSUMPTION * price + batterySavY + exportIncome;
       if (y === INVERTER_YEAR) sav -= inverterCost;
+      const runCost = runningCostIn(y, runningCost1);
+      sav -= runCost;
+      totalRunningCost += runCost;
 
       yearlyGeneration.push(gen);
       yearlySavings.push(sav);
@@ -2603,6 +2713,7 @@
                 paybackYear: paybackYear, // null = never breaks even within SYSTEM_LIFETIME
                 carbonOffset, yearlySavings, yearlyGeneration, yearlyBatterySavings,
                 totalExportRevenue, yearOneExportRevenue, inverterCost,
+                runningCostYear1: runningCost1, totalRunningCost,
                 batteryKwh, batteryCost, batteryTotalSaving, batteryNetPosition },
       date: new Date().toLocaleDateString('en-GB')
     };
@@ -2627,6 +2738,7 @@
     animateCount(document.getElementById('annualGen'), 0, r.yearOneGeneration);
     animateCount(document.getElementById('totalGen'), 0, r.totalGeneration);
     animateCount(document.getElementById('totalCost'), 0, r.totalCost, '£');
+    animateCount(document.getElementById('runningCosts'), 0, r.totalRunningCost, '£');
     animateCount(document.getElementById('totalSavings'), 0, r.totalSavings, '£');
     animateCount(document.getElementById('roi'), 0, r.roi, '', '', 1);
     if (r.paybackYear) {
@@ -3388,7 +3500,8 @@
     let ry = sectionHead('Financial Summary', AMBER, [232, 241, 248], C2L, startY, COL_W);
     ry = dataRow('Total Install Cost:', '£' + fmt(r.totalCost), C2L, ry, COL_W);
     if (inp.batteryOn) ry = dataRow('  of which battery:', '£' + fmt(r.batteryCost), C2L, ry, COL_W);
-    ry = dataRow('25-Year Savings:', '£' + fmt(r.totalSavings), C2L, ry, COL_W);
+    ry = dataRow('Running Costs (25yr):', '£' + fmt(r.totalRunningCost), C2L, ry, COL_W);
+    ry = dataRow('25-Year Savings (net):', '£' + fmt(r.totalSavings), C2L, ry, COL_W);
     ry = dataRow('Net Profit (25yr):', '£' + fmt(r.totalSavings - r.totalCost), C2L, ry, COL_W);
     ry = dataRow('Return on Investment:', r.roi.toFixed(1) + '%', C2L, ry, COL_W);
     ry = dataRow('Payback Period:', r.paybackYear ? r.paybackYear.toFixed(1) + ' years' : 'Beyond ' + SYSTEM_LIFETIME + ' years', C2L, ry, COL_W);
@@ -3465,7 +3578,7 @@
 
     T('normal', 6.5, DGREY);
     const assumptions = [
-      'Maintenance costs are NOT included (typically £15-20 per kWp per year). A one-off inverter replacement allowance is included in year ' + INVERTER_YEAR + '.',
+      'Running costs are included: maintenance at £' + OM_PER_KWP + '/kWp a year, £' + OM_FIXED + ' a year for monitoring and an annual visit, and insurance at ' + (INSURANCE_RATE*100) + '% of the system cost, rising ' + (RUNNING_COST_INFLATION*100) + '% a year. A one-off inverter replacement allowance is included in year ' + INVERTER_YEAR + '.',
       'Roof/mount coverage: 80-90% of total area assumed usable depending on mount type, accounting for edge setbacks, obstructions, and inter-row spacing.',
       inp.oversize > 1.0 ? `System oversized by ${Math.round((inp.oversize-1)*100)}% above the roof-area baseline to increase winter generation and export available for battery storage.` : null,
       'Self-consumption: ' + Math.round((inp.selfConsumption || SELF_CONSUMPTION) * 100) + '% of generation used on site, displacing grid electricity at the import rate.',

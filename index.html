@@ -281,9 +281,9 @@
     </div>
     <div class="wide">
       <div class="lead-row"><span style="font-size:18px">Generation in year 1</span><span class="leader"></span><strong style="font-size:22px">~450,000 kWh</strong></div>
-      <div class="lead-row"><span style="font-size:18px">Saving in year 1</span><span class="leader"></span><strong style="font-size:22px;color:var(--green)">~£85,000</strong></div>
-      <div class="lead-row"><span style="font-size:18px">Simple payback</span><span class="leader"></span><strong style="font-size:22px">~5 years</strong></div>
-      <div class="lead-row"><span style="font-size:18px">Net benefit over 25 years</span><span class="leader"></span><strong style="font-size:22px;color:var(--green)">£2.4m</strong></div>
+      <div class="lead-row"><span style="font-size:18px">Saving in year 1, after running costs</span><span class="leader"></span><strong style="font-size:22px;color:var(--green)">~£78,000</strong></div>
+      <div class="lead-row"><span style="font-size:18px">Simple payback</span><span class="leader"></span><strong style="font-size:22px">~5.5 years</strong></div>
+      <div class="lead-row"><span style="font-size:18px">Net benefit over 25 years</span><span class="leader"></span><strong style="font-size:22px;color:var(--green)">£2.2m</strong></div>
       <div class="lead-row"><span style="font-size:18px">Carbon avoided</span><span class="leader"></span><strong style="font-size:22px">~88 tonnes a year</strong></div>
     </div>
   </div>
@@ -362,7 +362,8 @@
 (function () {
   // Mirrors the self-funded maths in calculator.html (compute): 510W panels on 2.27 x 1.13 m,
   // usable share by mount, SAP 10.3 yield, 1% then 0.4%/yr degradation, 3%/yr prices,
-  // 5p export, inverter allowance in year 13, 25 years. Keep the two in step.
+  // 5p export, inverter allowance in year 13, running costs (maintenance £10/kWp + £850
+  // a year, insurance 0.2% of cost, rising 3%/yr), 25 years. Keep the two in step.
   var SAP_Y = [905,969,1029,1053,1043,1003,931,895,908,887,902,905,990,968,851,857,832,806,856,828,780,888];
   var SAP_N = ['UK average','Thames','South East England','Southern England','South West England','Severn','Midlands','West Pennines','NW England and SW Scotland','Borders','North East England','East Pennines','East Anglia','Wales','West Scotland','East Scotland','North East Scotland','Highland','Western Isles','Orkney','Shetland','Northern Ireland'];
   var PC = {"AB":16,"G":14,"N":1,"SL":1,"AL":1,"GL":5,"NE":9,"SM":1,"B":6,"GU":1,"NG":11,"SN":5,"BA":5,"GU11-12":3,"NN":6,"SN7":1,"BB":7,"GU14":3,"NP":5,"SO":3,"BD":11,"GU28-29":2,"NP8":13,"SP":5,"BD23-24":10,"GU30-35":3,"NR":12,"SP6-11":3,"BH":3,"GU46":3,"NW":1,"SR":9,"BL":7,"GU51-52":3,"OL":7,"SR7-8":10,"BN":2,"HA":1,"OX":1,"SS":12,"BR":2,"HD":11,"PA":14,"ST":6,"BS":5,"HG":10,"PE":12,"SW":1,"BT":21,"HP":1,"PE9-12":11,"SY":6,"CA":8,"HR":6,"PE20-25":11,"SY14":7,"CB":12,"HS":18,"PH":15,"SY15-25":13,"CF":5,"HU":11,"PH19-25":17,"TA":5,"CH":7,"HX":11,"PH26":16,"TD":9,"CH5-8":7,"IG":12,"PH30-44":17,"TD12":9,"CM":12,"IP":12,"PH49":14,"TD15":9,"CM21-23":1,"IV":17,"PH50":14,"TF":6,"CO":12,"IV30-32":16,"PL":4,"TN":2,"CR":1,"IV36":16,"PO":3,"TQ":4,"CT":2,"KA":14,"PO18-22":2,"TR":4,"CV":6,"KT":1,"PR":7,"TS":10,"CW":7,"KW":17,"RG":1,"TW":1,"DA":2,"KW15-17":19,"RG21-29":3,"UB":1,"DD":15,"KY":15,"RH":1,"W":1,"DE":6,"L":7,"RH10-20":2,"WA":7,"DG":8,"LA":7,"RM":12,"WC":1,"DH":10,"LA7-23":8,"S":11,"WD":1,"DH4-5":9,"LD":13,"S18":6,"WF":11,"DL":10,"LE":6,"S32-33":6,"WN":7,"DN":11,"LL":7,"S40-45":6,"WR":6,"DT":3,"LL23-27":13,"SA":5,"WS":6,"DY":6,"LL30-78":13,"SA14-20":13,"WV":6,"E":1,"LN":11,"SA31-48":13,"YO":10,"EC":1,"LS":11,"SA61-73":13,"YO15-16":11,"EH":15,"LS24":10,"SE":1,"YO25":11,"EH43-46":9,"LU":1,"SG":1,"ZE":20,"EN":1,"M":7,"SK":7,"EN9":12,"ME":2,"SK13":6,"EX":4,"MK":1,"SK17":6,"FK":14,"ML":14,"SK22-23":6,"FY":7};
@@ -396,9 +397,10 @@
     $('qe-sc-val').textContent = Math.round(sc * 100) + '%';
     var kwp = Math.floor(area * COVER[mount] / (2.27 * 1.13)) * 0.51, cost = kwp * COST[mount];
     var inv = Math.max(1, Math.ceil(kwp / 100)) * 1400, y1 = kwp * y * 0.99, cum = 0, pb = null, sav1 = 0;
+    var run1 = 10 * kwp + 850 + 0.002 * cost;
     for (var t = 1; t <= 25; t++) {
       var g = y1 * Math.pow(0.996, t - 1), p = price * Math.pow(1.03, t - 1);
-      var s = g * sc * p + g * (1 - sc) * 0.05 - (t === 13 ? inv : 0);
+      var s = g * sc * p + g * (1 - sc) * 0.05 - (t === 13 ? inv : 0) - run1 * Math.pow(1.03, t - 1);
       if (t === 1) sav1 = s;
       if (pb === null && cum + s >= cost) pb = t - 1 + (cost - cum) / s;
       cum += s;
